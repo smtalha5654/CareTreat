@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "535675636413",
+    "project_id": "caretreat-69b27",
+    "storage_bucket": "caretreat-69b27.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:535675636413:android:fac2718eb37ae331fa45d4",
+        "android_client_info": {
+          "package_name": "com.example.caretreat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "535675636413-vjbg0p4o17bmjua20pm74u4480dv4885.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdu27FgAUZM2T0Jygax7Us5IQd6HRxARc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "535675636413-vjbg0p4o17bmjua20pm74u4480dv4885.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "535675636413-g7gkq8th7pus5u07l1osrh4nl46vu2le.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.caretreat"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
