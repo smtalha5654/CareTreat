@@ -1,4 +1,5 @@
-import 'package:caretreat/Pages/main_page.dart';
+import 'package:caretreat/Auth/main_page.dart';
+
 import 'package:caretreat/main.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';

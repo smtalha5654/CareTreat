@@ -1,5 +1,7 @@
+import 'package:caretreat/Auth/main_page.dart';
 import 'package:caretreat/Other%20Screens/create_doctor_profile.dart';
-import 'package:caretreat/Pages/main_page.dart';
+
+import 'package:caretreat/components/mybutton.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -251,32 +253,22 @@ class _DoctorScreenState extends State<DoctorScreen> {
                   ),
                 ),
                 Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 2.h, horizontal: 1.h),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(24),
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return CreateDoctorProfile();
-                        }));
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.deepPurple[300],
-                            borderRadius: BorderRadius.circular(24)),
-                        height: 7.h,
-                        child: Center(
-                          child: Text(
-                            'Create Your Doctor Profile',
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    )),
+                  padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+                  child: MyButton(
+                    textStyle: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                    color: Color.fromARGB(255, 150, 115, 210),
+                    title: 'Create Your Doctor Profile',
+                    ontap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return CreateDoctorProfile();
+                      }));
+                    },
+                  ),
+                ),
               ],
             ),
             preferredSize: Size.fromHeight(50)),

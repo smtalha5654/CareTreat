@@ -1,4 +1,6 @@
-import 'package:caretreat/Pages/main_page.dart';
+import 'package:caretreat/Auth/main_page.dart';
+
+import 'package:caretreat/components/mybutton.dart';
 
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -67,32 +69,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 1.5.h, horizontal: 4.h),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50)),
-                              height: 8.h,
-                              width: MediaQuery.of(context).size.width,
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                  ),
-                                  onPressed: () {
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 1.5.h, horizontal: 4.h),
+                              child: MyButton(
+                                  textStyle: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                  title: 'NEXT',
+                                  ontap: () {
                                     _controller.nextPage(
                                         duration: Duration(milliseconds: 500),
                                         curve: Curves.easeIn);
                                   },
-                                  child: Text(
-                                    "NEXT",
-                                    style: TextStyle(
-                                        fontSize: 14.5.sp,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                            ),
-                          ),
+                                  color: Colors.deepPurple)),
                         ],
                       )),
                 ),
@@ -131,29 +121,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 1.5.h, horizontal: 4.h),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50)),
-                              height: 8.h,
-                              width: MediaQuery.of(context).size.width,
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    _controller.nextPage(
-                                        duration: Duration(milliseconds: 500),
-                                        curve: Curves.easeIn);
-                                  },
-                                  child: Text(
-                                    "NEXT",
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                            ),
+                            child: MyButton(
+                                textStyle: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                                title: 'NEXT',
+                                ontap: () {
+                                  _controller.nextPage(
+                                      duration: Duration(milliseconds: 500),
+                                      curve: Curves.easeIn);
+                                },
+                                color: Colors.deepPurple),
                           ),
                         ],
                       )),
@@ -192,32 +171,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 1.5.h, horizontal: 4.h),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50)),
-                              height: 8.h,
-                              width: MediaQuery.of(context).size.width,
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                  ),
-                                  onPressed: () {
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 1.5.h, horizontal: 4.h),
+                              child: MyButton(
+                                  textStyle: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                  title: 'NEXT',
+                                  ontap: () {
                                     _controller.nextPage(
                                         duration: Duration(milliseconds: 500),
                                         curve: Curves.easeIn);
                                   },
-                                  child: Text(
-                                    "NEXT",
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                            ),
-                          ),
+                                  color: Colors.deepPurple)),
                         ],
                       )),
                 ),
@@ -257,29 +224,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 1.5.h, horizontal: 4.h),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50)),
-                              height: 8.h,
-                              width: MediaQuery.of(context).size.width,
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    _controller.nextPage(
-                                        duration: Duration(milliseconds: 500),
-                                        curve: Curves.easeIn);
-                                  },
-                                  child: Text(
-                                    "NEXT",
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                            ),
+                            child: MyButton(
+                                textStyle: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                                title: 'NEXT',
+                                ontap: () {
+                                  _controller.nextPage(
+                                      duration: Duration(milliseconds: 500),
+                                      curve: Curves.easeIn);
+                                },
+                                color: Colors.deepPurple),
                           ),
                         ],
                       )),
@@ -318,32 +274,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 1.5.h, horizontal: 4.h),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50)),
-                              height: 8.h,
-                              width: MediaQuery.of(context).size.width,
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    await _storeOnBoardInfo();
-                                    Navigator.pushReplacement(context,
-                                        MaterialPageRoute(
-                                            builder: (BuildContext) {
-                                      return Main_Page();
-                                    }));
-                                  },
-                                  child: Text(
-                                    "Get Started",
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                            ),
+                            child: MyButton(
+                                textStyle: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                                title: 'Get Started',
+                                ontap: () async {
+                                  await _storeOnBoardInfo();
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext) {
+                                    return Main_Page();
+                                  }));
+                                },
+                                color: Colors.deepPurple),
                           ),
                         ],
                       )),

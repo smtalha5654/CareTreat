@@ -1,8 +1,9 @@
+import 'package:caretreat/Auth/main_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../Pages/main_page.dart';
+
 
 class LabScreen extends StatefulWidget {
   const LabScreen({super.key});

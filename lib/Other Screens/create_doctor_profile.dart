@@ -1,3 +1,5 @@
+import 'package:caretreat/components/mybutton.dart';
+import 'package:caretreat/components/mytextfield.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +13,19 @@ class CreateDoctorProfile extends StatefulWidget {
 }
 
 class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
+  final _namecontroller = TextEditingController();
+  final _experiencecontroller = TextEditingController();
+  final _descriptioncontroller = TextEditingController();
+  late SingleValueDropDownController _doctortypecontroller;
+  late SingleValueDropDownController _gendercontroller;
+  final _phonecontroller = TextEditingController();
+  @override
+  void initState() {
+    _doctortypecontroller = SingleValueDropDownController();
+    _gendercontroller = SingleValueDropDownController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -35,23 +50,11 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
               ),
               SizedBox(height: 12),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 3.h),
-                child: TextField(
-                  // controller: _firstnamecontroller,
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.person_4_rounded),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple),
-                          borderRadius: BorderRadius.circular(12)),
-                      hintText: 'Enter Name',
-                      fillColor: Colors.grey[200],
-                      filled: true),
-                ),
-              ),
+                  padding: EdgeInsets.symmetric(horizontal: 3.h),
+                  child: MyTextField(
+                      controller: _namecontroller,
+                      hinttext: 'Enter Name',
+                      icon: Icons.account_circle)),
               SizedBox(
                 height: 8,
               ),
@@ -63,7 +66,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                     FilteringTextInputFormatter.digitsOnly
                   ],
-                  // controller: _phonecontroller,
+                  controller: _phonecontroller,
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.phone),
                       enabledBorder: OutlineInputBorder(
@@ -96,7 +99,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                         fillColor: Colors.grey[200],
                         filled: true),
                     clearOption: true,
-                    // controller: _gendercontroller,
+                    controller: _gendercontroller,
                     validator: (value) {
                       if (value == null) {
                         return "Required field";
@@ -117,6 +120,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
               Padding(
                   padding: EdgeInsets.symmetric(horizontal: 3.h),
                   child: DropDownTextField(
+                    enableSearch: true,
                     textFieldDecoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -125,11 +129,11 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.deepPurple),
                             borderRadius: BorderRadius.circular(12)),
-                        hintText: 'Select Role',
+                        hintText: 'Select Doctor Type',
                         fillColor: Colors.grey[200],
                         filled: true),
                     clearOption: true,
-                    // controller: _rolecontroller,
+                    controller: _doctortypecontroller,
                     validator: (value) {
                       if (value == null) {
                         return "Required field";
@@ -137,12 +141,36 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                         return null;
                       }
                     },
-                    dropDownItemCount: 4,
+                    dropDownItemCount: 6,
                     dropDownList: [
-                      DropDownValueModel(name: 'Doctor', value: "value1"),
-                      DropDownValueModel(name: 'Patient', value: "value2"),
-                      DropDownValueModel(name: 'Nurse', value: "value3"),
-                      DropDownValueModel(name: 'Laboratory', value: "value4"),
+                      DropDownValueModel(
+                          name: 'General practitioner', value: "value1"),
+                      DropDownValueModel(name: 'Pediatrician', value: "value2"),
+                      DropDownValueModel(name: 'Gynecologist', value: "value3"),
+                      DropDownValueModel(name: 'Cardiologist', value: "value4"),
+                      DropDownValueModel(name: 'Oncologist', value: "value5"),
+                      DropDownValueModel(
+                          name: 'Gastroenterologist', value: "value6"),
+                      DropDownValueModel(
+                          name: 'Pulmonologist', value: "value7"),
+                      DropDownValueModel(
+                          name: 'Infectious disease', value: "value8"),
+                      DropDownValueModel(name: 'Nephrologist', value: "value9"),
+                      DropDownValueModel(
+                          name: 'Endocrinologist', value: "value10"),
+                      DropDownValueModel(
+                          name: 'Ophthalmologist', value: "value11"),
+                      DropDownValueModel(
+                          name: 'Dermatologist', value: "value12"),
+                      DropDownValueModel(
+                          name: 'Psychiatrist', value: "value13"),
+                      DropDownValueModel(name: 'Neurologist', value: "value14"),
+                      DropDownValueModel(name: 'Radiologist', value: "value15"),
+                      DropDownValueModel(
+                          name: 'Anesthesiologist', value: "value16"),
+                      DropDownValueModel(name: 'Surgeon', value: "value17"),
+                      DropDownValueModel(
+                          name: 'Physician executive', value: "value18"),
                     ],
                     onChanged: (val) {},
                   )),
@@ -150,28 +178,113 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                 height: 8,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 3.h,
-                ),
-                child: TextField(
-                  // controller: _emailController,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 6.h,
-                      ),
-                      prefixIcon: Icon(Icons.description),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple),
-                          borderRadius: BorderRadius.circular(12)),
-                      hintText: 'Description',
-                      fillColor: Colors.grey[200],
-                      filled: true),
-                ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 3.h,
+                  ),
+                  child: MyTextField(
+                      controller: _descriptioncontroller,
+                      hinttext: 'About',
+                      icon: Icons.description)),
+              SizedBox(
+                height: 8,
               ),
+              Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 3.h,
+                  ),
+                  child: MyTextField(
+                      controller: _descriptioncontroller,
+                      hinttext: 'Address',
+                      icon: Icons.home_filled)),
+              SizedBox(
+                height: 8,
+              ),
+              Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 3.h,
+                  ),
+                  child: MyTextField(
+                      controller: _descriptioncontroller,
+                      hinttext: 'Education',
+                      icon: Icons.school)),
+              SizedBox(
+                height: 8,
+              ),
+              Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 3.h,
+                  ),
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    controller: _phonecontroller,
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.attach_money),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.deepPurple),
+                            borderRadius: BorderRadius.circular(12)),
+                        hintText: 'Fee Charges For Appointment (PKR)',
+                        fillColor: Colors.grey[200],
+                        filled: true),
+                  )),
+              SizedBox(
+                height: 8,
+              ),
+              Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 3.h,
+                  ),
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    controller: _phonecontroller,
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.attach_money),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.deepPurple),
+                            borderRadius: BorderRadius.circular(12)),
+                        hintText: 'Fee Charges For House Visit (PKR)',
+                        fillColor: Colors.grey[200],
+                        filled: true),
+                  )),
+              SizedBox(
+                height: 8,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 3.h),
+                child: MyTextField(
+                    controller: _experiencecontroller,
+                    hinttext: 'Experience (Optional)',
+                    icon: Icons.document_scanner),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 3.h),
+                child: MyButton(
+                    title: 'Submit',
+                    ontap: () {},
+                    color: Colors.deepPurple,
+                    textStyle: TextStyle(
+                        fontSize: 15.sp,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)),
+              )
             ],
           ),
         ),

@@ -1,6 +1,9 @@
 import 'dart:async';
 
-import 'package:caretreat/Pages/forget_password_page.dart';
+import 'package:caretreat/Auth/auth_service.dart';
+import 'package:caretreat/Auth/forget_password_page.dart';
+
+import 'package:caretreat/components/mytextfield.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -8,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:sizer/sizer.dart';
 
-import 'auth_service.dart';
+
 
 class LoginPage extends StatefulWidget {
   final VoidCallback showRegisterPage;
@@ -105,23 +108,11 @@ class _LoginPageState extends State<LoginPage> {
                 height: 12,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 3.h),
-                child: TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.email),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple),
-                          borderRadius: BorderRadius.circular(12)),
-                      hintText: 'Email',
-                      fillColor: Colors.grey[200],
-                      filled: true),
-                ),
-              ),
+                  padding: EdgeInsets.symmetric(horizontal: 3.h),
+                  child: MyTextField(
+                      controller: _emailController,
+                      hinttext: 'Email',
+                      icon: Icons.email)),
               SizedBox(
                 height: 10,
               ),

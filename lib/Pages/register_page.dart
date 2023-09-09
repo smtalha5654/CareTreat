@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:caretreat/components/mytextfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -157,44 +158,20 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               SizedBox(height: 12),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 3.h),
-                child: TextField(
-                  controller: _firstnamecontroller,
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.person_4_rounded),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple),
-                          borderRadius: BorderRadius.circular(12)),
-                      hintText: 'First Name',
-                      fillColor: Colors.grey[200],
-                      filled: true),
-                ),
-              ),
+                  padding: EdgeInsets.symmetric(horizontal: 3.h),
+                  child: MyTextField(
+                      controller: _firstnamecontroller,
+                      hinttext: 'First Name',
+                      icon: Icons.account_circle)),
               SizedBox(
                 height: 8,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 3.h),
-                child: TextField(
-                  controller: _lastnamecontroller,
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.person_4_rounded),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple),
-                          borderRadius: BorderRadius.circular(12)),
-                      hintText: 'Last Name',
-                      fillColor: Colors.grey[200],
-                      filled: true),
-                ),
-              ),
+                  padding: EdgeInsets.symmetric(horizontal: 3.h),
+                  child: MyTextField(
+                      controller: _lastnamecontroller,
+                      hinttext: 'Last Name',
+                      icon: Icons.account_circle)),
               SizedBox(
                 height: 8,
               ),
@@ -293,23 +270,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 8,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 3.h),
-                child: TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.email),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple),
-                          borderRadius: BorderRadius.circular(12)),
-                      hintText: 'Email',
-                      fillColor: Colors.grey[200],
-                      filled: true),
-                ),
-              ),
+                  padding: EdgeInsets.symmetric(horizontal: 3.h),
+                  child: MyTextField(
+                      controller: _emailController,
+                      hinttext: 'Email',
+                      icon: Icons.email)),
               SizedBox(
                 height: 8,
               ),

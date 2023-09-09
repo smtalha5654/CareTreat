@@ -1,3 +1,4 @@
+import 'package:caretreat/Auth/main_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -9,7 +10,7 @@ import 'package:sizer/sizer.dart';
 import '../Drawer Screens/favorite.dart';
 import '../Drawer Screens/my_profile.dart';
 import '../Drawer Screens/settings_page.dart';
-import '../Pages/main_page.dart';
+
 
 final userRef = FirebaseFirestore.instance.collection('users');
 
