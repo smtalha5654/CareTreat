@@ -11,7 +11,6 @@ import '../Drawer Screens/favorite.dart';
 import '../Drawer Screens/my_profile.dart';
 import '../Drawer Screens/settings_page.dart';
 
-
 final userRef = FirebaseFirestore.instance.collection('users');
 
 class PatientScreen extends StatefulWidget {
@@ -26,19 +25,21 @@ class _PatientScreenState extends State<PatientScreen> {
   void initState() {
     super.initState();
     getName();
+    email;
   }
 
   String fname = '';
   String lname = '';
-  String email = '';
+  String email = FirebaseAuth.instance.currentUser!.email.toString();
 
   void getName() {
     final String id = FirebaseAuth.instance.currentUser!.uid;
     userRef.doc(id).get().then((DocumentSnapshot doc) {
       setState(() {
-        fname = doc.get('first name');
-        lname = doc.get('last name');
-        email = FirebaseAuth.instance.currentUser!.email.toString();
+        
+          fname = doc.get('first name');
+          lname = doc.get('last name');
+        
       });
     });
   }
@@ -51,14 +52,13 @@ class _PatientScreenState extends State<PatientScreen> {
         length: 3,
         child: Scaffold(
           backgroundColor: Colors.grey[200],
-          drawer: SingleChildScrollView(
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              child: SafeArea(
-                child: Drawer(
-                  elevation: 0,
-                  width: 44.h,
-                  backgroundColor: Colors.white,
+          drawer: SafeArea(
+            child: Drawer(
+              elevation: 0,
+              width: 44.h,
+              backgroundColor: Colors.white,
+              child: SingleChildScrollView(
+                child: Container(
                   child: Column(
                     children: [
                       Container(

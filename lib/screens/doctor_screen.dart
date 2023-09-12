@@ -31,14 +31,17 @@ class _DoctorScreenState extends State<DoctorScreen> {
 
   String fname = '';
   String lname = '';
-  String email = '';
+  String email = FirebaseAuth.instance.currentUser!.email.toString();
 
-  void getName() async {
+  void getName() {
     final String id = FirebaseAuth.instance.currentUser!.uid;
     userRef.doc(id).get().then((DocumentSnapshot doc) {
-      fname = doc.get('first name');
-      lname = doc.get('last name');
-      email = FirebaseAuth.instance.currentUser!.email.toString();
+      setState(() {
+        
+          fname = doc.get('first name');
+          lname = doc.get('last name');
+        
+      });
     });
   }
 
@@ -47,14 +50,13 @@ class _DoctorScreenState extends State<DoctorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          child: SafeArea(
-            child: Drawer(
-              elevation: 0,
-              width: 44.h,
-              backgroundColor: Colors.white,
+      drawer: SafeArea(
+        child: Drawer(
+          elevation: 0,
+          width: 44.h,
+          backgroundColor: Colors.white,
+          child: SingleChildScrollView(
+            child: Container(
               child: Column(
                 children: [
                   Container(

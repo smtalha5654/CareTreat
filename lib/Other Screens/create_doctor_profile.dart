@@ -1,8 +1,11 @@
 import 'package:caretreat/components/mybutton.dart';
 import 'package:caretreat/components/mytextfield.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:sizer/sizer.dart';
 
 class CreateDoctorProfile extends StatefulWidget {
@@ -14,8 +17,12 @@ class CreateDoctorProfile extends StatefulWidget {
 
 class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
   final _namecontroller = TextEditingController();
+  final _aboutcontroller = TextEditingController();
+  final _educationcontroller = TextEditingController();
+  final _appointmentchargescontroller = TextEditingController();
+  final _visitchargescontroller = TextEditingController();
   final _experiencecontroller = TextEditingController();
-  final _descriptioncontroller = TextEditingController();
+  final _addresscontroller = TextEditingController();
   late SingleValueDropDownController _doctortypecontroller;
   late SingleValueDropDownController _gendercontroller;
   final _phonecontroller = TextEditingController();
@@ -24,6 +31,72 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
     _doctortypecontroller = SingleValueDropDownController();
     _gendercontroller = SingleValueDropDownController();
     super.initState();
+  }
+
+  Future submit() async {
+   
+    try {
+      addDoctorDetails(
+        _namecontroller.text.trim(),
+        int.parse(_phonecontroller.text.trim()),
+        _gendercontroller.dropDownValue!.name.toString().trim(),
+        _doctortypecontroller.dropDownValue!.name.toString().trim(),
+        _aboutcontroller.text.trim(),
+        _addresscontroller.text.trim(),
+        _educationcontroller.text.trim(),
+        int.parse(_visitchargescontroller.text.trim()),
+        int.parse(_appointmentchargescontroller.text.trim()),
+        _experiencecontroller.text.trim(),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          "Profile Created Successfully",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+        ),
+        backgroundColor: Colors.deepPurple,
+        padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 3),
+      ));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          "Error While Submiting Data",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+        ),
+        backgroundColor: Colors.deepPurple,
+        padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 3),
+      ));
+    }
+  }
+
+  Future addDoctorDetails(
+    String name,
+    int phone,
+    String gender,
+    String doctortype,
+    String about,
+    String address,
+    String education,
+    int visitcharges,
+    int appointmentcharges,
+    String experience,
+  ) async {
+    final id = await FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance.collection('doctors').doc(id).set({
+      'name': name,
+      'phone': phone,
+      'gender': gender,
+      'doctor type': doctortype,
+      'about': about,
+      'address': address,
+      'education': education,
+      'visit charges': visitcharges,
+      'appointment charges': appointmentcharges,
+      'experience': experience,
+    });
   }
 
   @override
@@ -182,7 +255,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                     horizontal: 3.h,
                   ),
                   child: MyTextField(
-                      controller: _descriptioncontroller,
+                      controller: _aboutcontroller,
                       hinttext: 'About',
                       icon: Icons.description)),
               SizedBox(
@@ -193,7 +266,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                     horizontal: 3.h,
                   ),
                   child: MyTextField(
-                      controller: _descriptioncontroller,
+                      controller: _addresscontroller,
                       hinttext: 'Address',
                       icon: Icons.home_filled)),
               SizedBox(
@@ -204,7 +277,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                     horizontal: 3.h,
                   ),
                   child: MyTextField(
-                      controller: _descriptioncontroller,
+                      controller: _educationcontroller,
                       hinttext: 'Education',
                       icon: Icons.school)),
               SizedBox(
@@ -220,7 +293,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    controller: _phonecontroller,
+                    controller: _appointmentchargescontroller,
                     decoration: InputDecoration(
                         prefixIcon: Icon(Icons.attach_money),
                         enabledBorder: OutlineInputBorder(
@@ -247,7 +320,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    controller: _phonecontroller,
+                    controller: _visitchargescontroller,
                     decoration: InputDecoration(
                         prefixIcon: Icon(Icons.attach_money),
                         enabledBorder: OutlineInputBorder(
@@ -278,7 +351,9 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                 padding: EdgeInsets.symmetric(horizontal: 3.h),
                 child: MyButton(
                     title: 'Submit',
-                    ontap: () {},
+                    ontap: () {
+                      submit();
+                    },
                     color: Colors.deepPurple,
                     textStyle: TextStyle(
                         fontSize: 15.sp,
