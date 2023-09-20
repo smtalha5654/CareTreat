@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:caretreat/Auth/checkroles.dart';
 
-
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
@@ -26,7 +25,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
     if (!isEmailVerified) {
       sendVerificationEmail();
-      timer = Timer.periodic(Duration(seconds: 3), (_) => checkEmailVerified());
+      timer = Timer.periodic(const Duration(seconds: 3), (_) => checkEmailVerified());
     }
   }
 
@@ -35,7 +34,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
       final user = FirebaseAuth.instance.currentUser!;
       await user.sendEmailVerification();
       setState(() => canResendEmail = false);
-      await Future.delayed(Duration(seconds: 5));
+      await Future.delayed(const Duration(seconds: 5));
       setState(() => canResendEmail = true);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -46,7 +45,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
         backgroundColor: Colors.deepPurple,
         padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
         behavior: SnackBarBehavior.floating,
-        duration: Duration(seconds: 3),
+        duration:const Duration(seconds: 3),
       ));
     }
   }
@@ -65,12 +64,12 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   @override
   Widget build(BuildContext context) => isEmailVerified
-      ? CheckRole()
+      ?const CheckRole()
       : SafeArea(
           child: Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.deepPurple,
-              title: Center(child: Text('Email Verification')),
+              title:const Center(child: Text('Email Verification')),
             ),
             body: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -101,7 +100,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                         ),
                         onPressed:
                             canResendEmail ? sendVerificationEmail : null,
-                        icon: Icon(Icons.email),
+                        icon:const Icon(Icons.email),
                         label: Text(
                           "Resent Email",
                           style: TextStyle(
@@ -123,7 +122,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                           ),
                         ),
                         onPressed: () => FirebaseAuth.instance.signOut(),
-                        icon: Icon(Icons.cancel_sharp),
+                        icon:const Icon(Icons.cancel_sharp),
                         label: Text(
                           "Cancel",
                           style: TextStyle(

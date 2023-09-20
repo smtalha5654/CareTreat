@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:caretreat/components/mytextfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
@@ -49,7 +48,7 @@ class _RegisterPageState extends State<RegisterPage> {
     showDialog(
         context: context,
         builder: (context) {
-          return SpinKitFadingCircle(
+          return const SpinKitFadingCircle(
             color: Colors.deepPurple,
             size: 60.0,
           );
@@ -82,7 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
           backgroundColor: Colors.deepPurple,
           padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
           behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
         ));
       }
     } on FirebaseAuthException catch (e) {
@@ -98,7 +97,7 @@ class _RegisterPageState extends State<RegisterPage> {
           backgroundColor: Colors.deepPurple,
           padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
           behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
         ),
       );
     }
@@ -113,7 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
     String role,
     String password,
   ) async {
-    final id = await FirebaseAuth.instance.currentUser!.uid;
+    final id = FirebaseAuth.instance.currentUser!.uid;
     await FirebaseFirestore.instance.collection('users').doc(id).set({
       'first name': firstName,
       'last name': lastName,
@@ -156,14 +155,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   fontSize: 14.sp,
                 ),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Padding(
                   padding: EdgeInsets.symmetric(horizontal: 3.h),
                   child: MyTextField(
                       controller: _firstnamecontroller,
                       hinttext: 'First Name',
                       icon: Icons.account_circle)),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -172,7 +171,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: _lastnamecontroller,
                       hinttext: 'Last Name',
                       icon: Icons.account_circle)),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -185,20 +184,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   ],
                   controller: _phonecontroller,
                   decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.phone),
+                      prefixIcon: const Icon(Icons.phone),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: const BorderSide(color: Colors.white),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple),
+                          borderSide: const BorderSide(color: Colors.deepPurple),
                           borderRadius: BorderRadius.circular(12)),
                       hintText: 'Phone Number',
                       fillColor: Colors.grey[200],
                       filled: true),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -206,11 +205,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: DropDownTextField(
                     textFieldDecoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.deepPurple),
+                            borderSide: const BorderSide(color: Colors.deepPurple),
                             borderRadius: BorderRadius.circular(12)),
                         hintText: 'Select Gender',
                         fillColor: Colors.grey[200],
@@ -225,13 +224,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       }
                     },
                     dropDownItemCount: 2,
-                    dropDownList: [
+                    dropDownList: const [
                       DropDownValueModel(name: 'Male', value: "value1"),
                       DropDownValueModel(name: 'Female', value: "value2"),
                     ],
                     onChanged: (val) {},
                   )),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -239,11 +238,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: DropDownTextField(
                     textFieldDecoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.deepPurple),
+                            borderSide: const BorderSide(color: Colors.deepPurple),
                             borderRadius: BorderRadius.circular(12)),
                         hintText: 'Select Role',
                         fillColor: Colors.grey[200],
@@ -258,7 +257,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       }
                     },
                     dropDownItemCount: 4,
-                    dropDownList: [
+                    dropDownList: const [
                       DropDownValueModel(name: 'Doctor', value: "value1"),
                       DropDownValueModel(name: 'Patient', value: "value2"),
                       DropDownValueModel(name: 'Nurse', value: "value3"),
@@ -266,7 +265,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ],
                     onChanged: (val) {},
                   )),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -275,7 +274,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: _emailController,
                       hinttext: 'Email',
                       icon: Icons.email)),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -294,20 +293,20 @@ class _RegisterPageState extends State<RegisterPage> {
                             ? Icons.visibility
                             : Icons.visibility_off),
                       ),
-                      prefixIcon: Icon(Icons.lock),
+                      prefixIcon: const Icon(Icons.lock),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: const BorderSide(color: Colors.white),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple),
+                          borderSide: const BorderSide(color: Colors.deepPurple),
                           borderRadius: BorderRadius.circular(12)),
                       hintText: 'Password',
                       fillColor: Colors.grey[200],
                       filled: true),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -326,20 +325,20 @@ class _RegisterPageState extends State<RegisterPage> {
                             ? Icons.visibility
                             : Icons.visibility_off),
                       ),
-                      prefixIcon: Icon(Icons.lock),
+                      prefixIcon: const Icon(Icons.lock),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: const BorderSide(color: Colors.white),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple),
+                          borderSide: const BorderSide(color: Colors.deepPurple),
                           borderRadius: BorderRadius.circular(12)),
                       hintText: 'Confirm Password',
                       fillColor: Colors.grey[200],
                       filled: true),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Padding(
@@ -370,7 +369,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       )),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 18,
               ),
               Row(

@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sizer/sizer.dart';
 import '../Drawer Screens/favorite.dart';
 import '../Drawer Screens/my_profile.dart';
@@ -37,15 +38,13 @@ class _DoctorScreenState extends State<DoctorScreen> {
     final String id = FirebaseAuth.instance.currentUser!.uid;
     userRef.doc(id).get().then((DocumentSnapshot doc) {
       setState(() {
-        
-          fname = doc.get('first name');
-          lname = doc.get('last name');
-        
+        fname = doc.get('first name');
+        lname = doc.get('last name');
       });
     });
   }
 
-  GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   @override
   Widget build(BuildContext context) {
@@ -66,18 +65,140 @@ class _DoctorScreenState extends State<DoctorScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          margin: EdgeInsets.only(
-                              bottom: 2.h, right: 25.h, top: 3.h),
-                          height: 11.h,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image:
-                                  AssetImage('assets/images/doctorprofile.jpg'),
+                        Stack(children: [
+                          Container(
+                            margin: EdgeInsets.only(
+                                bottom: 2.h, right: 25.h, top: 3.h),
+                            height: 12.h,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/images/doctorprofile.jpg'),
+                              ),
                             ),
                           ),
-                        ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 11.h, right: 16.h),
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: 5.h,
+                              decoration: const BoxDecoration(
+                                  shape: BoxShape.circle, color: Colors.white),
+                              child: Center(
+                                child: IconButton(
+                                    onPressed: () {
+                                      ImagePicker imagePicker = ImagePicker();
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    imagePicker.pickImage(
+                                                        source:
+                                                            ImageSource.camera);
+                                                  },
+                                                  child: Container(
+                                                      height: 15.h,
+                                                      width: 15.h,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white60,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12)),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Icon(
+                                                            Icons
+                                                                .camera_alt_rounded,
+                                                            size: 10.h,
+                                                            color: Colors.black,
+                                                          ),
+                                                          Text(
+                                                            'Camera',
+                                                            style: TextStyle(
+                                                                fontSize: 10.sp,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .none,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          )
+                                                        ],
+                                                      )),
+                                                ),
+                                                SizedBox(
+                                                  width: 1.h,
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    imagePicker.pickImage(
+                                                        source: ImageSource
+                                                            .gallery);
+                                                  },
+                                                  child: Container(
+                                                      height: 15.h,
+                                                      width: 15.h,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white60,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12)),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.photo,
+                                                            size: 10.h,
+                                                            color: Colors.black,
+                                                          ),
+                                                          Text(
+                                                            'Gallery',
+                                                            style: TextStyle(
+                                                                fontSize: 10.sp,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .none,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          )
+                                                        ],
+                                                      )),
+                                                )
+                                              ],
+                                            );
+                                          });
+                                      // imagePicker.pickImage(
+                                      //     source: ImageSource.gallery : ImageSource.camera);
+                                    },
+                                    icon: Icon(
+                                      Icons.add_a_photo,
+                                      size: 2.5.h,
+                                      color: Colors.black,
+                                    )),
+                              ),
+                            ),
+                          ),
+                        ]),
                         Padding(
                           padding: EdgeInsets.only(left: 2.5.h),
                           child: Text(
@@ -94,7 +215,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                         Padding(
                           padding: EdgeInsets.only(left: 2.5.h),
                           child: Text(
-                            "$email",
+                            email,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 11.sp,
@@ -119,7 +240,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => DoctorScreen()));
+                              builder: (context) => const DoctorScreen()));
                     },
                   ),
                   ListTile(
@@ -135,7 +256,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                     ),
                     onTap: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MyProfile()));
+                          MaterialPageRoute(builder: (context) => const MyProfile()));
                     },
                   ),
                   ListTile(
@@ -153,7 +274,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SettingPage()));
+                              builder: (context) => const SettingPage()));
                     },
                   ),
                   ListTile(
@@ -169,7 +290,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                     ),
                     onTap: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Favorite()));
+                          MaterialPageRoute(builder: (context) => const Favorite()));
                     },
                   ),
                   ListTile(
@@ -189,11 +310,11 @@ class _DoctorScreenState extends State<DoctorScreen> {
 
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) {
-                        return Main_Page();
+                        return const Main_Page();
                       }));
                     },
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 2,
                     color: Colors.black45,
                   ),
@@ -230,7 +351,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
         ),
       ),
       appBar: AppBar(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(24),
                 bottomLeft: Radius.circular(24))),
@@ -261,21 +382,21 @@ class _DoctorScreenState extends State<DoctorScreen> {
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
-                    color: Color.fromARGB(255, 150, 115, 210),
+                    color: const Color.fromARGB(255, 150, 115, 210),
                     title: 'Create Your Doctor Profile',
                     ontap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return CreateDoctorProfile();
+                        return const CreateDoctorProfile();
                       }));
                     },
                   ),
                 ),
               ],
             ),
-            preferredSize: Size.fromHeight(50)),
+            preferredSize: const Size.fromHeight(50)),
       ),
-      body: Center(child: Text('Doctor Screen')),
+      body: const Center(child: Text('Doctor Screen')),
     );
   }
 }

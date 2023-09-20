@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return AnimatedSplashScreen(
       splash: 'assets/images/splashscreen.png',
       splashIconSize: double.infinity,
-      nextScreen: isViewed !=0 ? WelcomeScreen() : Main_Page(),
+      nextScreen: isViewed !=0 ? const WelcomeScreen() : const Main_Page(),
       splashTransition: SplashTransition.fadeTransition,
       pageTransitionType: PageTransitionType.rightToLeft,
       curve: Curves.easeIn,

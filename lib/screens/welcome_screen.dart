@@ -79,7 +79,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                   title: 'NEXT',
                                   ontap: () {
                                     _controller.nextPage(
-                                        duration: Duration(milliseconds: 500),
+                                        duration: const Duration(milliseconds: 500),
                                         curve: Curves.easeIn);
                                   },
                                   color: Colors.deepPurple)),
@@ -129,7 +129,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 title: 'NEXT',
                                 ontap: () {
                                   _controller.nextPage(
-                                      duration: Duration(milliseconds: 500),
+                                      duration: const Duration(milliseconds: 500),
                                       curve: Curves.easeIn);
                                 },
                                 color: Colors.deepPurple),
@@ -181,7 +181,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                   title: 'NEXT',
                                   ontap: () {
                                     _controller.nextPage(
-                                        duration: Duration(milliseconds: 500),
+                                        duration: const Duration(milliseconds: 500),
                                         curve: Curves.easeIn);
                                   },
                                   color: Colors.deepPurple)),
@@ -232,7 +232,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 title: 'NEXT',
                                 ontap: () {
                                   _controller.nextPage(
-                                      duration: Duration(milliseconds: 500),
+                                      duration: const Duration(milliseconds: 500),
                                       curve: Curves.easeIn);
                                 },
                                 color: Colors.deepPurple),
@@ -285,7 +285,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                   Navigator.pushReplacement(context,
                                       MaterialPageRoute(
                                           builder: (BuildContext) {
-                                    return Main_Page();
+                                    return const Main_Page();
                                   }));
                                 },
                                 color: Colors.deepPurple),
@@ -305,7 +305,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       await _storeOnBoardInfo();
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (BuildContext) {
-                        return Main_Page();
+                        return const Main_Page();
                       }));
                     },
                     child: Text(
@@ -327,12 +327,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        child: SmoothPageIndicator(
-                            effect: WormEffect(),
-                            controller: _controller,
-                            count: 5),
-                      ),
+                      SmoothPageIndicator(
+                          effect: const WormEffect(),
+                          controller: _controller,
+                          count: 5),
                     ],
                   ),
                 ],

@@ -14,12 +14,12 @@ class AuthService {
       showDialog(
           context: context,
           builder: (context) {
-            return SpinKitFadingCircle(
+            return const SpinKitFadingCircle(
               color: Colors.deepPurple,
               size: 60.0,
             );
           });
-      FirebaseAuth _auth = FirebaseAuth.instance;
+      FirebaseAuth auth = FirebaseAuth.instance;
 
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -32,7 +32,7 @@ class AuthService {
       );
 
       final UserCredential authResult =
-          await _auth.signInWithCredential(credential);
+          await auth.signInWithCredential(credential);
 
       final User? user = authResult.user;
 
@@ -41,13 +41,13 @@ class AuthService {
         if (user != null) {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) {
-            return CompleteDetail();
+            return const CompleteDetail();
           }));
         }
       } else {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
-          return CheckRole();
+          return const CheckRole();
         }));
       }
       
@@ -62,7 +62,7 @@ class AuthService {
             return CupertinoAlertDialog(
               content: Text(
                 e.message.toString(),
-                style: TextStyle(
+                style:const TextStyle(
                   fontSize: 22,
                 ),
               ),

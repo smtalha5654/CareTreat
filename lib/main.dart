@@ -1,4 +1,6 @@
+
 import 'package:caretreat/screens/splash_screen.dart';
+
 import 'package:sizer/sizer.dart';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
@@ -33,7 +35,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.deepPurple,
           ),
-          home: SplashScreen(),
+          home: const SplashScreen(),
         );
       },
     );

@@ -23,9 +23,9 @@ class _Main_PageState extends State<Main_Page> {
         snapshot,
       ) {
         if (snapshot.hasData) {
-          return VerifyEmailPage();
+          return const VerifyEmailPage();
         } else {
-          return AuthPage();
+          return const AuthPage();
         }
       },
     ));

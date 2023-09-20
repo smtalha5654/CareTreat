@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
     showDialog(
         context: context,
         builder: (context) {
-          return SpinKitFadingCircle(
+          return const SpinKitFadingCircle(
             color: Colors.deepPurple,
             size: 60.0,
           );
@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
           backgroundColor: Colors.deepPurple,
           padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
           behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
         ),
       );
     }
@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                   fontSize: 14.sp,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 12,
               ),
               Padding(
@@ -113,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _emailController,
                       hinttext: 'Email',
                       icon: Icons.email)),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Padding(
@@ -132,20 +132,20 @@ class _LoginPageState extends State<LoginPage> {
                             ? Icons.visibility
                             : Icons.visibility_off),
                       ),
-                      prefixIcon: Icon(Icons.lock),
+                      prefixIcon: const Icon(Icons.lock),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: const BorderSide(color: Colors.white),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple),
+                          borderSide: const BorderSide(color: Colors.deepPurple),
                           borderRadius: BorderRadius.circular(12)),
                       hintText: 'Password',
                       fillColor: Colors.grey[200],
                       filled: true),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Padding(
@@ -157,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ForgetPassword())),
+                              builder: (context) => const ForgetPassword())),
                       child: Text(
                         'Forget Password?',
                         style: TextStyle(
@@ -169,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Padding(
@@ -200,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                       )),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Padding(
@@ -227,7 +227,7 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Padding(
@@ -237,7 +237,7 @@ class _LoginPageState extends State<LoginPage> {
                     AuthService().signInWithGoogle(context);
                   },
                   child: Container(
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.white),
                         borderRadius: BorderRadius.circular(16),
@@ -249,7 +249,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 18,
               ),
               Row(

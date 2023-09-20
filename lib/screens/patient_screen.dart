@@ -36,15 +36,13 @@ class _PatientScreenState extends State<PatientScreen> {
     final String id = FirebaseAuth.instance.currentUser!.uid;
     userRef.doc(id).get().then((DocumentSnapshot doc) {
       setState(() {
-        
-          fname = doc.get('first name');
-          lname = doc.get('last name');
-        
+        fname = doc.get('first name');
+        lname = doc.get('last name');
       });
     });
   }
 
-  GoogleSignIn _googleSignIn = GoogleSignIn();
+ final GoogleSignIn _googleSignIn = GoogleSignIn();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -72,7 +70,7 @@ class _PatientScreenState extends State<PatientScreen> {
                               margin: EdgeInsets.only(
                                   bottom: 2.h, right: 25.h, top: 3.h),
                               height: 11.h,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                   image: AssetImage(
@@ -96,7 +94,7 @@ class _PatientScreenState extends State<PatientScreen> {
                             Padding(
                               padding: EdgeInsets.only(left: 2.5.h),
                               child: Text(
-                                "$email",
+                                email,
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 11.sp,
@@ -121,7 +119,7 @@ class _PatientScreenState extends State<PatientScreen> {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PatientScreen()));
+                                  builder: (context) => const PatientScreen()));
                         },
                       ),
                       ListTile(
@@ -139,7 +137,7 @@ class _PatientScreenState extends State<PatientScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => MyProfile()));
+                                  builder: (context) => const MyProfile()));
                         },
                       ),
                       ListTile(
@@ -157,7 +155,7 @@ class _PatientScreenState extends State<PatientScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SettingPage()));
+                                  builder: (context) => const SettingPage()));
                         },
                       ),
                       ListTile(
@@ -175,7 +173,7 @@ class _PatientScreenState extends State<PatientScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Favorite()));
+                                  builder: (context) => const Favorite()));
                         },
                       ),
                       ListTile(
@@ -192,14 +190,13 @@ class _PatientScreenState extends State<PatientScreen> {
                         onTap: () async {
                           await _googleSignIn.signOut();
                           await FirebaseAuth.instance.signOut();
-
                           Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (context) {
-                            return Main_Page();
+                            return const Main_Page();
                           }));
                         },
                       ),
-                      Divider(
+                      const Divider(
                         thickness: 2,
                         color: Colors.black45,
                       ),
@@ -236,7 +233,7 @@ class _PatientScreenState extends State<PatientScreen> {
             ),
           ),
           appBar: AppBar(
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(24),
                     bottomLeft: Radius.circular(24))),
@@ -269,7 +266,7 @@ class _PatientScreenState extends State<PatientScreen> {
                           decoration: InputDecoration(
                             border: UnderlineInputBorder(
                                 borderRadius: BorderRadius.circular(24)),
-                            prefixIcon: Icon(
+                            prefixIcon: const Icon(
                               Icons.search,
                               color: Colors.deepPurple,
                             ),
@@ -282,11 +279,11 @@ class _PatientScreenState extends State<PatientScreen> {
                     ),
                   ],
                 ),
-                preferredSize: Size.fromHeight(50)),
+                preferredSize: const Size.fromHeight(50)),
           ),
           body: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               TabBar(
@@ -420,7 +417,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 12.sp)),
-                                      Text('Psychiatrist',
+                                      const Text('Psychiatrist',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 16)),
@@ -452,7 +449,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                 Tab(
                                   child: Card(
                                     child: ListView(
-                                      children: [
+                                      children: const [
                                         ListTile(
                                           title: Text('hello'),
                                         )
@@ -460,55 +457,55 @@ class _PatientScreenState extends State<PatientScreen> {
                                     ),
                                   ),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const  Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
-                                Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
                               ]),
@@ -555,7 +552,7 @@ class _PatientScreenState extends State<PatientScreen> {
                       ],
                     ),
                   )),
-                  Tab(
+                  const Tab(
                     child: Text('Lab'),
                   )
                 ]),

@@ -13,11 +13,11 @@ class LabScreen extends StatefulWidget {
 }
 
 class _LabScreenState extends State<LabScreen> {
-  GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Lab Screen'), elevation: 0, actions: [
+      appBar: AppBar(title: const Text('Lab Screen'), elevation: 0, actions: [
         Padding(
           padding: const EdgeInsets.only(right: 10),
           child: GestureDetector(
@@ -27,13 +27,13 @@ class _LabScreenState extends State<LabScreen> {
 
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) {
-                  return Main_Page();
+                  return const Main_Page();
                 }));
               },
-              child: Icon(Icons.person)),
+              child: const Icon(Icons.person)),
         ),
       ]),
-      body: Center(child: Text('Lab Screen')),
+      body: const Center(child: Text('Lab Screen')),
     );
   }
 }

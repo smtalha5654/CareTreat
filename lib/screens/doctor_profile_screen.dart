@@ -27,7 +27,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                       color: Colors.deepPurple[100],
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(24),
                           topRight: Radius.circular(24))),
                   child: Padding(
@@ -39,7 +39,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
+                            const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
@@ -60,108 +60,108 @@ class _DoctorProfileState extends State<DoctorProfile> {
                               ],
                             ),
                             Container(
-                                padding: EdgeInsets.all(8),
+                                padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
                                     color: Colors.deepPurple),
-                                child: Icon(
+                                child: const Icon(
                                   Icons.call,
                                   color: Colors.white,
                                   size: 50,
                                 ))
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
-                        Divider(
+                        const Divider(
                           color: Colors.black,
                           thickness: 1.7,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
-                        Text(
+                        const Text(
                           'Description',
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
-                        Text(
+                        const Text(
                           'Doctors, also known as physicians, are licensed health professionals who maintain and restore human health through the practice of medicine. They examine patients, review their medical history, diagnose illnesses or injuries, administer treatment, and counsel patients on their health and well-being.',
                           style: TextStyle(
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
-                        Text(
+                        const Text(
                           'Education',
                           style: TextStyle(
                               fontSize: 22, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
-                        Text(
+                        const Text(
                           'Oxford University',
                           style: TextStyle(
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
-                        Text(
+                        const Text(
                           'Location',
                           style: TextStyle(
                               fontSize: 22, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
-                        Text(
+                        const Text(
                           'Unit No 8 Latifabad Hyderabad',
                           style: TextStyle(
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
-                        Text(
+                        const Text(
                           'Fee/Charges',
                           style: TextStyle(
                               fontSize: 22, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
-                        Text(
+                        const Text(
                           'For House Visit Rs.3000\nFor Clinic Appointment Rs.2000',
                           style: TextStyle(
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 15),
                               decoration: BoxDecoration(
                                   color: Colors.deepPurple,
                                   border: Border.all(color: Colors.deepPurple),
                                   borderRadius: BorderRadius.circular(12)),
-                              child: Text(
+                              child: const Text(
                                 'House Visit',
                                 style: TextStyle(
                                     fontSize: 20,
@@ -170,13 +170,13 @@ class _DoctorProfileState extends State<DoctorProfile> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 15),
                               decoration: BoxDecoration(
                                   color: Colors.deepPurple,
                                   border: Border.all(color: Colors.deepPurple),
                                   borderRadius: BorderRadius.circular(12)),
-                              child: Text(
+                              child: const Text(
                                 'Clinic Appointment',
                                 style: TextStyle(
                                     fontSize: 20,
@@ -186,7 +186,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         )
                       ],
@@ -201,20 +201,20 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
                             color: Colors.grey[300]),
-                        child: Icon(
+                        child: const Icon(
                           Icons.arrow_back_sharp,
                           color: Colors.deepPurple,
                         )),
                     Container(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
                             color: Colors.grey[300]),
-                        child: Icon(
+                        child: const Icon(
                           Icons.favorite,
                           color: Colors.deepPurple,
                         ))

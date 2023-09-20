@@ -12,9 +12,9 @@ class _FavoriteState extends State<Favorite> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Favorite Screen'),
+        title:const Text('Favorite Screen'),
       ),
-      body: Center(child: Text('Favorite Screen')),
+      body:const Center(child: Text('Favorite Screen')),
     );
   }
 }

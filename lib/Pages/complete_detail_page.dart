@@ -50,7 +50,7 @@ class _CompleteDetailState extends State<CompleteDetail> {
       _rolecontroller.dropDownValue!.name.toString().trim(),
     );
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-      return CheckRole();
+      return const CheckRole();
     }));
   }
 
@@ -61,7 +61,7 @@ class _CompleteDetailState extends State<CompleteDetail> {
     String gender,
     String role,
   ) async {
-    final id = await FirebaseAuth.instance.currentUser!.uid;
+    final id =  FirebaseAuth.instance.currentUser!.uid;
     await FirebaseFirestore.instance.collection('users').doc(id).set({
       'first name': firstName,
       'last name': lastName,
@@ -93,26 +93,26 @@ class _CompleteDetailState extends State<CompleteDetail> {
                   fontSize: 14.sp,
                 ),
               ),
-              SizedBox(height: 12),
+             const SizedBox(height: 12),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 3.h),
                 child: TextField(
                   controller: _firstnamecontroller,
                   decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.person_4_rounded),
+                      prefixIcon:const Icon(Icons.person_4_rounded),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide:const BorderSide(color: Colors.white),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple),
+                          borderSide:const BorderSide(color: Colors.deepPurple),
                           borderRadius: BorderRadius.circular(12)),
                       hintText: 'First Name',
                       fillColor: Colors.grey[200],
                       filled: true),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -120,20 +120,20 @@ class _CompleteDetailState extends State<CompleteDetail> {
                 child: TextField(
                   controller: _lastnamecontroller,
                   decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.person_4_rounded),
+                      prefixIcon: const Icon(Icons.person_4_rounded),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide:const BorderSide(color: Colors.white),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple),
+                          borderSide:const BorderSide(color: Colors.deepPurple),
                           borderRadius: BorderRadius.circular(12)),
                       hintText: 'Last Name',
                       fillColor: Colors.grey[200],
                       filled: true),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -146,20 +146,20 @@ class _CompleteDetailState extends State<CompleteDetail> {
                   ],
                   controller: _phonecontroller,
                   decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.phone),
+                      prefixIcon: const Icon(Icons.phone),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: const BorderSide(color: Colors.white),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurple),
+                          borderSide: const BorderSide(color: Colors.deepPurple),
                           borderRadius: BorderRadius.circular(12)),
                       hintText: 'Phone Number',
                       fillColor: Colors.grey[200],
                       filled: true),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -167,11 +167,11 @@ class _CompleteDetailState extends State<CompleteDetail> {
                   child: DropDownTextField(
                     textFieldDecoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.deepPurple),
+                            borderSide: const BorderSide(color: Colors.deepPurple),
                             borderRadius: BorderRadius.circular(12)),
                         hintText: 'Select Gender',
                         fillColor: Colors.grey[200],
@@ -186,13 +186,13 @@ class _CompleteDetailState extends State<CompleteDetail> {
                       }
                     },
                     dropDownItemCount: 2,
-                    dropDownList: [
+                    dropDownList: const [
                       DropDownValueModel(name: 'Male', value: "value1"),
                       DropDownValueModel(name: 'Female', value: "value2"),
                     ],
                     onChanged: (val) {},
                   )),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -200,11 +200,11 @@ class _CompleteDetailState extends State<CompleteDetail> {
                   child: DropDownTextField(
                     textFieldDecoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.deepPurple),
+                            borderSide: const BorderSide(color: Colors.deepPurple),
                             borderRadius: BorderRadius.circular(12)),
                         hintText: 'Select Role',
                         fillColor: Colors.grey[200],
@@ -219,7 +219,7 @@ class _CompleteDetailState extends State<CompleteDetail> {
                       }
                     },
                     dropDownItemCount: 4,
-                    dropDownList: [
+                    dropDownList: const [
                       DropDownValueModel(name: 'Doctor', value: "value1"),
                       DropDownValueModel(name: 'Patient', value: "value2"),
                       DropDownValueModel(name: 'Nurse', value: "value3"),
@@ -227,7 +227,7 @@ class _CompleteDetailState extends State<CompleteDetail> {
                     ],
                     onChanged: (val) {},
                   )),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Padding(
@@ -258,7 +258,7 @@ class _CompleteDetailState extends State<CompleteDetail> {
                       )),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 18,
               ),
             ],

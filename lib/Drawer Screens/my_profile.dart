@@ -12,9 +12,9 @@ class _MyProfileState extends State<MyProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Profile Screen'),
+        title:const Text('My Profile Screen'),
       ),
-      body: Center(child: Text('My Profile Screen')),
+      body:const Center(child: Text('My Profile Screen')),
     );
   }
 }

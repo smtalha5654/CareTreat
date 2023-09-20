@@ -9,8 +9,8 @@ class WelcomePage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          title: Padding(
-            padding: const EdgeInsets.only(left: 20),
+          title: const Padding(
+            padding: EdgeInsets.only(left: 20),
             child: Text(
               'Welcome! To CareTreat \n Register As',
               style: TextStyle(
@@ -21,7 +21,7 @@ class WelcomePage extends StatelessWidget {
             ),
           ),
           toolbarHeight: 200,
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
             bottomRight: Radius.circular(180),
           )),
@@ -33,7 +33,7 @@ class WelcomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Row(
@@ -41,7 +41,7 @@ class WelcomePage extends StatelessWidget {
                 children: [
                   Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(12),
@@ -52,17 +52,17 @@ class WelcomePage extends StatelessWidget {
                             'assets/images/doctor.png',
                             scale: 5,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 4),
                             decoration: BoxDecoration(
                                 color: Colors.deepPurple,
                                 border: Border.all(color: Colors.deepPurple),
                                 borderRadius: BorderRadius.circular(12)),
-                            child: Text(
+                            child: const Text(
                               'Doctor',
                               style: TextStyle(
                                 fontSize: 20,
@@ -75,7 +75,7 @@ class WelcomePage extends StatelessWidget {
                       )),
                   Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(12),
@@ -86,17 +86,17 @@ class WelcomePage extends StatelessWidget {
                             'assets/images/patient.png',
                             scale: 5,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 4),
                             decoration: BoxDecoration(
                                 color: Colors.deepPurple,
                                 border: Border.all(color: Colors.deepPurple),
                                 borderRadius: BorderRadius.circular(12)),
-                            child: Text(
+                            child: const Text(
                               'Patient',
                               style: TextStyle(
                                   fontSize: 20,
@@ -108,7 +108,7 @@ class WelcomePage extends StatelessWidget {
                       )),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Row(
@@ -116,7 +116,7 @@ class WelcomePage extends StatelessWidget {
                 children: [
                   Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(12),
@@ -127,17 +127,17 @@ class WelcomePage extends StatelessWidget {
                             'assets/images/nurse.png',
                             scale: 5,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 4),
                             decoration: BoxDecoration(
                                 color: Colors.deepPurple,
                                 border: Border.all(color: Colors.deepPurple),
                                 borderRadius: BorderRadius.circular(12)),
-                            child: Text(
+                            child: const Text(
                               'Nurse',
                               style: TextStyle(
                                   fontSize: 20,
@@ -149,7 +149,7 @@ class WelcomePage extends StatelessWidget {
                       )),
                   Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(12),
@@ -160,17 +160,17 @@ class WelcomePage extends StatelessWidget {
                             'assets/images/lab.png',
                             scale: 5,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 4),
                             decoration: BoxDecoration(
                                 color: Colors.deepPurple,
                                 border: Border.all(color: Colors.deepPurple),
                                 borderRadius: BorderRadius.circular(12)),
-                            child: Text(
+                            child: const Text(
                               'Lab',
                               style: TextStyle(
                                   fontSize: 20,
@@ -182,33 +182,33 @@ class WelcomePage extends StatelessWidget {
                       )),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
-              Divider(
+              const Divider(
                 thickness: 2,
                 color: Colors.black,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Already Have Account?',
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 15,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
                         color: Colors.deepPurple,
                         border: Border.all(color: Colors.deepPurple),
                         borderRadius: BorderRadius.circular(12)),
-                    child: Text(
+                    child: const Text(
                       'Sign In',
                       style: TextStyle(
                           fontSize: 20,

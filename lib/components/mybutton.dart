@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+// ignore: must_be_immutable
 class MyButton extends StatelessWidget {
   MyButton(
       {super.key,

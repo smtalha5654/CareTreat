@@ -4,7 +4,7 @@ import 'package:caretreat/screens/patient_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
 import '../screens/lab_screen.dart';
@@ -33,26 +33,26 @@ class _CheckRoleState extends State<CheckRole> {
 
       if (role == 'Doctor') {
         return Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext) {
-          return DoctorScreen();
+            MaterialPageRoute(builder: (context) {
+          return const DoctorScreen();
         }));
       }
       if (role == 'Patient') {
         return Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext) {
-          return PatientScreen();
+            MaterialPageRoute(builder: (context) {
+          return const PatientScreen();
         }));
       }
       if (role == 'Nurse') {
         return Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext) {
-          return NurseScreen();
+            MaterialPageRoute(builder: (context) {
+          return const NurseScreen();
         }));
       }
       if (role == 'Laboratory') {
         return Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext) {
-          return LabScreen();
+            MaterialPageRoute(builder: (context) {
+          return const LabScreen();
         }));
       } else {
         return Container();
