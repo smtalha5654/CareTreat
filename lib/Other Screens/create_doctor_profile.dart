@@ -61,6 +61,23 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
     });
   }
 
+  Future submitImage() async {
+    try {
+      addJustImage(imageUrl.toString().trim());
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          "Image Uploading Error",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+        ),
+        backgroundColor: Colors.deepPurple,
+        padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 3),
+      ));
+    }
+  }
+
   Future submit() async {
     try {
       addDoctorDetails(
@@ -74,7 +91,6 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
         int.parse(_visitchargescontroller.text.trim()),
         int.parse(_appointmentchargescontroller.text.trim()),
         _experiencecontroller.text.trim(),
-        imageUrl.toString().trim(),
       );
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -84,7 +100,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
         backgroundColor: Colors.deepPurple,
         padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
         behavior: SnackBarBehavior.floating,
-        duration:const Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
       ));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -111,10 +127,9 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
     int visitcharges,
     int appointmentcharges,
     String experience,
-    String profile,
   ) async {
-    final id =  FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance.collection('doctors').doc(id).set({
+    final id = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance.collection('doctors').doc(id).update({
       'name': name,
       'phone': phone,
       'gender': gender,
@@ -125,19 +140,20 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
       'visit charges': visitcharges,
       'appointment charges': appointmentcharges,
       'experience': experience,
+    });
+  }
+
+  Future addJustImage(
+    String profile,
+  ) async {
+    final id = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance.collection('doctors').doc(id).update({
       'profile': imageUrl,
     });
   }
 
   String imageUrl = '';
-  // void image() {
-  //   if (profile == '') {
-  //     setState(() {
-  //       imageUrl =
-  //           'https://cdn.vectorstock.com/i/preview-1x/82/99/no-image-available-like-missing-picture-vector-43938299.jpg';
-  //     });
-  //   }
-  // }
+
 
   final id = FirebaseAuth.instance.currentUser!.uid;
   @override
@@ -156,20 +172,19 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                 Container(
                   height: 22.h,
                   decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                    profile),
-                              ),
-                            ),
-                
+                    color: Colors.black,
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: NetworkImage(profile, scale: 1),
+                    ),
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 17.h, left: 10.h),
                   child: Container(
                     alignment: Alignment.center,
                     height: 6.h,
-                    decoration:const BoxDecoration(
+                    decoration: const BoxDecoration(
                         shape: BoxShape.circle, color: Colors.black),
                     child: Center(
                       child: IconButton(
@@ -219,8 +234,27 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                                             imageUrl =
                                                 await referenceImageToUpload
                                                     .getDownloadURL();
+                                            submitImage();
+                                            getProfileData();
                                           } catch (error) {
-                                            //Some error occurred
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                              content: Text(
+                                                "Error while uploading image",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13.sp),
+                                              ),
+                                              backgroundColor:
+                                                  Colors.deepPurple,
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 2.h,
+                                                  horizontal: 2.h),
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              duration:
+                                                  const Duration(seconds: 3),
+                                            ));
                                           }
                                         },
                                         child: Container(
@@ -255,10 +289,65 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                                       SizedBox(
                                         width: 1.h,
                                       ),
+                                     
                                       GestureDetector(
-                                        onTap: () {
-                                          imagePicker.pickImage(
-                                              source: ImageSource.gallery);
+                                        onTap: () async {
+                                          XFile? file =
+                                              await imagePicker.pickImage(
+                                                  source: ImageSource.gallery);
+
+                                          if (file == null) return;
+                                          //Import dart:core
+                                          String uniqueFileName = id.toString();
+
+                                          /*Step 2: Upload to Firebase storage*/
+                                          //Install firebase_storage
+                                          //Import the library
+
+                                          //Get a reference to storage root
+                                          Reference referenceRoot =
+                                              FirebaseStorage.instance.ref();
+                                          Reference referenceDirImages =
+                                              referenceRoot
+                                                  .child('digitalprofile');
+
+                                          //Create a reference for the image to be stored
+                                          Reference referenceImageToUpload =
+                                              referenceDirImages
+                                                  .child(uniqueFileName);
+
+                                          //Handle errors/success
+                                          try {
+                                            //Store the file
+                                            await referenceImageToUpload
+                                                .putFile(File(file.path));
+                                            //Success: get the download URL
+
+                                            imageUrl =
+                                                await referenceImageToUpload
+                                                    .getDownloadURL();
+                                            submitImage();
+                                            getProfileData();
+                                          } catch (error) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                              content: Text(
+                                                "Error while uploading image",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13.sp),
+                                              ),
+                                              backgroundColor:
+                                                  Colors.deepPurple,
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 2.h,
+                                                  horizontal: 2.h),
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              duration:
+                                                  const Duration(seconds: 3),
+                                            ));
+                                          }
                                         },
                                         child: Container(
                                             height: 15.h,
@@ -288,7 +377,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                                                 )
                                               ],
                                             )),
-                                      )
+                                      ),
                                     ],
                                   );
                                 });
@@ -318,7 +407,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                       controller: _namecontroller,
                       hinttext: 'Enter Name',
                       icon: Icons.account_circle)),
-             const SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -331,20 +420,21 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                   ],
                   controller: _phonecontroller,
                   decoration: InputDecoration(
-                      prefixIcon:const Icon(Icons.phone),
+                      prefixIcon: const Icon(Icons.phone),
                       enabledBorder: OutlineInputBorder(
-                        borderSide:const BorderSide(color: Colors.white),
+                        borderSide: const BorderSide(color: Colors.white),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderSide:const BorderSide(color: Colors.deepPurple),
+                          borderSide:
+                              const BorderSide(color: Colors.deepPurple),
                           borderRadius: BorderRadius.circular(12)),
                       hintText: 'Phone Number',
                       fillColor: Colors.grey[200],
                       filled: true),
                 ),
               ),
-             const SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -352,11 +442,12 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                   child: DropDownTextField(
                     textFieldDecoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
-                          borderSide:const BorderSide(color: Colors.white),
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         focusedBorder: OutlineInputBorder(
-                            borderSide:const BorderSide(color: Colors.deepPurple),
+                            borderSide:
+                                const BorderSide(color: Colors.deepPurple),
                             borderRadius: BorderRadius.circular(12)),
                         hintText: 'Select Gender',
                         fillColor: Colors.grey[200],
@@ -371,13 +462,13 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                       }
                     },
                     dropDownItemCount: 2,
-                    dropDownList:const [
+                    dropDownList: const [
                       DropDownValueModel(name: 'Male', value: "value1"),
                       DropDownValueModel(name: 'Female', value: "value2"),
                     ],
                     onChanged: (val) {},
                   )),
-             const SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -386,11 +477,12 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                     enableSearch: true,
                     textFieldDecoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
-                          borderSide:const BorderSide(color: Colors.white),
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         focusedBorder: OutlineInputBorder(
-                            borderSide:const BorderSide(color: Colors.deepPurple),
+                            borderSide:
+                                const BorderSide(color: Colors.deepPurple),
                             borderRadius: BorderRadius.circular(12)),
                         hintText: 'Select Doctor Type',
                         fillColor: Colors.grey[200],
@@ -405,7 +497,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                       }
                     },
                     dropDownItemCount: 6,
-                    dropDownList:const [
+                    dropDownList: const [
                       DropDownValueModel(
                           name: 'General practitioner', value: "value1"),
                       DropDownValueModel(name: 'Pediatrician', value: "value2"),
@@ -437,7 +529,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                     ],
                     onChanged: (val) {},
                   )),
-             const SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -448,7 +540,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                       controller: _aboutcontroller,
                       hinttext: 'About',
                       icon: Icons.description)),
-             const SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -459,7 +551,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                       controller: _addresscontroller,
                       hinttext: 'Address',
                       icon: Icons.home_filled)),
-             const SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -470,7 +562,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                       controller: _educationcontroller,
                       hinttext: 'Education',
                       icon: Icons.school)),
-             const SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -485,19 +577,20 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                     ],
                     controller: _appointmentchargescontroller,
                     decoration: InputDecoration(
-                        prefixIcon:const Icon(Icons.attach_money),
+                        prefixIcon: const Icon(Icons.attach_money),
                         enabledBorder: OutlineInputBorder(
-                          borderSide:const BorderSide(color: Colors.white),
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         focusedBorder: OutlineInputBorder(
-                            borderSide:const BorderSide(color: Colors.deepPurple),
+                            borderSide:
+                                const BorderSide(color: Colors.deepPurple),
                             borderRadius: BorderRadius.circular(12)),
                         hintText: 'Fee Charges For Appointment (PKR)',
                         fillColor: Colors.grey[200],
                         filled: true),
                   )),
-             const SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -512,19 +605,20 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                     ],
                     controller: _visitchargescontroller,
                     decoration: InputDecoration(
-                        prefixIcon:const Icon(Icons.attach_money),
+                        prefixIcon: const Icon(Icons.attach_money),
                         enabledBorder: OutlineInputBorder(
-                          borderSide:const BorderSide(color: Colors.white),
+                          borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         focusedBorder: OutlineInputBorder(
-                            borderSide:const BorderSide(color: Colors.deepPurple),
+                            borderSide:
+                                const BorderSide(color: Colors.deepPurple),
                             borderRadius: BorderRadius.circular(12)),
                         hintText: 'Fee Charges For House Visit (PKR)',
                         fillColor: Colors.grey[200],
                         filled: true),
                   )),
-             const SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(
@@ -534,7 +628,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                     hinttext: 'Experience (Optional)',
                     icon: Icons.document_scanner),
               ),
-             const SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Padding(

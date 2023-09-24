@@ -1,6 +1,5 @@
 import 'package:caretreat/Auth/main_page.dart';
 import 'package:caretreat/Other%20Screens/create_doctor_profile.dart';
-
 import 'package:caretreat/components/mybutton.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
+
 import 'package:sizer/sizer.dart';
 import '../Drawer Screens/favorite.dart';
 import '../Drawer Screens/my_profile.dart';
@@ -202,7 +202,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                         Padding(
                           padding: EdgeInsets.only(left: 2.5.h),
                           child: Text(
-                            "$fname $lname",
+                            '$fname $lname',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.sp,
@@ -255,8 +255,10 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       color: Colors.deepPurple,
                     ),
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => const MyProfile()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MyProfile()));
                     },
                   ),
                   ListTile(
@@ -289,8 +291,10 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       color: Colors.deepPurple,
                     ),
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => const Favorite()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Favorite()));
                     },
                   ),
                   ListTile(

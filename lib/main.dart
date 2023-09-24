@@ -1,6 +1,7 @@
 
 import 'package:caretreat/screens/splash_screen.dart';
 
+
 import 'package:sizer/sizer.dart';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
