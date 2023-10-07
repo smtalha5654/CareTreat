@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:sizer/sizer.dart';
@@ -12,6 +13,7 @@ import '../Drawer Screens/my_profile.dart';
 import '../Drawer Screens/settings_page.dart';
 
 final userRef = FirebaseFirestore.instance.collection('users');
+final userRef2 = FirebaseFirestore.instance.collection('doctors');
 
 class PatientScreen extends StatefulWidget {
   const PatientScreen({super.key});
@@ -25,6 +27,7 @@ class _PatientScreenState extends State<PatientScreen> {
   void initState() {
     super.initState();
     getName();
+    displayData();
     email;
   }
 
@@ -42,7 +45,24 @@ class _PatientScreenState extends State<PatientScreen> {
     });
   }
 
- final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  var collection = FirebaseFirestore.instance.collection("doctors");
+  late List<Map<String, dynamic>> items;
+  bool isLoaded = false;
+
+  displayData() async {
+    List<Map<String, dynamic>> tempList = [];
+    var data = await collection.get();
+    data.docs.forEach((element) {
+      tempList.add(element.data());
+    });
+
+    setState(() {
+      items = tempList;
+      isLoaded = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -56,178 +76,176 @@ class _PatientScreenState extends State<PatientScreen> {
               width: 44.h,
               backgroundColor: Colors.white,
               child: SingleChildScrollView(
-                child: Container(
-                  child: Column(
-                    children: [
-                      Container(
+                child: Column(
+                  children: [
+                    Container(
+                      color: Colors.deepPurple,
+                      width: double.infinity,
+                      height: 26.h,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(
+                                bottom: 2.h, right: 25.h, top: 3.h),
+                            height: 11.h,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/images/doctorprofile.jpg'),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 2.5.h),
+                            child: Text(
+                              "$fname $lname",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 0.5.h,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 2.5.h),
+                            child: Text(
+                              email,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Home',
+                        style: TextStyle(
+                            fontSize: 12.sp, fontWeight: FontWeight.bold),
+                      ),
+                      leading: Icon(
+                        Icons.home_outlined,
+                        size: 3.5.h,
                         color: Colors.deepPurple,
-                        width: double.infinity,
-                        height: 26.h,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(
-                                  bottom: 2.h, right: 25.h, top: 3.h),
-                              height: 11.h,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                      'assets/images/doctorprofile.jpg'),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 2.5.h),
-                              child: Text(
-                                "$fname $lname",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 0.5.h,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 2.5.h),
-                              child: Text(
-                                email,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11.sp,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
-                      ListTile(
-                        title: Text(
-                          'Home',
-                          style: TextStyle(
-                              fontSize: 12.sp, fontWeight: FontWeight.bold),
-                        ),
-                        leading: Icon(
-                          Icons.home_outlined,
-                          size: 3.5.h,
-                          color: Colors.deepPurple,
-                        ),
-                        onTap: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const PatientScreen()));
-                        },
+                      onTap: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const PatientScreen()));
+                      },
+                    ),
+                    ListTile(
+                      title: Text(
+                        'My Profile',
+                        style: TextStyle(
+                            fontSize: 12.sp, fontWeight: FontWeight.bold),
                       ),
-                      ListTile(
-                        title: Text(
-                          'My Profile',
-                          style: TextStyle(
-                              fontSize: 12.sp, fontWeight: FontWeight.bold),
-                        ),
-                        leading: Icon(
-                          Icons.person_2_outlined,
-                          size: 3.5.h,
-                          color: Colors.deepPurple,
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const MyProfile()));
-                        },
+                      leading: Icon(
+                        Icons.person_2_outlined,
+                        size: 3.5.h,
+                        color: Colors.deepPurple,
                       ),
-                      ListTile(
-                        title: Text(
-                          'Settings',
-                          style: TextStyle(
-                              fontSize: 12.sp, fontWeight: FontWeight.bold),
-                        ),
-                        leading: Icon(
-                          Icons.settings_outlined,
-                          size: 3.5.h,
-                          color: Colors.deepPurple,
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const SettingPage()));
-                        },
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MyProfile()));
+                      },
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Settings',
+                        style: TextStyle(
+                            fontSize: 12.sp, fontWeight: FontWeight.bold),
                       ),
-                      ListTile(
-                        title: Text(
-                          'Favorites',
-                          style: TextStyle(
-                              fontSize: 12.sp, fontWeight: FontWeight.bold),
-                        ),
-                        leading: Icon(
-                          Icons.favorite_border_outlined,
-                          size: 3.5.h,
-                          color: Colors.deepPurple,
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Favorite()));
-                        },
+                      leading: Icon(
+                        Icons.settings_outlined,
+                        size: 3.5.h,
+                        color: Colors.deepPurple,
                       ),
-                      ListTile(
-                        title: Text(
-                          'Logout',
-                          style: TextStyle(
-                              fontSize: 12.sp, fontWeight: FontWeight.bold),
-                        ),
-                        leading: Icon(
-                          Icons.logout_outlined,
-                          size: 3.5.h,
-                          color: Colors.deepPurple,
-                        ),
-                        onTap: () async {
-                          await _googleSignIn.signOut();
-                          await FirebaseAuth.instance.signOut();
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (context) {
-                            return const Main_Page();
-                          }));
-                        },
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SettingPage()));
+                      },
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Favorites',
+                        style: TextStyle(
+                            fontSize: 12.sp, fontWeight: FontWeight.bold),
                       ),
-                      const Divider(
-                        thickness: 2,
-                        color: Colors.black45,
+                      leading: Icon(
+                        Icons.favorite_border_outlined,
+                        size: 3.5.h,
+                        color: Colors.deepPurple,
                       ),
-                      ListTile(
-                        title: Text(
-                          'Report Bug',
-                          style: TextStyle(
-                              fontSize: 12.sp, fontWeight: FontWeight.bold),
-                        ),
-                        leading: Icon(
-                          Icons.bug_report_outlined,
-                          size: 3.5.h,
-                          color: Colors.deepPurple,
-                        ),
-                        onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Favorite()));
+                      },
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Logout',
+                        style: TextStyle(
+                            fontSize: 12.sp, fontWeight: FontWeight.bold),
                       ),
-                      ListTile(
-                        title: Text(
-                          'Feedback',
-                          style: TextStyle(
-                              fontSize: 12.sp, fontWeight: FontWeight.bold),
-                        ),
-                        leading: Icon(
-                          Icons.feedback_outlined,
-                          size: 3.5.h,
-                          color: Colors.deepPurple,
-                        ),
-                        onTap: () {},
+                      leading: Icon(
+                        Icons.logout_outlined,
+                        size: 3.5.h,
+                        color: Colors.deepPurple,
                       ),
-                    ],
-                  ),
+                      onTap: () async {
+                        await _googleSignIn.signOut();
+                        await FirebaseAuth.instance.signOut();
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const Main_Page();
+                        }));
+                      },
+                    ),
+                    const Divider(
+                      thickness: 2,
+                      color: Colors.black45,
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Report Bug',
+                        style: TextStyle(
+                            fontSize: 12.sp, fontWeight: FontWeight.bold),
+                      ),
+                      leading: Icon(
+                        Icons.bug_report_outlined,
+                        size: 3.5.h,
+                        color: Colors.deepPurple,
+                      ),
+                      onTap: () {},
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Feedback',
+                        style: TextStyle(
+                            fontSize: 12.sp, fontWeight: FontWeight.bold),
+                      ),
+                      leading: Icon(
+                        Icons.feedback_outlined,
+                        size: 3.5.h,
+                        color: Colors.deepPurple,
+                      ),
+                      onTap: () {},
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -367,7 +385,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                     labelColor: Colors.white,
                                     unselectedLabelColor: Colors.black,
                                     tabs: [
-                                      Text('General practitioner',
+                                      Text('General Practitioner',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 12.sp)),
@@ -377,7 +395,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12.sp),
                                       ),
-                                      Text('gynecologist ',
+                                      Text('Gynecologist ',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 12.sp)),
@@ -417,10 +435,10 @@ class _PatientScreenState extends State<PatientScreen> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 12.sp)),
-                                      const Text('Psychiatrist',
+                                      Text('Psychiatrist',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 16)),
+                                              fontSize: 12.sp)),
                                       Text('Neurologist',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
@@ -447,16 +465,39 @@ class _PatientScreenState extends State<PatientScreen> {
                             Expanded(
                               child: TabBarView(children: [
                                 Tab(
-                                  child: Card(
-                                    child: ListView(
-                                      children: const [
-                                        ListTile(
-                                          title: Text('hello'),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                                    child: isLoaded
+                                        ? ListView.builder(
+                                            itemCount: items.length,
+                                            itemBuilder: (context, index) {
+                                              return Card(
+                                                child: Padding(
+                                                  padding:  EdgeInsets.symmetric(vertical: 1.h),
+                                                  child: ListTile(
+                                                    leading: ClipRRect(borderRadius: BorderRadius.circular(50),
+                                                      child: Image.network(
+                                                          items[index]['profile']),
+                                                    ),
+                                                    title: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(items[index]
+                                                                ["name"] ??
+                                                            "Not given",style: const TextStyle(fontWeight: FontWeight.bold),),
+                                                       
+                                                        Text(items[index]
+                                                            ["doctor type"])
+                                                      ],
+                                                    ),
+                                                    
+                                                                                              
+                                                  ),
+                                                ),
+                                              );
+                                            })
+                                        : const SpinKitFadingCircle(
+                                            color: Colors.deepPurple,
+                                            size: 60.0,
+                                          )),
                                 const Tab(
                                   child: Text('hello'),
                                 ),
@@ -487,7 +528,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                 const Tab(
                                   child: Text('hello'),
                                 ),
-                                const  Tab(
+                                const Tab(
                                   child: Text('hello'),
                                 ),
                                 const Tab(

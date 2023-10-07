@@ -1,7 +1,8 @@
 import 'dart:io';
-
 import 'package:caretreat/components/mybutton.dart';
 import 'package:caretreat/components/mytextfield.dart';
+import 'package:caretreat/screens/doctor_profile_screen.dart';
+import 'package:caretreat/screens/patient_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,14 +40,14 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
   }
 
   var name = '';
-  var number = '';
+  int phone = 0;
   var gender = '';
-  var doctype = '';
+  var doctortype = '';
   var about = '';
   var address = '';
   var education = '';
-  var appointmentcharges = '';
-  var visitcharges = '';
+  int appointmentcharges = 0;
+  int visitcharges = 0;
   var experience = '';
   String profile = '';
 
@@ -56,14 +57,49 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
     userRef.doc(id).get().then((DocumentSnapshot doc) {
       setState(() {
         profile = doc.get('profile');
-        print(profile);
+        name = doc.get('name');
+        phone = doc.get('phone');
+        appointmentcharges = doc.get('appointment charges');
+        visitcharges = doc.get('visit charges');
+        doctortype = doc.get('doctor type');
+        education = doc.get('education');
+        experience = doc.get('experience');
+        address = doc.get('address');
+        about = doc.get('about');
+        gender = doc.get("gender");
       });
     });
   }
 
   Future submitImage() async {
     try {
-      addJustImage(imageUrl.toString().trim());
+      userRef2.doc(id).get().then((DocumentSnapshot doc) {
+        if (doc.exists) {
+          updateImage(imageUrl.toString().trim());
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+              "Profile Picture Updated Successfully",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+            ),
+            backgroundColor: Colors.deepPurple,
+            padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 3),
+          ));
+        } else {
+          addImage(imageUrl.toString().trim());
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+              "Profile Picture Added Successfully",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+            ),
+            backgroundColor: Colors.deepPurple,
+            padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 3),
+          ));
+        }
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -80,28 +116,55 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
 
   Future submit() async {
     try {
-      addDoctorDetails(
-        _namecontroller.text.trim(),
-        int.parse(_phonecontroller.text.trim()),
-        _gendercontroller.dropDownValue!.name.toString().trim(),
-        _doctortypecontroller.dropDownValue!.name.toString().trim(),
-        _aboutcontroller.text.trim(),
-        _addresscontroller.text.trim(),
-        _educationcontroller.text.trim(),
-        int.parse(_visitchargescontroller.text.trim()),
-        int.parse(_appointmentchargescontroller.text.trim()),
-        _experiencecontroller.text.trim(),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-          "Profile Created Successfully",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
-        ),
-        backgroundColor: Colors.deepPurple,
-        padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 3),
-      ));
+      userRef2.doc(id).get().then((DocumentSnapshot doc) {
+        if (doc.exists) {
+          updateDoctorDetails(
+            _namecontroller.text.trim(),
+            int.parse(_phonecontroller.text.trim()),
+            _gendercontroller.dropDownValue!.name.toString().trim(),
+            _doctortypecontroller.dropDownValue!.name.toString().trim(),
+            _aboutcontroller.text.trim(),
+            _addresscontroller.text.trim(),
+            _educationcontroller.text.trim(),
+            int.parse(_visitchargescontroller.text.trim()),
+            int.parse(_appointmentchargescontroller.text.trim()),
+            _experiencecontroller.text.trim(),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+              "Profile Updated Successfully",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+            ),
+            backgroundColor: Colors.deepPurple,
+            padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 3),
+          ));
+        } else {
+          addDoctorDetails(
+            _namecontroller.text.trim(),
+            int.parse(_phonecontroller.text.trim()),
+            _gendercontroller.dropDownValue!.name.toString().trim(),
+            _doctortypecontroller.dropDownValue!.name.toString().trim(),
+            _aboutcontroller.text.trim(),
+            _addresscontroller.text.trim(),
+            _educationcontroller.text.trim(),
+            int.parse(_visitchargescontroller.text.trim()),
+            int.parse(_appointmentchargescontroller.text.trim()),
+            _experiencecontroller.text.trim(),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+              "Profile Created Successfully",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+            ),
+            backgroundColor: Colors.deepPurple,
+            padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 3),
+          ));
+        }
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -129,6 +192,33 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
     String experience,
   ) async {
     final id = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance.collection('doctors').doc(id).set({
+      'name': name,
+      'phone': phone,
+      'gender': gender,
+      'doctor type': doctortype,
+      'about': about,
+      'address': address,
+      'education': education,
+      'visit charges': visitcharges,
+      'appointment charges': appointmentcharges,
+      'experience': experience,
+    });
+  }
+
+  Future updateDoctorDetails(
+    String name,
+    int phone,
+    String gender,
+    String doctortype,
+    String about,
+    String address,
+    String education,
+    int visitcharges,
+    int appointmentcharges,
+    String experience,
+  ) async {
+    final id = FirebaseAuth.instance.currentUser!.uid;
     await FirebaseFirestore.instance.collection('doctors').doc(id).update({
       'name': name,
       'phone': phone,
@@ -143,7 +233,16 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
     });
   }
 
-  Future addJustImage(
+  Future addImage(
+    String profile,
+  ) async {
+    final id = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance.collection('doctors').doc(id).set({
+      'profile': imageUrl,
+    });
+  }
+
+  Future updateImage(
     String profile,
   ) async {
     final id = FirebaseAuth.instance.currentUser!.uid;
@@ -153,8 +252,6 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
   }
 
   String imageUrl = '';
-
-
   final id = FirebaseAuth.instance.currentUser!.uid;
   @override
   Widget build(BuildContext context) {
@@ -175,7 +272,10 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                     color: Colors.black,
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: NetworkImage(profile, scale: 1),
+                      image: NetworkImage(
+                        profile,
+                        scale: 1,
+                      ),
                     ),
                   ),
                 ),
@@ -289,7 +389,6 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                                       SizedBox(
                                         width: 1.h,
                                       ),
-                                     
                                       GestureDetector(
                                         onTap: () async {
                                           XFile? file =
@@ -625,7 +724,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                 padding: EdgeInsets.symmetric(horizontal: 3.h),
                 child: MyTextField(
                     controller: _experiencecontroller,
-                    hinttext: 'Experience (Optional)',
+                    hinttext: 'Experience',
                     icon: Icons.document_scanner),
               ),
               const SizedBox(
@@ -637,6 +736,36 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                     title: 'Submit',
                     ontap: () {
                       submit();
+                    },
+                    color: Colors.deepPurple,
+                    textStyle: TextStyle(
+                        fontSize: 15.sp,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)),
+              ),
+              SizedBox(
+                height: 1.h,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 3.h),
+                child: MyButton(
+                    title: 'Check Profile',
+                    ontap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return DoctorProfile(
+                            name: name,
+                            about: about,
+                            address: address,
+                            appointmentcharges: appointmentcharges,
+                            doctortype: doctortype,
+                            education: education,
+                            experience: experience,
+                            gender: gender,
+                            phone: phone,
+                            profile: profile,
+                            visitcharges: visitcharges);
+                      }));
                     },
                     color: Colors.deepPurple,
                     textStyle: TextStyle(

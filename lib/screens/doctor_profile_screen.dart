@@ -1,26 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
-class DoctorProfile extends StatefulWidget {
-  const DoctorProfile({super.key});
-
-  @override
-  State<DoctorProfile> createState() => _DoctorProfileState();
-}
-
-class _DoctorProfileState extends State<DoctorProfile> {
+class DoctorProfile extends StatelessWidget {
+  DoctorProfile(
+      {super.key,
+      required this.name,
+      required this.about,
+      required this.address,
+      required this.appointmentcharges,
+      required this.doctortype,
+      required this.education,
+      required this.experience,
+      required this.gender,
+      required this.phone,
+      required this.profile,
+      required this.visitcharges});
+  String name = '';
+  int phone = 0;
+  String gender = '';
+  String doctortype = '';
+  String about = '';
+  String address = '';
+  String education = '';
+  int appointmentcharges = 0;
+  int visitcharges = 0;
+  String experience = '';
+  String profile = '';
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      body: Container(
+      body: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              Image.asset(
-                'assets/images/doctorprofile.jpg',
-              ),
+              Image.network(profile),
               Padding(
                 padding: const EdgeInsets.only(top: 360),
                 child: Container(
@@ -39,22 +55,31 @@ class _DoctorProfileState extends State<DoctorProfile> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Column(
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Dr Anna Smith',
+                                  'Dr $name',
                                   style: TextStyle(
-                                      fontSize: 30,
+                                      fontSize: 15.sp,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 5,
                                 ),
                                 Text(
-                                  'General Physician',
+                                  doctortype,
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 14.sp,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  '$gender | +92$phone',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
                                   ),
                                 ),
                               ],
@@ -81,71 +106,88 @@ class _DoctorProfileState extends State<DoctorProfile> {
                         const SizedBox(
                           height: 5,
                         ),
-                        const Text(
-                          'Description',
+                        Text(
+                          'About',
                           style: TextStyle(
-                            fontSize: 22,
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(
                           height: 5,
                         ),
-                        const Text(
-                          'Doctors, also known as physicians, are licensed health professionals who maintain and restore human health through the practice of medicine. They examine patients, review their medical history, diagnose illnesses or injuries, administer treatment, and counsel patients on their health and well-being.',
+                        Text(
+                          about,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 13.sp,
                           ),
                         ),
                         const SizedBox(
                           height: 5,
                         ),
-                        const Text(
+                        Text(
                           'Education',
                           style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold),
+                              fontSize: 16.sp, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 5,
                         ),
-                        const Text(
-                          'Oxford University',
+                        Text(
+                          education,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 13.sp,
                           ),
                         ),
                         const SizedBox(
                           height: 5,
                         ),
-                        const Text(
+                        Text(
                           'Location',
                           style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold),
+                              fontSize: 16.sp, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 5,
                         ),
-                        const Text(
-                          'Unit No 8 Latifabad Hyderabad',
+                        Text(
+                          address,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 13.sp,
                           ),
                         ),
                         const SizedBox(
                           height: 5,
                         ),
-                        const Text(
-                          'Fee/Charges',
+                        Text(
+                          'Experience',
                           style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold),
+                              fontSize: 16.sp, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 5,
                         ),
-                        const Text(
-                          'For House Visit Rs.3000\nFor Clinic Appointment Rs.2000',
+                        Text(
+                          experience,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 13.sp,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Fee/Charges',
+                          style: TextStyle(
+                              fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'House Visit Charges $visitcharges \nAppointment Charges $appointmentcharges',
+                          style: TextStyle(
+                            fontSize: 13.sp,
                           ),
                         ),
                         const SizedBox(
@@ -205,9 +247,14 @@ class _DoctorProfileState extends State<DoctorProfile> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
                             color: Colors.grey[300]),
-                        child: const Icon(
-                          Icons.arrow_back_sharp,
-                          color: Colors.deepPurple,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Icon(
+                            Icons.arrow_back_sharp,
+                            color: Colors.deepPurple,
+                          ),
                         )),
                     Container(
                         padding: const EdgeInsets.all(8),

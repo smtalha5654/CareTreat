@@ -42,7 +42,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             padding: EdgeInsets.symmetric(
                               vertical: 2.5.h,
                             ),
-                            child: Container(
+                            child: SizedBox(
                               height: 45.h,
                               child: Image.asset(
                                 'assets/images/onboardingscreen1.png',
@@ -93,7 +93,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         children: [
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.5.h),
-                            child: Container(
+                            child: SizedBox(
                               height: 45.h,
                               child: Image.asset(
                                   'assets/images/onboardingscreen2.png'),
@@ -144,7 +144,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         children: [
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.5.h),
-                            child: Container(
+                            child: SizedBox(
                               height: 45.h,
                               child: Image.asset(
                                 'assets/images/onboardingscreen5.png',
@@ -195,11 +195,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         children: [
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.5.h),
-                            child: Container(
-                              child: Image.asset(
-                                'assets/images/onboardingscreen3.png',
-                                height: 45.h,
-                              ),
+                            child: Image.asset(
+                              'assets/images/onboardingscreen3.png',
+                              height: 45.h,
                             ),
                           ),
                           Text(
