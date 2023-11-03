@@ -1,7 +1,7 @@
 import 'package:caretreat/Auth/main_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -11,6 +11,7 @@ import 'package:sizer/sizer.dart';
 import '../Drawer Screens/favorite.dart';
 import '../Drawer Screens/my_profile.dart';
 import '../Drawer Screens/settings_page.dart';
+import 'doctor_profile_screen.dart';
 
 final userRef = FirebaseFirestore.instance.collection('users');
 final userRef2 = FirebaseFirestore.instance.collection('doctors');
@@ -67,7 +68,7 @@ class _PatientScreenState extends State<PatientScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
           backgroundColor: Colors.grey[200],
           drawer: SafeArea(
@@ -259,45 +260,61 @@ class _PatientScreenState extends State<PatientScreen> {
             toolbarHeight: 20.h,
             backgroundColor: Colors.deepPurple,
             bottom: PreferredSize(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 2.h,
-                      ),
-                      child: Text(
-                        'Hi! $fname \nFind What You Need',
-                        style: TextStyle(
-                            fontSize: 22.sp,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Signika'),
-                      ),
+              preferredSize: const Size.fromHeight(50),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 2.h,
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
-                      child: SizedBox(
-                        height: 7.h,
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: UnderlineInputBorder(
-                                borderRadius: BorderRadius.circular(24)),
-                            prefixIcon: const Icon(
-                              Icons.search,
-                              color: Colors.deepPurple,
-                            ),
-                            hintText: 'Search',
-                            filled: true,
-                            fillColor: Colors.white,
+                    child: Text(
+                      'Hi $fname $lname',
+                      style: TextStyle(
+                          fontSize: 22.sp,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Signika',
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 2.h,
+                    ),
+                    child: Text(
+                      'Find What You Need',
+                      style: TextStyle(
+                          fontSize: 22.sp,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Signika',
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+                    child: SizedBox(
+                      height: 7.h,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(24)),
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: Colors.deepPurple,
                           ),
+                          hintText: 'Search',
+                          filled: true,
+                          fillColor: Colors.white,
                         ),
                       ),
                     ),
-                  ],
-                ),
-                preferredSize: const Size.fromHeight(50)),
+                  ),
+                ],
+              ),
+            ),
           ),
           body: Column(
             children: [
@@ -339,221 +356,175 @@ class _PatientScreenState extends State<PatientScreen> {
                                 fontSize: 11.sp))
                       ],
                     ),
-                    Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0.5.h),
-                          child:
-                              Image.asset('assets/images/lab.png', height: 6.h),
-                        ),
-                        Text(
-                          'Labs',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 11.sp),
-                        )
-                      ],
-                    ),
                   ]),
+              Text('Filters'),
+              SizedBox(
+                height: 1.h,
+              ),
               Expanded(
                 child: TabBarView(children: [
                   Tab(
-                    child: DefaultTabController(
-                        length: 18,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 1.h),
-                              child: Container(
-                                height: 6.h,
-                                decoration: BoxDecoration(
-                                    color: Colors.deepPurple[100],
-                                    borderRadius: BorderRadius.circular(24)),
-                                child: TabBar(
-                                    indicator: BoxDecoration(
-                                        color: Colors.deepPurple,
-                                        borderRadius:
-                                            BorderRadius.circular(24)),
-                                    splashBorderRadius:
-                                        BorderRadius.circular(24),
-                                    labelPadding: EdgeInsets.symmetric(
-                                      horizontal: 3.h,
-                                    ),
-                                    isScrollable: true,
-                                    labelColor: Colors.white,
-                                    unselectedLabelColor: Colors.black,
-                                    tabs: [
-                                      Text('General Practitioner',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text(
-                                        'Pediatrician',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12.sp),
+                      child: isLoaded
+                          ? MasonryGridView.builder(
+                              // physics: const NeverScrollableScrollPhysics(),
+                              // shrinkWrap: true,
+                              gridDelegate:
+                                  SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2),
+                              itemCount: items.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 0.5.h, vertical: 0.5.h),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: ((
+                                        context,
+                                      ) {
+                                        return DoctorProfile(
+                                          name: items[index]["name"],
+                                          appointmentcharges: items[index]
+                                              ["appointment charges"],
+                                          doctortype: items[index]
+                                              ["doctor type"],
+                                          visitcharges: items[index]
+                                              ["visit charges"],
+                                          profile: items[index]["profile"],
+                                          about: items[index]["about"],
+                                          address: items[index]["address"],
+                                          education: items[index]["education"],
+                                          experience: items[index]
+                                              ["experience"],
+                                          gender: items[index]["gender"],
+                                          phone: items[index]["phone"],
+                                          id: items[index]['id'],
+                                        );
+                                      })));
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: Colors.deepPurple[100],
                                       ),
-                                      Text('Gynecologist ',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text('Cardiologist',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text('Oncologist',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text('Gastroenterologist',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text('Pulmonologist',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text('Infectious disease',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text('Nephrologist',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text('Endocrinologist',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text('Ophthalmologist',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text('Dermatologist',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text('Psychiatrist',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text('Neurologist',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text('Radiologist',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text('Anesthesiologist',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text('Surgeon',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp)),
-                                      Text('Physician executive',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp))
-                                    ]),
-                              ),
-                            ),
-                            Expanded(
-                              child: TabBarView(children: [
-                                Tab(
-                                    child: isLoaded
-                                        ? ListView.builder(
-                                            itemCount: items.length,
-                                            itemBuilder: (context, index) {
-                                              return Card(
-                                                child: Padding(
-                                                  padding:  EdgeInsets.symmetric(vertical: 1.h),
-                                                  child: ListTile(
-                                                    leading: ClipRRect(borderRadius: BorderRadius.circular(50),
-                                                      child: Image.network(
-                                                          items[index]['profile']),
-                                                    ),
-                                                    title: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(items[index]
-                                                                ["name"] ??
-                                                            "Not given",style: const TextStyle(fontWeight: FontWeight.bold),),
-                                                       
-                                                        Text(items[index]
-                                                            ["doctor type"])
-                                                      ],
-                                                    ),
-                                                    
-                                                                                              
-                                                  ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(12),
+                                                topRight: Radius.circular(12)),
+                                            child: Image.network(
+                                              items[index]['profile'],
+                                              height: 180,
+                                              width: double.infinity,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          // const Spacer(),
+                                          Padding(
+                                            padding: EdgeInsets.all(0.9.h),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Dr. ' +
+                                                          items[index]
+                                                              ["name"] ??
+                                                      "Not given",
+                                                  style: TextStyle(
+                                                      fontSize: 10.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      overflow: TextOverflow
+                                                          .ellipsis),
                                                 ),
-                                              );
-                                            })
-                                        : const SpinKitFadingCircle(
-                                            color: Colors.deepPurple,
-                                            size: 60.0,
-                                          )),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                                const Tab(
-                                  child: Text('hello'),
-                                ),
-                              ]),
-                            ),
-                          ],
-                        )),
-                  ),
+                                                SizedBox(
+                                                  height: 0.5.h,
+                                                ),
+                                                Text(
+                                                    items[index]["doctor type"],
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        overflow: TextOverflow
+                                                            .ellipsis)),
+                                                SizedBox(
+                                                  height: 0.5.h,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    const Text('Appointment',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis)),
+                                                    Text(
+                                                        'Rs. ' +
+                                                            items[index][
+                                                                    "appointment charges"]
+                                                                .toString(),
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis))
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 0.5.h,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    const Text('House vist',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis)),
+                                                    Text(
+                                                        'Rs.' +
+                                                            items[index][
+                                                                    "visit charges"]
+                                                                .toString(),
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis))
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              })
+                          : const SpinKitFadingCircle(
+                              color: Colors.deepPurple,
+                              size: 60.0,
+                            )),
                   Tab(
                       child: DefaultTabController(
                     length: 2,
@@ -593,9 +564,6 @@ class _PatientScreenState extends State<PatientScreen> {
                       ],
                     ),
                   )),
-                  const Tab(
-                    child: Text('Lab'),
-                  )
                 ]),
               )
             ],

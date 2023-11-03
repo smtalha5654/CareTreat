@@ -1,9 +1,12 @@
+import 'package:caretreat/Other%20Screens/appointment_request_screen.dart';
+import 'package:caretreat/main.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-class DoctorProfile extends StatelessWidget {
+class DoctorProfile extends StatefulWidget {
   DoctorProfile(
       {super.key,
+      required this.id,
       required this.name,
       required this.about,
       required this.address,
@@ -26,8 +29,16 @@ class DoctorProfile extends StatelessWidget {
   int visitcharges = 0;
   String experience = '';
   String profile = '';
+  String id = '';
+
+  @override
+  State<DoctorProfile> createState() => _DoctorProfileState();
+}
+
+class _DoctorProfileState extends State<DoctorProfile> {
   @override
   Widget build(BuildContext context) {
+    print('id=${widget.id}');
     return SafeArea(
         child: Scaffold(
       body: SizedBox(
@@ -36,16 +47,21 @@ class DoctorProfile extends StatelessWidget {
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              Image.network(profile),
+              Image.network(
+                widget.profile,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                height: MediaQuery.of(context).size.width,
+              ),
               Padding(
-                padding: const EdgeInsets.only(top: 360),
+                padding: EdgeInsets.only(top: 45.h),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                       color: Colors.deepPurple[100],
                       borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(24),
-                          topRight: Radius.circular(24))),
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12))),
                   child: Padding(
                     padding:
                         const EdgeInsets.only(left: 15, top: 20, right: 15),
@@ -59,7 +75,7 @@ class DoctorProfile extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Dr $name',
+                                  'Dr. ${widget.name}',
                                   style: TextStyle(
                                       fontSize: 15.sp,
                                       fontWeight: FontWeight.bold),
@@ -68,7 +84,7 @@ class DoctorProfile extends StatelessWidget {
                                   height: 5,
                                 ),
                                 Text(
-                                  doctortype,
+                                  widget.doctortype,
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                   ),
@@ -77,7 +93,7 @@ class DoctorProfile extends StatelessWidget {
                                   height: 5,
                                 ),
                                 Text(
-                                  '$gender | +92$phone',
+                                  '${widget.gender} | +92${widget.phone}',
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                   ),
@@ -117,7 +133,7 @@ class DoctorProfile extends StatelessWidget {
                           height: 5,
                         ),
                         Text(
-                          about,
+                          widget.about,
                           style: TextStyle(
                             fontSize: 13.sp,
                           ),
@@ -134,7 +150,7 @@ class DoctorProfile extends StatelessWidget {
                           height: 5,
                         ),
                         Text(
-                          education,
+                          widget.education,
                           style: TextStyle(
                             fontSize: 13.sp,
                           ),
@@ -151,7 +167,7 @@ class DoctorProfile extends StatelessWidget {
                           height: 5,
                         ),
                         Text(
-                          address,
+                          widget.address,
                           style: TextStyle(
                             fontSize: 13.sp,
                           ),
@@ -168,7 +184,7 @@ class DoctorProfile extends StatelessWidget {
                           height: 5,
                         ),
                         Text(
-                          experience,
+                          widget.experience,
                           style: TextStyle(
                             fontSize: 13.sp,
                           ),
@@ -185,7 +201,7 @@ class DoctorProfile extends StatelessWidget {
                           height: 5,
                         ),
                         Text(
-                          'House Visit Charges $visitcharges \nAppointment Charges $appointmentcharges',
+                          'House Visit Charges ${widget.visitcharges} \nAppointment Charges ${widget.appointmentcharges}',
                           style: TextStyle(
                             fontSize: 13.sp,
                           ),
@@ -193,44 +209,42 @@ class DoctorProfile extends StatelessWidget {
                         const SizedBox(
                           height: 20,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 15),
-                              decoration: BoxDecoration(
-                                  color: Colors.deepPurple,
-                                  border: Border.all(color: Colors.deepPurple),
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: const Text(
-                                'House Visit',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
+                        isOwnProfileSelected
+                            ? SizedBox.shrink()
+                            : Center(
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return AppointmentRequestScreen(
+                                        appointmentCharges:
+                                            widget.appointmentcharges,
+                                        housevisitCharges: widget.visitcharges,
+                                      );
+                                    }));
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.only(bottom: 2.h),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 15),
+                                      decoration: BoxDecoration(
+                                          color: Colors.deepPurple,
+                                          border: Border.all(
+                                              color: Colors.deepPurple),
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      child: Text(
+                                        'Book Appointment & House Visit',
+                                        style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 15),
-                              decoration: BoxDecoration(
-                                  color: Colors.deepPurple,
-                                  border: Border.all(color: Colors.deepPurple),
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: const Text(
-                                'Clinic Appointment',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        )
                       ],
                     ),
                   ),
@@ -249,6 +263,10 @@ class DoctorProfile extends StatelessWidget {
                             color: Colors.grey[300]),
                         child: InkWell(
                           onTap: () {
+                            setState(() {
+                              isOwnProfileSelected = false;
+                            });
+
                             Navigator.pop(context);
                           },
                           child: const Icon(

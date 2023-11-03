@@ -1,6 +1,4 @@
-
 import 'package:caretreat/screens/splash_screen.dart';
-
 
 import 'package:sizer/sizer.dart';
 import 'dart:io';
@@ -10,6 +8,7 @@ import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
 int? isViewed;
+bool isOwnProfileSelected = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();

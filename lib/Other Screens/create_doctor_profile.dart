@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:caretreat/components/mybutton.dart';
 import 'package:caretreat/components/mytextfield.dart';
+import 'package:caretreat/main.dart';
 import 'package:caretreat/screens/doctor_profile_screen.dart';
 import 'package:caretreat/screens/patient_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -53,6 +54,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
 
   final userRef = FirebaseFirestore.instance.collection('doctors');
   void getProfileData() {
+    print('profile data function load');
     final String id = FirebaseAuth.instance.currentUser!.uid;
     userRef.doc(id).get().then((DocumentSnapshot doc) {
       setState(() {
@@ -76,6 +78,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
       userRef2.doc(id).get().then((DocumentSnapshot doc) {
         if (doc.exists) {
           updateImage(imageUrl.toString().trim());
+          getProfileData();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
               "Profile Picture Updated Successfully",
@@ -88,6 +91,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
           ));
         } else {
           addImage(imageUrl.toString().trim());
+          getProfileData();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
               "Profile Picture Added Successfully",
@@ -119,17 +123,17 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
       userRef2.doc(id).get().then((DocumentSnapshot doc) {
         if (doc.exists) {
           updateDoctorDetails(
-            _namecontroller.text.trim(),
-            int.parse(_phonecontroller.text.trim()),
-            _gendercontroller.dropDownValue!.name.toString().trim(),
-            _doctortypecontroller.dropDownValue!.name.toString().trim(),
-            _aboutcontroller.text.trim(),
-            _addresscontroller.text.trim(),
-            _educationcontroller.text.trim(),
-            int.parse(_visitchargescontroller.text.trim()),
-            int.parse(_appointmentchargescontroller.text.trim()),
-            _experiencecontroller.text.trim(),
-          );
+              _namecontroller.text.trim(),
+              int.parse(_phonecontroller.text.trim()),
+              _gendercontroller.dropDownValue!.name.toString().trim(),
+              _doctortypecontroller.dropDownValue!.name.toString().trim(),
+              _aboutcontroller.text.trim(),
+              _addresscontroller.text.trim(),
+              _educationcontroller.text.trim(),
+              int.parse(_visitchargescontroller.text.trim()),
+              int.parse(_appointmentchargescontroller.text.trim()),
+              _experiencecontroller.text.trim(),
+              id.trim());
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
               "Profile Updated Successfully",
@@ -142,17 +146,17 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
           ));
         } else {
           addDoctorDetails(
-            _namecontroller.text.trim(),
-            int.parse(_phonecontroller.text.trim()),
-            _gendercontroller.dropDownValue!.name.toString().trim(),
-            _doctortypecontroller.dropDownValue!.name.toString().trim(),
-            _aboutcontroller.text.trim(),
-            _addresscontroller.text.trim(),
-            _educationcontroller.text.trim(),
-            int.parse(_visitchargescontroller.text.trim()),
-            int.parse(_appointmentchargescontroller.text.trim()),
-            _experiencecontroller.text.trim(),
-          );
+              _namecontroller.text.trim(),
+              int.parse(_phonecontroller.text.trim()),
+              _gendercontroller.dropDownValue!.name.toString().trim(),
+              _doctortypecontroller.dropDownValue!.name.toString().trim(),
+              _aboutcontroller.text.trim(),
+              _addresscontroller.text.trim(),
+              _educationcontroller.text.trim(),
+              int.parse(_visitchargescontroller.text.trim()),
+              int.parse(_appointmentchargescontroller.text.trim()),
+              _experiencecontroller.text.trim(),
+              id.trim());
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
               "Profile Created Successfully",
@@ -190,6 +194,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
     int visitcharges,
     int appointmentcharges,
     String experience,
+    String id,
   ) async {
     final id = FirebaseAuth.instance.currentUser!.uid;
     await FirebaseFirestore.instance.collection('doctors').doc(id).set({
@@ -203,6 +208,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
       'visit charges': visitcharges,
       'appointment charges': appointmentcharges,
       'experience': experience,
+      'id': id,
     });
   }
 
@@ -217,6 +223,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
     int visitcharges,
     int appointmentcharges,
     String experience,
+    String id,
   ) async {
     final id = FirebaseAuth.instance.currentUser!.uid;
     await FirebaseFirestore.instance.collection('doctors').doc(id).update({
@@ -230,6 +237,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
       'visit charges': visitcharges,
       'appointment charges': appointmentcharges,
       'experience': experience,
+      'id': id,
     });
   }
 
@@ -267,18 +275,16 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
             children: [
               Stack(children: [
                 Container(
-                  height: 22.h,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image: NetworkImage(
-                        profile,
-                        scale: 1,
-                      ),
-                    ),
-                  ),
-                ),
+                    height: 22.h,
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: NetworkImage(
+                            profile,
+                            scale: 1,
+                          ),
+                        ))),
                 Padding(
                   padding: EdgeInsets.only(top: 17.h, left: 10.h),
                   child: Container(
@@ -751,9 +757,13 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                 child: MyButton(
                     title: 'Check Profile',
                     ontap: () {
+                      setState(() {
+                        isOwnProfileSelected = true;
+                      });
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return DoctorProfile(
+                            id: id,
                             name: name,
                             about: about,
                             address: address,

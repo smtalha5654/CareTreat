@@ -30,20 +30,29 @@ class _DoctorScreenState extends State<DoctorScreen> {
   @override
   void initState() {
     super.initState();
-    getProfileData();
+    getName();
+    getProfile();
   }
 
   String fname = '';
   String lname = '';
   String email = FirebaseAuth.instance.currentUser!.email.toString();
   String profile = '';
-  void getProfileData() {
+  void getProfile() {
+    final String id = FirebaseAuth.instance.currentUser!.uid;
+    userRef.doc(id).get().then((DocumentSnapshot doc) {
+      setState(() {
+        profile = doc.get('profile');
+      });
+    });
+  }
+
+  void getName() {
     final String id = FirebaseAuth.instance.currentUser!.uid;
     userRef.doc(id).get().then((DocumentSnapshot doc) {
       setState(() {
         fname = doc.get('first name');
         lname = doc.get('last name');
-        profile = doc.get('profile');
       });
     });
   }
@@ -154,17 +163,15 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                                   Reference referenceRoot =
                                                       FirebaseStorage.instance
                                                           .ref();
-                                                  Reference
-                                                      referenceDirImages =
+                                                  Reference referenceDirImages =
                                                       referenceRoot
                                                           .child('profile');
 
                                                   //Create a reference for the image to be stored
                                                   Reference
                                                       referenceImageToUpload =
-                                                      referenceDirImages
-                                                          .child(
-                                                              uniqueFileName);
+                                                      referenceDirImages.child(
+                                                          uniqueFileName);
 
                                                   //Handle errors/success
                                                   try {
@@ -178,33 +185,28 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                                         await referenceImageToUpload
                                                             .getDownloadURL();
                                                     submitImage();
-                                                    getProfileData();
+                                                    getProfile();
                                                   } catch (error) {
                                                     ScaffoldMessenger.of(
                                                             context)
-                                                        .showSnackBar(
-                                                            SnackBar(
+                                                        .showSnackBar(SnackBar(
                                                       content: Text(
                                                         "Error while uploading image",
                                                         style: TextStyle(
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .bold,
+                                                                FontWeight.bold,
                                                             fontSize: 13.sp),
                                                       ),
                                                       backgroundColor:
                                                           Colors.deepPurple,
-                                                      padding: EdgeInsets
-                                                          .symmetric(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
                                                               vertical: 2.h,
-                                                              horizontal:
-                                                                  2.h),
-                                                      behavior:
-                                                          SnackBarBehavior
-                                                              .floating,
-                                                      duration:
-                                                          const Duration(
-                                                              seconds: 3),
+                                                              horizontal: 2.h),
+                                                      behavior: SnackBarBehavior
+                                                          .floating,
+                                                      duration: const Duration(
+                                                          seconds: 3),
                                                     ));
                                                   }
                                                 },
@@ -215,8 +217,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                                         color: Colors.white60,
                                                         borderRadius:
                                                             BorderRadius
-                                                                .circular(
-                                                                    12)),
+                                                                .circular(12)),
                                                     child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -235,8 +236,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                                               decoration:
                                                                   TextDecoration
                                                                       .none,
-                                                              color: Colors
-                                                                  .black,
+                                                              color:
+                                                                  Colors.black,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold),
@@ -269,17 +270,15 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                                   Reference referenceRoot =
                                                       FirebaseStorage.instance
                                                           .ref();
-                                                  Reference
-                                                      referenceDirImages =
+                                                  Reference referenceDirImages =
                                                       referenceRoot
                                                           .child('profile');
 
                                                   //Create a reference for the image to be stored
                                                   Reference
                                                       referenceImageToUpload =
-                                                      referenceDirImages
-                                                          .child(
-                                                              uniqueFileName);
+                                                      referenceDirImages.child(
+                                                          uniqueFileName);
 
                                                   //Handle errors/success
                                                   try {
@@ -293,33 +292,28 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                                         await referenceImageToUpload
                                                             .getDownloadURL();
                                                     submitImage();
-                                                    getProfileData();
+                                                    getProfile();
                                                   } catch (error) {
                                                     ScaffoldMessenger.of(
                                                             context)
-                                                        .showSnackBar(
-                                                            SnackBar(
+                                                        .showSnackBar(SnackBar(
                                                       content: Text(
                                                         "Error while uploading image",
                                                         style: TextStyle(
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .bold,
+                                                                FontWeight.bold,
                                                             fontSize: 13.sp),
                                                       ),
                                                       backgroundColor:
                                                           Colors.deepPurple,
-                                                      padding: EdgeInsets
-                                                          .symmetric(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
                                                               vertical: 2.h,
-                                                              horizontal:
-                                                                  2.h),
-                                                      behavior:
-                                                          SnackBarBehavior
-                                                              .floating,
-                                                      duration:
-                                                          const Duration(
-                                                              seconds: 3),
+                                                              horizontal: 2.h),
+                                                      behavior: SnackBarBehavior
+                                                          .floating,
+                                                      duration: const Duration(
+                                                          seconds: 3),
                                                     ));
                                                   }
                                                 },
@@ -330,8 +324,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                                         color: Colors.white60,
                                                         borderRadius:
                                                             BorderRadius
-                                                                .circular(
-                                                                    12)),
+                                                                .circular(12)),
                                                     child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -349,8 +342,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                                               decoration:
                                                                   TextDecoration
                                                                       .none,
-                                                              color: Colors
-                                                                  .black,
+                                                              color:
+                                                                  Colors.black,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold),
@@ -400,8 +393,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
                 ListTile(
                   title: Text(
                     'Home',
-                    style: TextStyle(
-                        fontSize: 12.sp, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
                   ),
                   leading: Icon(
                     Icons.home_outlined,
@@ -418,8 +411,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
                 ListTile(
                   title: Text(
                     'My Profile',
-                    style: TextStyle(
-                        fontSize: 12.sp, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
                   ),
                   leading: Icon(
                     Icons.person_2_outlined,
@@ -436,8 +429,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
                 ListTile(
                   title: Text(
                     'Settings',
-                    style: TextStyle(
-                        fontSize: 12.sp, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
                   ),
                   leading: Icon(
                     Icons.settings_outlined,
@@ -454,8 +447,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
                 ListTile(
                   title: Text(
                     'Favorites',
-                    style: TextStyle(
-                        fontSize: 12.sp, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
                   ),
                   leading: Icon(
                     Icons.favorite_border_outlined,
@@ -472,8 +465,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
                 ListTile(
                   title: Text(
                     'Logout',
-                    style: TextStyle(
-                        fontSize: 12.sp, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
                   ),
                   leading: Icon(
                     Icons.logout_outlined,
@@ -497,8 +490,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
                 ListTile(
                   title: Text(
                     'Report Bug',
-                    style: TextStyle(
-                        fontSize: 12.sp, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
                   ),
                   leading: Icon(
                     Icons.bug_report_outlined,
@@ -510,8 +503,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
                 ListTile(
                   title: Text(
                     'Feedback',
-                    style: TextStyle(
-                        fontSize: 12.sp, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
                   ),
                   leading: Icon(
                     Icons.feedback_outlined,
@@ -538,16 +531,27 @@ class _DoctorScreenState extends State<DoctorScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 2.h,
-                  ),
+                  padding: EdgeInsets.only(left: 2.h),
                   child: Text(
-                    'Hi! Dr $lname \nFind What You Need',
+                    'Hi! Dr $fname $lname',
                     style: TextStyle(
                         fontSize: 22.sp,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Signika'),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 2.h),
+                  child: Text(
+                    'Find What You Need!',
+                    style: TextStyle(
+                        fontSize: 22.sp,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Signika'),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 Padding(
