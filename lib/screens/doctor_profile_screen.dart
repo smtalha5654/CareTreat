@@ -38,7 +38,6 @@ class DoctorProfile extends StatefulWidget {
 class _DoctorProfileState extends State<DoctorProfile> {
   @override
   Widget build(BuildContext context) {
-    print('id=${widget.id}');
     return SafeArea(
         child: Scaffold(
       body: SizedBox(
@@ -220,6 +219,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                                         appointmentCharges:
                                             widget.appointmentcharges,
                                         housevisitCharges: widget.visitcharges,
+                                        id: widget.id,
                                       );
                                     }));
                                   },

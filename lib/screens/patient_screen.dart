@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:caretreat/Auth/main_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:sizer/sizer.dart';
 
@@ -30,6 +34,7 @@ class _PatientScreenState extends State<PatientScreen> {
     getName();
     displayData();
     email;
+    getProfile();
   }
 
   String fname = '';
@@ -64,6 +69,44 @@ class _PatientScreenState extends State<PatientScreen> {
     });
   }
 
+  String profile = '';
+  void getProfile() {
+    final String id = FirebaseAuth.instance.currentUser!.uid;
+    userRef.doc(id).get().then((DocumentSnapshot doc) {
+      setState(() {
+        profile = doc.get('profile');
+      });
+    });
+  }
+
+  Future submitImage() async {
+    try {
+      addJustImage(imageUrl.toString().trim());
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          "Image Uploading Error",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+        ),
+        backgroundColor: Colors.deepPurple,
+        padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 3),
+      ));
+    }
+  }
+
+  final id = FirebaseAuth.instance.currentUser!.uid;
+  String imageUrl = '';
+  Future addJustImage(
+    String profile,
+  ) async {
+    final id = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance.collection('users').doc(id).update({
+      'profile': imageUrl,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -86,18 +129,292 @@ class _PatientScreenState extends State<PatientScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            margin: EdgeInsets.only(
-                                bottom: 2.h, right: 25.h, top: 3.h),
-                            height: 11.h,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: AssetImage(
-                                    'assets/images/doctorprofile.jpg'),
+                          Stack(children: [
+                            Padding(
+                              padding: EdgeInsets.only(right: 25.h, top: 2.h),
+                              child: Container(
+                                height: 14.h,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      profile,
+                                      scale: 1,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 12.h, right: 17.h),
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: 5.h,
+                                decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black),
+                                child: Center(
+                                  child: IconButton(
+                                      onPressed: () {
+                                        ImagePicker imagePicker = ImagePicker();
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () async {
+                                                      XFile? file =
+                                                          await imagePicker
+                                                              .pickImage(
+                                                                  source:
+                                                                      ImageSource
+                                                                          .camera);
+
+                                                      if (file == null) return;
+                                                      //Import dart:core
+                                                      String uniqueFileName =
+                                                          id.toString();
+
+                                                      /*Step 2: Upload to Firebase storage*/
+                                                      //Install firebase_storage
+                                                      //Import the library
+
+                                                      //Get a reference to storage root
+                                                      Reference referenceRoot =
+                                                          FirebaseStorage
+                                                              .instance
+                                                              .ref();
+                                                      Reference
+                                                          referenceDirImages =
+                                                          referenceRoot
+                                                              .child('profile');
+
+                                                      //Create a reference for the image to be stored
+                                                      Reference
+                                                          referenceImageToUpload =
+                                                          referenceDirImages
+                                                              .child(
+                                                                  uniqueFileName);
+
+                                                      //Handle errors/success
+                                                      try {
+                                                        //Store the file
+                                                        await referenceImageToUpload
+                                                            .putFile(File(
+                                                                file.path));
+                                                        //Success: get the download URL
+
+                                                        imageUrl =
+                                                            await referenceImageToUpload
+                                                                .getDownloadURL();
+                                                        submitImage();
+                                                        getProfile();
+                                                      } catch (error) {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                                SnackBar(
+                                                          content: Text(
+                                                            "Error while uploading image",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize:
+                                                                    13.sp),
+                                                          ),
+                                                          backgroundColor:
+                                                              Colors.deepPurple,
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  vertical: 2.h,
+                                                                  horizontal:
+                                                                      2.h),
+                                                          behavior:
+                                                              SnackBarBehavior
+                                                                  .floating,
+                                                          duration:
+                                                              const Duration(
+                                                                  seconds: 3),
+                                                        ));
+                                                      }
+                                                    },
+                                                    child: Container(
+                                                        height: 15.h,
+                                                        width: 15.h,
+                                                        decoration: BoxDecoration(
+                                                            color:
+                                                                Colors.white60,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12)),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Icon(
+                                                              Icons
+                                                                  .camera_alt_rounded,
+                                                              size: 10.h,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                            Text(
+                                                              'Camera',
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      10.sp,
+                                                                  decoration:
+                                                                      TextDecoration
+                                                                          .none,
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )
+                                                          ],
+                                                        )),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 1.h,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () async {
+                                                      XFile? file = await imagePicker
+                                                          .pickImage(
+                                                              source:
+                                                                  ImageSource
+                                                                      .gallery);
+
+                                                      if (file == null) return;
+                                                      //Import dart:core
+                                                      String uniqueFileName =
+                                                          id.toString();
+
+                                                      /*Step 2: Upload to Firebase storage*/
+                                                      //Install firebase_storage
+                                                      //Import the library
+
+                                                      //Get a reference to storage root
+                                                      Reference referenceRoot =
+                                                          FirebaseStorage
+                                                              .instance
+                                                              .ref();
+                                                      Reference
+                                                          referenceDirImages =
+                                                          referenceRoot
+                                                              .child('profile');
+
+                                                      //Create a reference for the image to be stored
+                                                      Reference
+                                                          referenceImageToUpload =
+                                                          referenceDirImages
+                                                              .child(
+                                                                  uniqueFileName);
+
+                                                      //Handle errors/success
+                                                      try {
+                                                        //Store the file
+                                                        await referenceImageToUpload
+                                                            .putFile(File(
+                                                                file.path));
+                                                        //Success: get the download URL
+
+                                                        imageUrl =
+                                                            await referenceImageToUpload
+                                                                .getDownloadURL();
+                                                        submitImage();
+                                                        getProfile();
+                                                      } catch (error) {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                                SnackBar(
+                                                          content: Text(
+                                                            "Error while uploading image",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize:
+                                                                    13.sp),
+                                                          ),
+                                                          backgroundColor:
+                                                              Colors.deepPurple,
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  vertical: 2.h,
+                                                                  horizontal:
+                                                                      2.h),
+                                                          behavior:
+                                                              SnackBarBehavior
+                                                                  .floating,
+                                                          duration:
+                                                              const Duration(
+                                                                  seconds: 3),
+                                                        ));
+                                                      }
+                                                    },
+                                                    child: Container(
+                                                        height: 15.h,
+                                                        width: 15.h,
+                                                        decoration: BoxDecoration(
+                                                            color:
+                                                                Colors.white60,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12)),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Icon(
+                                                              Icons.photo,
+                                                              size: 10.h,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                            Text(
+                                                              'Gallery',
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      10.sp,
+                                                                  decoration:
+                                                                      TextDecoration
+                                                                          .none,
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )
+                                                          ],
+                                                        )),
+                                                  ),
+                                                ],
+                                              );
+                                            });
+                                      },
+                                      icon: Icon(
+                                        Icons.add_a_photo,
+                                        size: 2.5.h,
+                                        color: Colors.white,
+                                      )),
+                                ),
+                              ),
+                            ),
+                          ]),
                           Padding(
                             padding: EdgeInsets.only(left: 2.5.h),
                             child: Text(
@@ -357,10 +674,6 @@ class _PatientScreenState extends State<PatientScreen> {
                       ],
                     ),
                   ]),
-              Text('Filters'),
-              SizedBox(
-                height: 1.h,
-              ),
               Expanded(
                 child: TabBarView(children: [
                   Tab(

@@ -18,6 +18,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   bool passtoggle = true;
+  final _addressController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordcontroller = TextEditingController();
   final _confirmpasswordcontroller = TextEditingController();
@@ -67,6 +68,7 @@ class _RegisterPageState extends State<RegisterPage> {
           _gendercontroller.dropDownValue!.name.toString().trim(),
           _rolecontroller.dropDownValue!.name.toString().trim(),
           _passwordcontroller.text.trim(),
+          _addressController.text.trim(),
         );
         Navigator.of(context).pop();
       } else if (passwordConfirmed() == false) {
@@ -104,19 +106,20 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future addUserDetails(
-    String firstName,
-    String lastName,
-    String email,
-    int phone,
-    String gender,
-    String role,
-    String password,
-  ) async {
+      String firstName,
+      String lastName,
+      String email,
+      int phone,
+      String gender,
+      String role,
+      String password,
+      String address) async {
     final id = FirebaseAuth.instance.currentUser!.uid;
     await FirebaseFirestore.instance.collection('users').doc(id).set({
       'first name': firstName,
       'last name': lastName,
       'email': email,
+      'address': address,
       'phone': phone,
       'gender': gender,
       'role': role,
@@ -259,12 +262,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         return null;
                       }
                     },
-                    dropDownItemCount: 4,
+                    dropDownItemCount: 3,
                     dropDownList: const [
                       DropDownValueModel(name: 'Doctor', value: "value1"),
                       DropDownValueModel(name: 'Patient', value: "value2"),
                       DropDownValueModel(name: 'Nurse', value: "value3"),
-                      DropDownValueModel(name: 'Laboratory', value: "value4"),
                     ],
                     onChanged: (val) {},
                   )),
@@ -277,6 +279,15 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: _emailController,
                       hinttext: 'Email',
                       icon: Icons.email)),
+              const SizedBox(
+                height: 8,
+              ),
+              Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 3.h),
+                  child: MyTextField(
+                      controller: _addressController,
+                      hinttext: 'Address',
+                      icon: Icons.place)),
               const SizedBox(
                 height: 8,
               ),

@@ -1,21 +1,27 @@
 import 'dart:io';
 
 import 'package:caretreat/Auth/main_page.dart';
+import 'package:caretreat/Other%20Screens/appointment_request_screen.dart';
 import 'package:caretreat/Other%20Screens/create_doctor_profile.dart';
 import 'package:caretreat/components/mybutton.dart';
+import 'package:caretreat/main.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 import 'package:sizer/sizer.dart';
 import '../Drawer Screens/favorite.dart';
 import '../Drawer Screens/my_profile.dart';
 import '../Drawer Screens/settings_page.dart';
+import '../doctor_request_screen..dart';
 
 final userRef = FirebaseFirestore.instance.collection('users');
 
@@ -27,11 +33,28 @@ class DoctorScreen extends StatefulWidget {
 }
 
 class _DoctorScreenState extends State<DoctorScreen> {
+  TimeOfDay selectedTime = TimeOfDay.now();
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? timeOfDay = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    setState(() {
+      if (timeOfDay != null) {
+        selectedTime = timeOfDay;
+      }
+    });
+  }
+
+  String time = '';
   @override
   void initState() {
     super.initState();
     getName();
     getProfile();
+    displayData();
   }
 
   String fname = '';
@@ -86,9 +109,29 @@ class _DoctorScreenState extends State<DoctorScreen> {
   String imageUrl = '';
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final id = FirebaseAuth.instance.currentUser!.uid;
+  late List<Map<String, dynamic>> items;
+  bool isLoaded = false;
+  displayData() async {
+    List<Map<String, dynamic>> tempList = [];
+    var data = await userRef2
+        .doc(id)
+        .collection(
+            'appointments') // Reference to the "posts" collection inside the user's document
+        .get();
+    data.docs.forEach((element) {
+      tempList.add(element.data() as Map<String, dynamic>);
+    });
+
+    setState(() {
+      items = tempList;
+      isLoaded = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       drawer: SafeArea(
         child: Drawer(
           elevation: 0,
@@ -575,7 +618,72 @@ class _DoctorScreenState extends State<DoctorScreen> {
             ),
             preferredSize: const Size.fromHeight(50)),
       ),
-      body: const Center(child: Text('Doctor Screen')),
+      body: Column(
+        children: [
+          SizedBox(
+            height: 10,
+          ),
+          isLoaded
+              ? Expanded(
+                  child: ListView.builder(
+                      itemCount: items.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Timestamp timestamp = items[index]['date'];
+                        DateTime dateTime = timestamp.toDate();
+                        String formattedDate =
+                            DateFormat('d MMMM y').format(dateTime);
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          child: Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      'https://firebasestorage.googleapis.com/v0/b/caretreat-69b27.appspot.com/o/digitalprofile%2Ft.jpg?alt=media&token=6cf569aa-2988-4c3f-beba-67d33f4afa9b'),
+                                ),
+                                title: Text(items[index]['first name'] +
+                                    ' ' +
+                                    items[index]['last name']),
+                                subtitle: Row(
+                                  children: [
+                                    Text(items[index]['type'] + ' Date '),
+                                    Text(formattedDate),
+                                  ],
+                                ),
+                                trailing: Icon(Icons.arrow_forward_ios_rounded),
+                                onTap: () {
+                                  setState(() {
+                                    isTimeSelected = false;
+                                  });
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return DoctorRequestScreen(
+                                      requestType: items[index]['type'],
+                                      name: items[index]['first name'] +
+                                          ' ' +
+                                          items[index]['last name'],
+                                      address: items[index]['address'],
+                                      date: formattedDate,
+                                      email: items[index]['email'],
+                                      phone: items[index]['phone'],
+                                      profile: items[index]['profile'],
+                                    );
+                                  }));
+                                },
+                              )),
+                        );
+                      }),
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(top: 200),
+                  child: const SpinKitFadingCircle(
+                    color: Colors.deepPurple,
+                    size: 60.0,
+                  ),
+                )
+        ],
+      ),
     );
   }
 }

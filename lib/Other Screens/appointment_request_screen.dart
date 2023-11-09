@@ -1,15 +1,22 @@
+import 'package:caretreat/screens/doctor_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:sizer/sizer.dart';
 
+final userRef2 = FirebaseFirestore.instance.collection('doctors');
+
 class AppointmentRequestScreen extends StatefulWidget {
   AppointmentRequestScreen(
       {super.key,
+      required this.id,
       required this.appointmentCharges,
       required this.housevisitCharges});
   int appointmentCharges;
   int housevisitCharges;
+  String id = '';
   @override
   State<AppointmentRequestScreen> createState() =>
       _AppointmentRequestScreenState();
@@ -35,10 +42,72 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
     }
   }
 
+  String fname = '';
+  String lname = '';
+  int phone = 0;
+  String profile = '';
+  String address = '';
+  String email = FirebaseAuth.instance.currentUser!.email.toString();
+
+  void getName() {
+    final String id = FirebaseAuth.instance.currentUser!.uid;
+    userRef.doc(id).get().then((DocumentSnapshot doc) {
+      setState(() {
+        fname = doc.get('first name');
+        lname = doc.get('last name');
+        phone = doc.get('phone');
+        profile = doc.get('profile');
+        address = doc.get('address');
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _bookingtypecontroller = SingleValueDropDownController();
+    getName();
+  }
+
+  Future<void> addPost() {
+    return userRef2
+        .doc(widget.id)
+        .collection(
+            'appointments') // Reference to the "posts" collection inside the user's document
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({
+          'date': selectedDate,
+          'type': _bookingtypecontroller.dropDownValue?.name.toString().trim(),
+          'first name': fname,
+          'last name': lname,
+          'phone': phone,
+          'profile': profile,
+          'email': FirebaseAuth.instance.currentUser?.email,
+          'address': address
+          // 'content': 'Lorem ipsum dolor sit amet...',
+          // Other post data...
+        })
+        .then((value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                "Requeset Added succesfully",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+              ),
+              backgroundColor: Colors.deepPurple,
+              padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 3),
+            )))
+        .catchError((error) =>
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                "Error while sending request",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+              ),
+              backgroundColor: Colors.deepPurple,
+              padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 3),
+            )));
   }
 
   @override
@@ -180,14 +249,15 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
             isTypeSelected && isDateSelected
                 ? GestureDetector(
                     onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const SpinKitFadingCircle(
-                              color: Colors.deepPurple,
-                              size: 60.0,
-                            );
-                          });
+                      addPost();
+                      // showDialog(
+                      //     context: context,
+                      //     builder: (context) {
+                      //       return const SpinKitFadingCircle(
+                      //         color: Colors.deepPurple,
+                      //         size: 60.0,
+                      //       );
+                      //     });
                     },
                     child: Center(
                       child: Container(

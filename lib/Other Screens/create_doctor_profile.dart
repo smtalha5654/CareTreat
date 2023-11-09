@@ -655,7 +655,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                   child: MyTextField(
                       controller: _addresscontroller,
                       hinttext: 'Address',
-                      icon: Icons.home_filled)),
+                      icon: Icons.place)),
               const SizedBox(
                 height: 8,
               ),

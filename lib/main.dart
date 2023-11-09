@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 int? isViewed;
 bool isOwnProfileSelected = false;
+bool isTimeSelected = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();

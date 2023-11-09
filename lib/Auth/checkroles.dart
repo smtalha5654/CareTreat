@@ -4,11 +4,7 @@ import 'package:caretreat/screens/patient_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 import 'package:flutter/material.dart';
-
-import '../screens/lab_screen.dart';
-
 
 final userRef = FirebaseFirestore.instance.collection('users');
 
@@ -48,16 +44,9 @@ class _CheckRoleState extends State<CheckRole> {
             MaterialPageRoute(builder: (context) {
           return const NurseScreen();
         }));
-      }
-      if (role == 'Laboratory') {
-        return Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) {
-          return const LabScreen();
-        }));
       } else {
         return Container();
       }
-  
     });
   }
 
@@ -68,5 +57,3 @@ class _CheckRoleState extends State<CheckRole> {
     );
   }
 }
-
-
