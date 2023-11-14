@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 
-
 class CompleteDetail extends StatefulWidget {
   const CompleteDetail({super.key});
 
@@ -19,6 +18,7 @@ class CompleteDetail extends StatefulWidget {
 
 class _CompleteDetailState extends State<CompleteDetail> {
   final _firstnamecontroller = TextEditingController();
+  final _addresscontroller = TextEditingController();
   final _lastnamecontroller = TextEditingController();
   final _phonecontroller = TextEditingController();
 
@@ -48,6 +48,7 @@ class _CompleteDetailState extends State<CompleteDetail> {
       int.parse(_phonecontroller.text.trim()),
       _gendercontroller.dropDownValue!.name.toString().trim(),
       _rolecontroller.dropDownValue!.name.toString().trim(),
+      _addresscontroller.text.trim(),
     );
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
       return const CheckRole();
@@ -60,14 +61,16 @@ class _CompleteDetailState extends State<CompleteDetail> {
     int phone,
     String gender,
     String role,
+    String address,
   ) async {
-    final id =  FirebaseAuth.instance.currentUser!.uid;
+    final id = FirebaseAuth.instance.currentUser!.uid;
     await FirebaseFirestore.instance.collection('users').doc(id).set({
       'first name': firstName,
       'last name': lastName,
       'phone': phone,
       'gender': gender,
       'role': role,
+      'address': address
     });
   }
 
@@ -93,19 +96,20 @@ class _CompleteDetailState extends State<CompleteDetail> {
                   fontSize: 14.sp,
                 ),
               ),
-             const SizedBox(height: 12),
+              const SizedBox(height: 12),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 3.h),
                 child: TextField(
                   controller: _firstnamecontroller,
                   decoration: InputDecoration(
-                      prefixIcon:const Icon(Icons.person_4_rounded),
+                      prefixIcon: const Icon(Icons.person_4_rounded),
                       enabledBorder: OutlineInputBorder(
-                        borderSide:const BorderSide(color: Colors.white),
+                        borderSide: const BorderSide(color: Colors.white),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderSide:const BorderSide(color: Colors.deepPurple),
+                          borderSide:
+                              const BorderSide(color: Colors.deepPurple),
                           borderRadius: BorderRadius.circular(12)),
                       hintText: 'First Name',
                       fillColor: Colors.grey[200],
@@ -122,11 +126,12 @@ class _CompleteDetailState extends State<CompleteDetail> {
                   decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_4_rounded),
                       enabledBorder: OutlineInputBorder(
-                        borderSide:const BorderSide(color: Colors.white),
+                        borderSide: const BorderSide(color: Colors.white),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderSide:const BorderSide(color: Colors.deepPurple),
+                          borderSide:
+                              const BorderSide(color: Colors.deepPurple),
                           borderRadius: BorderRadius.circular(12)),
                       hintText: 'Last Name',
                       fillColor: Colors.grey[200],
@@ -152,9 +157,32 @@ class _CompleteDetailState extends State<CompleteDetail> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.deepPurple),
+                          borderSide:
+                              const BorderSide(color: Colors.deepPurple),
                           borderRadius: BorderRadius.circular(12)),
                       hintText: 'Phone Number',
+                      fillColor: Colors.grey[200],
+                      filled: true),
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 3.h),
+                child: TextField(
+                  controller: _addresscontroller,
+                  decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.place),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: Colors.deepPurple),
+                          borderRadius: BorderRadius.circular(12)),
+                      hintText: 'Address',
                       fillColor: Colors.grey[200],
                       filled: true),
                 ),
@@ -171,7 +199,8 @@ class _CompleteDetailState extends State<CompleteDetail> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.deepPurple),
+                            borderSide:
+                                const BorderSide(color: Colors.deepPurple),
                             borderRadius: BorderRadius.circular(12)),
                         hintText: 'Select Gender',
                         fillColor: Colors.grey[200],
@@ -204,7 +233,8 @@ class _CompleteDetailState extends State<CompleteDetail> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.deepPurple),
+                            borderSide:
+                                const BorderSide(color: Colors.deepPurple),
                             borderRadius: BorderRadius.circular(12)),
                         hintText: 'Select Role',
                         fillColor: Colors.grey[200],
@@ -218,12 +248,11 @@ class _CompleteDetailState extends State<CompleteDetail> {
                         return null;
                       }
                     },
-                    dropDownItemCount: 4,
+                    dropDownItemCount: 3,
                     dropDownList: const [
                       DropDownValueModel(name: 'Doctor', value: "value1"),
                       DropDownValueModel(name: 'Patient', value: "value2"),
                       DropDownValueModel(name: 'Nurse', value: "value3"),
-                      DropDownValueModel(name: 'Laboratory', value: "value4"),
                     ],
                     onChanged: (val) {},
                   )),

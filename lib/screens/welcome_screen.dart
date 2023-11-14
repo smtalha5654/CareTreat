@@ -50,7 +50,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             ),
                           ),
                           Text(
-                            'Book Appointments',
+                            'Effortless Appointments',
                             style: TextStyle(
                               fontSize: 21.sp,
                               fontWeight: FontWeight.bold,
@@ -60,7 +60,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             padding: EdgeInsets.symmetric(
                                 vertical: 2.h, horizontal: 3.h),
                             child: Text(
-                              'If you are facing any health issues use CareTreat to book any specialized Doctor Appointment with just one click. We Provide all types of doctors Such as Dental, Injury, Mental health, Muscle strain, Obesity, Arthritis, Asthma, etc. ',
+                              'Welcome to CareTreat! Streamline your healthcare journey by effortlessly scheduling appointments at your fingertips. Experience the convenience of personalized care with our intuitive appointment system.Your health is our priority, and with CareTreat, booking appointments has never been smoother.',
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
@@ -79,7 +79,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                   title: 'NEXT',
                                   ontap: () {
                                     _controller.nextPage(
-                                        duration: const Duration(milliseconds: 500),
+                                        duration:
+                                            const Duration(milliseconds: 500),
                                         curve: Curves.easeIn);
                                   },
                                   color: Colors.deepPurple)),
@@ -100,7 +101,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             ),
                           ),
                           Text(
-                            'Book House Call',
+                            'In-Home Care Hub',
                             style: TextStyle(
                               fontSize: 21.sp,
                               fontWeight: FontWeight.bold,
@@ -110,7 +111,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             padding: EdgeInsets.symmetric(
                                 vertical: 2.h, horizontal: 3.h),
                             child: Text(
-                              "CareTreat provide a House Call feature for patients. A house call is medical consultation performed by a doctor or other healthcare professionals visiting the home of a patient or client, instead of the patient visiting the doctor's clinic or hospital",
+                              "Discover the convenience of CareTreat's innovative house visit feature, a personalized healthcare experience tailored to your doorstep. Effortlessly schedule visits with our user-friendly platform, ensuring medical care is not just accessible but also seamlessly integrated into the comfort of your home. ",
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
@@ -129,7 +130,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 title: 'NEXT',
                                 ontap: () {
                                   _controller.nextPage(
-                                      duration: const Duration(milliseconds: 500),
+                                      duration:
+                                          const Duration(milliseconds: 500),
                                       curve: Curves.easeIn);
                                 },
                                 color: Colors.deepPurple),
@@ -137,6 +139,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         ],
                       )),
                 ),
+
                 SingleChildScrollView(
                   child: Container(
                       color: Colors.white,
@@ -144,15 +147,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         children: [
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.5.h),
-                            child: SizedBox(
+                            child: Image.asset(
+                              'assets/images/onboardingscreen3.png',
                               height: 45.h,
-                              child: Image.asset(
-                                'assets/images/onboardingscreen5.png',
-                              ),
                             ),
                           ),
                           Text(
-                            'Increase Your Patients',
+                            'Dynamic Nursing Solutions',
                             style: TextStyle(
                               fontSize: 21.sp,
                               fontWeight: FontWeight.bold,
@@ -162,7 +163,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             padding: EdgeInsets.symmetric(
                                 vertical: 2.h, horizontal: 3.h),
                             child: Text(
-                              "CareTreat provide a great opportunity to Doctors they can increase their patient base easily. Doctor can provide both Appointment or House Call service to their patients or can provide any one of them. Providing both service will increase more patient quickly",
+                              "CareTreat introduces a revolutionary nursing feature, optimizing your healthcare experience. Seamlessly allocate qualified nurses based on your unique needs, ensuring timely and personalized care. With CareTreat, your well-being is our priority, supported by a dynamic approach to nurse allocation.",
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
@@ -181,10 +182,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                   title: 'NEXT',
                                   ontap: () {
                                     _controller.nextPage(
-                                        duration: const Duration(milliseconds: 500),
+                                        duration:
+                                            const Duration(milliseconds: 500),
                                         curve: Curves.easeIn);
                                   },
-                                  color: Colors.deepPurple)),
+                                  color: Colors.deepPurple))
                         ],
                       )),
                 ),
@@ -195,63 +197,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         children: [
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.5.h),
-                            child: Image.asset(
-                              'assets/images/onboardingscreen3.png',
+                            child: SizedBox(
                               height: 45.h,
-                            ),
-                          ),
-                          Text(
-                            'Home Nursing Care',
-                            style: TextStyle(
-                              fontSize: 21.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 2.h, horizontal: 3.h),
-                            child: Text(
-                              "In home nursing care is intended mainly for clients who are well enough to be discharged from hospital, but are still in need of a nurse to perform preventative and/or rehabilitative services. Nursing care at home can be short-term, long-term ",
-                              style: TextStyle(
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w500,
+                              child: Image.asset(
+                                'assets/images/onboardingscreen5.png',
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 1.5.h, horizontal: 4.h),
-                            child: MyButton(
-                                textStyle: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                                title: 'NEXT',
-                                ontap: () {
-                                  _controller.nextPage(
-                                      duration: const Duration(milliseconds: 500),
-                                      curve: Curves.easeIn);
-                                },
-                                color: Colors.deepPurple),
-                          ),
-                        ],
-                      )),
-                ),
-                SingleChildScrollView(
-                  child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 2.5.h),
-                            child: Image.asset(
-                              'assets/images/onboardingscreen4.png',
-                              height: 45.h,
                             ),
                           ),
                           Text(
-                            'Medical Tests at Home',
+                            'Doctor Growth Network',
                             style: TextStyle(
                               fontSize: 21.sp,
                               fontWeight: FontWeight.bold,
@@ -261,7 +215,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             padding: EdgeInsets.symmetric(
                                 vertical: 2.h, horizontal: 3.h),
                             child: Text(
-                              "CareTreat provide Laboratory option for patient so that they can make a House call for different medical tests in which a professional comes at patients home and bring their equipment with them to perform different Medical tests. ",
+                              "Doctors, seize the opportunity with CareTreat! Expand your patient base through our platform's seamless features—easy scheduling, house visits, and dynamic nurse allocation. Elevate your practice and connect with patients in a new era of personalized healthcare.",
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
@@ -291,6 +245,59 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         ],
                       )),
                 ),
+                // SingleChildScrollView(
+                //   child: Container(
+                //       color: Colors.white,
+                //       child: Column(
+                //         children: [
+                //           Padding(
+                //             padding: EdgeInsets.symmetric(vertical: 2.5.h),
+                //             child: Image.asset(
+                //               'assets/images/onboardingscreen4.png',
+                //               height: 45.h,
+                //             ),
+                //           ),
+                //           Text(
+                //             'Medical Tests at Home',
+                //             style: TextStyle(
+                //               fontSize: 21.sp,
+                //               fontWeight: FontWeight.bold,
+                //             ),
+                //           ),
+                //           Padding(
+                //             padding: EdgeInsets.symmetric(
+                //                 vertical: 2.h, horizontal: 3.h),
+                //             child: Text(
+                //               "CareTreat provide Laboratory option for patient so that they can make a House call for different medical tests in which a professional comes at patients home and bring their equipment with them to perform different Medical tests. ",
+                //               style: TextStyle(
+                //                 fontSize: 13.sp,
+                //                 fontWeight: FontWeight.w500,
+                //               ),
+                //               textAlign: TextAlign.center,
+                //             ),
+                //           ),
+                //           Padding(
+                //             padding: EdgeInsets.symmetric(
+                //                 vertical: 1.5.h, horizontal: 4.h),
+                //             child: MyButton(
+                //                 textStyle: TextStyle(
+                //                     fontSize: 14.sp,
+                //                     fontWeight: FontWeight.bold,
+                //                     color: Colors.white),
+                //                 title: 'Get Started',
+                //                 ontap: () async {
+                //                   await _storeOnBoardInfo();
+                //                   Navigator.pushReplacement(context,
+                //                       MaterialPageRoute(
+                //                           builder: (BuildContext) {
+                //                     return const Main_Page();
+                //                   }));
+                //                 },
+                //                 color: Colors.deepPurple),
+                //           ),
+                //         ],
+                //       )),
+                // ),
               ],
             ),
             Padding(
@@ -328,7 +335,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       SmoothPageIndicator(
                           effect: const WormEffect(),
                           controller: _controller,
-                          count: 5),
+                          count: 4),
                     ],
                   ),
                 ],

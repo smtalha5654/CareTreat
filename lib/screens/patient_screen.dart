@@ -800,31 +800,37 @@ class _PatientScreenState extends State<PatientScreen> {
                                                 SizedBox(
                                                   height: 0.5.h,
                                                 ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    const Text('House vist',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis)),
-                                                    Text(
-                                                        'Rs.' +
-                                                            items[index][
-                                                                    "visit charges"]
-                                                                .toString(),
-                                                        style: const TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis))
-                                                  ],
-                                                )
+                                                items[index]["visit charges"] ==
+                                                        null
+                                                    ? SizedBox.shrink()
+                                                    : Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          const Text(
+                                                              'House vist',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis)),
+                                                          Text(
+                                                              'Rs.' +
+                                                                  items[index][
+                                                                          "visit charges"]
+                                                                      .toString(),
+                                                              style: const TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis))
+                                                        ],
+                                                      )
                                               ],
                                             ),
                                           ),
