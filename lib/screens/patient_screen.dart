@@ -68,7 +68,7 @@ class _PatientScreenState extends State<PatientScreen> {
       isLoaded = true;
     });
   }
-
+  
   String profile = '';
   void getProfile() {
     final String id = FirebaseAuth.instance.currentUser!.uid;
@@ -656,7 +656,7 @@ class _PatientScreenState extends State<PatientScreen> {
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 11.sp))
+                                fontSize: 11.sp)),
                       ],
                     ),
                     Column(
@@ -674,6 +674,9 @@ class _PatientScreenState extends State<PatientScreen> {
                       ],
                     ),
                   ]),
+              SizedBox(
+                height: 10,
+              ),
               Expanded(
                 child: TabBarView(children: [
                   Tab(
@@ -702,7 +705,8 @@ class _PatientScreenState extends State<PatientScreen> {
                                           doctortype: items[index]
                                               ["doctor type"],
                                           visitcharges: items[index]
-                                              ["visit charges"],
+                                                  ["visit charges"] ??
+                                              0,
                                           profile: items[index]["profile"],
                                           about: items[index]["about"],
                                           address: items[index]["address"],

@@ -5,6 +5,7 @@ import 'package:caretreat/Other%20Screens/appointment_request_screen.dart';
 import 'package:caretreat/Other%20Screens/create_doctor_profile.dart';
 import 'package:caretreat/components/mybutton.dart';
 import 'package:caretreat/main.dart';
+import 'package:caretreat/screens/create_doctor_schedule.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -127,6 +128,12 @@ class _DoctorScreenState extends State<DoctorScreen> {
       isLoaded = true;
     });
   }
+
+  TimeOfDay startTime = TimeOfDay.now();
+  TimeOfDay endTime = TimeOfDay.now();
+  int duration = 20; // Default duration in minutes
+
+  List<String> availableTimeSlots = [];
 
   @override
   Widget build(BuildContext context) {
@@ -574,7 +581,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 2.h),
+                  padding: EdgeInsets.only(left: 3.h),
                   child: Text(
                     'Hi! Dr $fname $lname',
                     style: TextStyle(
@@ -586,7 +593,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 2.h),
+                  padding: EdgeInsets.only(left: 3.h),
                   child: Text(
                     'Find What You Need!',
                     style: TextStyle(
@@ -598,43 +605,84 @@ class _DoctorScreenState extends State<DoctorScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
-                  child: MyButton(
-                    textStyle: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                    color: const Color.fromARGB(255, 150, 115, 210),
-                    title: 'Create Your Doctor Profile',
-                    ontap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return const CreateDoctorProfile();
-                      }));
-                    },
-                  ),
-                ),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return const CreateDoctorProfile();
+                            }));
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(24),
+                                color:
+                                    const Color.fromARGB(255, 150, 115, 210)),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 1.5.h, horizontal: 2.h),
+                              child: Text(
+                                'Create Doctor Profile',
+                                style: TextStyle(
+                                    fontSize: 11.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return const DoctorSchedule();
+                            }));
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(24),
+                                color:
+                                    const Color.fromARGB(255, 150, 115, 210)),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 1.5.h, horizontal: 2.h),
+                              child: Text(
+                                'Create Clinic Schedule',
+                                style: TextStyle(
+                                    fontSize: 11.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    )),
               ],
             ),
-            preferredSize: const Size.fromHeight(50)),
+            preferredSize: const Size.fromHeight(35)),
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 10,
-          ),
-          isLoaded
-              ? Expanded(
-                  child: ListView.builder(
-                      itemCount: items.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        Timestamp timestamp = items[index]['date'];
-                        DateTime dateTime = timestamp.toDate();
-                        String formattedDate =
-                            DateFormat('d MMMM y').format(dateTime);
-                        return Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12),
-                          child: Card(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            isLoaded
+                ? Expanded(
+                    child: ListView.builder(
+                        itemCount: items.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          Timestamp timestamp = items[index]['date'];
+                          DateTime dateTime = timestamp.toDate();
+                          String formattedDate =
+                              DateFormat('d MMMM y').format(dateTime);
+                          return Card(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12)),
                               child: ListTile(
@@ -651,7 +699,6 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                     Text(formattedDate),
                                   ],
                                 ),
-                                trailing: Icon(Icons.arrow_forward_ios_rounded),
                                 onTap: () {
                                   setState(() {
                                     isTimeSelected = false;
@@ -671,18 +718,18 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                     );
                                   }));
                                 },
-                              )),
-                        );
-                      }),
-                )
-              : Padding(
-                  padding: const EdgeInsets.only(top: 200),
-                  child: const SpinKitFadingCircle(
-                    color: Colors.deepPurple,
-                    size: 60.0,
-                  ),
-                )
-        ],
+                              ));
+                        }),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(top: 200),
+                    child: const SpinKitFadingCircle(
+                      color: Colors.deepPurple,
+                      size: 60.0,
+                    ),
+                  )
+          ],
+        ),
       ),
     );
   }

@@ -67,6 +67,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
     super.initState();
     _bookingtypecontroller = SingleValueDropDownController();
     getName();
+    getAvailableSots();
   }
 
   Future<void> addPost() {
@@ -110,6 +111,29 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
             )));
   }
 
+  List<String> slots = [];
+  void getAvailableSots() {
+    print('slots loadded');
+
+    final userRef = FirebaseFirestore.instance.collection('doctors');
+    userRef.doc(widget.id).get().then((DocumentSnapshot doc) {
+      String slotsString = doc.get('slots');
+      // Remove extra brackets at the start and end
+      slotsString = slotsString.substring(1, slotsString.length - 1);
+
+      List<String> slots = slotsString.split(', ');
+
+      // Print the fetched data to check if it's as expected
+      print('Fetched Slots: $slots');
+
+      // Now, update the state with the fetched data
+      // Now, update the state with the fetched data
+      setState(() {
+        this.slots = slots;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,168 +141,264 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
         elevation: 0,
         title: Text('Booking Request'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Text(
-            //   "For booking request select date and booking type then click on request button and wait for the doctor response",
-            //   style: TextStyle(
-            //     color: Colors.black,
-            //     fontSize: 14.sp,
-            //     fontWeight: FontWeight.w400,
-            //   ),
-            // ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Text(
+              //   "For booking request select date and booking type then click on request button and wait for the doctor response",
+              //   style: TextStyle(
+              //     color: Colors.black,
+              //     fontSize: 14.sp,
+              //     fontWeight: FontWeight.w400,
+              //   ),
+              // ),
 
-            isDateSelected && isTypeSelected
-                ? SizedBox.shrink()
-                : Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Text(
-                      "Please select date and booking type for booking request.",
-                      style: TextStyle(
-                        color: Colors.deepPurple,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              children: [
-                Text(
-                  "Select booking date:",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Spacer(),
-                InkWell(
-                  onTap: () {
-                    isDateSelected = true;
-                    _selectDate(context);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                        color: Colors.deepPurple,
-                        border: Border.all(color: Colors.deepPurple),
-                        borderRadius: BorderRadius.circular(12)),
-                    child: Text(
-                      'Select Date',
-                      style: TextStyle(
-                          fontSize: 13.sp,
+              isDateSelected && isTypeSelected
+                  ? SizedBox.shrink()
+                  : Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "Please select date and booking type for booking request.",
+                        style: TextStyle(
+                          color: Colors.deepPurple,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            DropDownTextField(
-              textFieldDecoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.deepPurple),
-                      borderRadius: BorderRadius.circular(12)),
-                  hintText: 'Select Booking Type',
-                  fillColor: Colors.grey[200],
-                  filled: true),
-              clearOption: false,
-              controller: _bookingtypecontroller,
-              validator: (value) {
-                if (value == null) {
-                  return "Required field";
-                } else {
-                  return null;
-                }
-              },
-              dropDownItemCount: 2,
-              dropDownList: const [
-                DropDownValueModel(name: 'Appointment', value: "value1"),
-                DropDownValueModel(name: 'House Visit', value: "value2"),
-              ],
-              onChanged: (val) {
-                setState(() {
-                  isTypeSelected = true;
-                });
-              },
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            isDateSelected
-                ? Text(
-                    'Selected Date: ' +
-                        '${selectedDate.toLocal()}'.split(' ')[0],
-                    style:
-                        TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
-                  )
-                : SizedBox.shrink(),
-            SizedBox(
-              height: 10,
-            ),
-            isTypeSelected
-                ? Text(
-                    'Selected Type: '
-                    '${_bookingtypecontroller.dropDownValue?.name.toString().trim()}',
-                    style:
-                        TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
-                  )
-                : SizedBox.shrink(),
-            SizedBox(
-              height: 10,
-            ),
-            isTypeSelected ? chargesText() : SizedBox.shrink(),
-            SizedBox(
-              height: 20,
-            ),
-            isTypeSelected && isDateSelected
-                ? GestureDetector(
-                    onTap: () {
-                      addPost();
-                      // showDialog(
-                      //     context: context,
-                      //     builder: (context) {
-                      //       return const SpinKitFadingCircle(
-                      //         color: Colors.deepPurple,
-                      //         size: 60.0,
-                      //       );
-                      //     });
-                    },
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 15),
-                        decoration: BoxDecoration(
-                            color: Colors.deepPurple,
-                            border: Border.all(color: Colors.deepPurple),
-                            borderRadius: BorderRadius.circular(12)),
-                        child: Text(
-                          'Send Booking Request',
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
                         ),
                       ),
                     ),
-                  )
-                : SizedBox.shrink()
-          ],
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Text(
+                    "Select booking date:",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Spacer(),
+                  InkWell(
+                    onTap: () {
+                      isDateSelected = true;
+                      _selectDate(context);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      decoration: BoxDecoration(
+                          color: Colors.deepPurple,
+                          border: Border.all(color: Colors.deepPurple),
+                          borderRadius: BorderRadius.circular(12)),
+                      child: Text(
+                        'Select Date',
+                        style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              widget.housevisitCharges == 0
+                  ? SizedBox.shrink()
+                  : DropDownTextField(
+                      textFieldDecoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  const BorderSide(color: Colors.deepPurple),
+                              borderRadius: BorderRadius.circular(12)),
+                          hintText: 'Select Booking Type',
+                          fillColor: Colors.grey[200],
+                          filled: true),
+                      clearOption: false,
+                      controller: _bookingtypecontroller,
+                      validator: (value) {
+                        if (value == null) {
+                          return "Required field";
+                        } else {
+                          return null;
+                        }
+                      },
+                      dropDownItemCount: 2,
+                      dropDownList: const [
+                        DropDownValueModel(
+                            name: 'Appointment', value: "value1"),
+                        DropDownValueModel(
+                            name: 'House Visit', value: "value2"),
+                      ],
+                      onChanged: (val) {
+                        setState(() {
+                          isTypeSelected = true;
+                        });
+                      },
+                    ),
+              SizedBox(
+                height: 20,
+              ),
+              isDateSelected
+                  ? Text(
+                      'Selected Date: ' +
+                          '${selectedDate.toLocal()}'.split(' ')[0],
+                      style: TextStyle(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    )
+                  : SizedBox.shrink(),
+              SizedBox(
+                height: 10,
+              ),
+              isTypeSelected
+                  ? Text(
+                      'Selected Type: '
+                      '${_bookingtypecontroller.dropDownValue?.name.toString().trim()}',
+                      style: TextStyle(
+                          fontSize: 15.sp, fontWeight: FontWeight.bold),
+                    )
+                  : SizedBox.shrink(),
+
+              SizedBox(
+                height: 10,
+              ),
+              isTypeSelected ? chargesText() : SizedBox.shrink(),
+              SizedBox(
+                height: 20,
+              ),
+              isDateSelected
+                  ? Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[350],
+                          borderRadius: BorderRadius.circular(12)),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Time Slots for Appointment',
+                            style: TextStyle(
+                                fontSize: 12.sp, fontWeight: FontWeight.bold),
+                          ),
+                          slots.isEmpty
+                              ? Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 60,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                          'Time slots is not available please generate time slots for Appointments',
+                                          style: TextStyle(
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                    SizedBox(
+                                      height: 60,
+                                    )
+                                  ],
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 10, bottom: 20, left: 5, right: 5),
+                                  child: Wrap(
+                                    spacing: 10.0,
+                                    runSpacing: 8.0,
+                                    children: slots.map((timeSlot) {
+                                      return buildTimeSlotCard(timeSlot);
+                                    }).toList(),
+                                  ),
+                                ),
+                        ],
+                      ),
+                    )
+                  : SizedBox.shrink(),
+              SizedBox(
+                height: 20,
+              ),
+              widget.housevisitCharges == 0
+                  ? isDateSelected
+                      ? GestureDetector(
+                          onTap: () {
+                            addPost();
+                            // showDialog(
+                            //     context: context,
+                            //     builder: (context) {
+                            //       return const SpinKitFadingCircle(
+                            //         color: Colors.deepPurple,
+                            //         size: 60.0,
+                            //       );
+                            //     });
+                          },
+                          child: Center(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 15),
+                              decoration: BoxDecoration(
+                                  color: Colors.deepPurple,
+                                  border: Border.all(color: Colors.deepPurple),
+                                  borderRadius: BorderRadius.circular(12)),
+                              child: Text(
+                                'Send Booking Request',
+                                style: TextStyle(
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        )
+                      : SizedBox.shrink()
+                  : isTypeSelected && isDateSelected
+                      ? GestureDetector(
+                          onTap: () {
+                            addPost();
+                            // showDialog(
+                            //     context: context,
+                            //     builder: (context) {
+                            //       return const SpinKitFadingCircle(
+                            //         color: Colors.deepPurple,
+                            //         size: 60.0,
+                            //       );
+                            //     });
+                          },
+                          child: Center(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 15),
+                              decoration: BoxDecoration(
+                                  color: Colors.deepPurple,
+                                  border: Border.all(color: Colors.deepPurple),
+                                  borderRadius: BorderRadius.circular(12)),
+                              child: Text(
+                                'Send Booking Request',
+                                style: TextStyle(
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        )
+                      : SizedBox.shrink()
+            ],
+          ),
         ),
       ),
     );
@@ -300,5 +420,24 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
         style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
       );
     }
+  }
+
+  Widget buildTimeSlotCard(String timeSlot) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.deepPurple, borderRadius: BorderRadius.circular(12)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              timeSlot,
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

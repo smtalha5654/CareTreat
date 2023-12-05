@@ -122,18 +122,30 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
     try {
       userRef2.doc(id).get().then((DocumentSnapshot doc) {
         if (doc.exists) {
-          updateDoctorDetails(
-              _namecontroller.text.trim(),
-              int.parse(_phonecontroller.text.trim()),
-              _gendercontroller.dropDownValue!.name.toString().trim(),
-              _doctortypecontroller.dropDownValue!.name.toString().trim(),
-              _aboutcontroller.text.trim(),
-              _addresscontroller.text.trim(),
-              _educationcontroller.text.trim(),
-              int.parse(_visitchargescontroller.text.trim()),
-              int.parse(_appointmentchargescontroller.text.trim()),
-              _experiencecontroller.text.trim(),
-              id.trim());
+          showHouseVisit
+              ? updateTherapyDoctorDetails(
+                  _namecontroller.text.trim(),
+                  int.parse(_phonecontroller.text.trim()),
+                  _gendercontroller.dropDownValue!.name.toString().trim(),
+                  _doctortypecontroller.dropDownValue!.name.toString().trim(),
+                  _aboutcontroller.text.trim(),
+                  _addresscontroller.text.trim(),
+                  _educationcontroller.text.trim(),
+                  int.parse(_visitchargescontroller.text.trim()),
+                  int.parse(_appointmentchargescontroller.text.trim()),
+                  _experiencecontroller.text.trim(),
+                  id.trim())
+              : updateOtherDoctorDetails(
+                  _namecontroller.text.trim(),
+                  int.parse(_phonecontroller.text.trim()),
+                  _gendercontroller.dropDownValue!.name.toString().trim(),
+                  _doctortypecontroller.dropDownValue!.name.toString().trim(),
+                  _aboutcontroller.text.trim(),
+                  _addresscontroller.text.trim(),
+                  _educationcontroller.text.trim(),
+                  int.parse(_appointmentchargescontroller.text.trim()),
+                  _experiencecontroller.text.trim(),
+                  id.trim());
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
               "Profile Updated Successfully",
@@ -145,18 +157,30 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
             duration: const Duration(seconds: 3),
           ));
         } else {
-          addDoctorDetails(
-              _namecontroller.text.trim(),
-              int.parse(_phonecontroller.text.trim()),
-              _gendercontroller.dropDownValue!.name.toString().trim(),
-              _doctortypecontroller.dropDownValue!.name.toString().trim(),
-              _aboutcontroller.text.trim(),
-              _addresscontroller.text.trim(),
-              _educationcontroller.text.trim(),
-              int.parse(_visitchargescontroller.text.trim()),
-              int.parse(_appointmentchargescontroller.text.trim()),
-              _experiencecontroller.text.trim(),
-              id.trim());
+          showHouseVisit
+              ? addTherapyDoctorDetails(
+                  _namecontroller.text.trim(),
+                  int.parse(_phonecontroller.text.trim()),
+                  _gendercontroller.dropDownValue!.name.toString().trim(),
+                  _doctortypecontroller.dropDownValue!.name.toString().trim(),
+                  _aboutcontroller.text.trim(),
+                  _addresscontroller.text.trim(),
+                  _educationcontroller.text.trim(),
+                  int.parse(_visitchargescontroller.text.trim()),
+                  int.parse(_appointmentchargescontroller.text.trim()),
+                  _experiencecontroller.text.trim(),
+                  id.trim())
+              : addOtherDoctorDetails(
+                  _namecontroller.text.trim(),
+                  int.parse(_phonecontroller.text.trim()),
+                  _gendercontroller.dropDownValue!.name.toString().trim(),
+                  _doctortypecontroller.dropDownValue!.name.toString().trim(),
+                  _aboutcontroller.text.trim(),
+                  _addresscontroller.text.trim(),
+                  _educationcontroller.text.trim(),
+                  int.parse(_visitchargescontroller.text.trim()),
+                  _experiencecontroller.text.trim(),
+                  id.trim());
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
               "Profile Created Successfully",
@@ -183,7 +207,34 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
     }
   }
 
-  Future addDoctorDetails(
+  Future addOtherDoctorDetails(
+    String name,
+    int phone,
+    String gender,
+    String doctortype,
+    String about,
+    String address,
+    String education,
+    int appointmentcharges,
+    String experience,
+    String id,
+  ) async {
+    final id = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance.collection('doctors').doc(id).set({
+      'name': name,
+      'phone': phone,
+      'gender': gender,
+      'doctor type': doctortype,
+      'about': about,
+      'address': address,
+      'education': education,
+      'appointment charges': appointmentcharges,
+      'experience': experience,
+      'id': id,
+    });
+  }
+
+  Future addTherapyDoctorDetails(
     String name,
     int phone,
     String gender,
@@ -212,7 +263,34 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
     });
   }
 
-  Future updateDoctorDetails(
+  Future updateOtherDoctorDetails(
+    String name,
+    int phone,
+    String gender,
+    String doctortype,
+    String about,
+    String address,
+    String education,
+    int appointmentcharges,
+    String experience,
+    String id,
+  ) async {
+    final id = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance.collection('doctors').doc(id).update({
+      'name': name,
+      'phone': phone,
+      'gender': gender,
+      'doctor type': doctortype,
+      'about': about,
+      'address': address,
+      'education': education,
+      'appointment charges': appointmentcharges,
+      'experience': experience,
+      'id': id,
+    });
+  }
+
+  Future updateTherapyDoctorDetails(
     String name,
     int phone,
     String gender,
@@ -261,6 +339,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
 
   String imageUrl = '';
   final id = FirebaseAuth.instance.currentUser!.uid;
+  bool showHouseVisit = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -632,7 +711,20 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                       DropDownValueModel(
                           name: 'Physician executive', value: "value18"),
                     ],
-                    onChanged: (val) {},
+                    onChanged: (val) {
+                      if (_doctortypecontroller.dropDownValue!.name
+                              .toString()
+                              .trim() ==
+                          'Psychiatrist') {
+                        setState(() {
+                          showHouseVisit = true;
+                        });
+                      } else {
+                        setState(() {
+                          showHouseVisit = false;
+                        });
+                      }
+                    },
                   )),
               const SizedBox(
                 height: 8,
@@ -698,34 +790,38 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
               const SizedBox(
                 height: 8,
               ),
-              Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 3.h,
-                  ),
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    controller: _visitchargescontroller,
-                    decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.attach_money),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.deepPurple),
-                            borderRadius: BorderRadius.circular(12)),
-                        hintText: 'Fee Charges For House Visit (PKR)',
-                        fillColor: Colors.grey[200],
-                        filled: true),
-                  )),
-              const SizedBox(
-                height: 8,
-              ),
+              showHouseVisit
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 3.h,
+                      ),
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        controller: _visitchargescontroller,
+                        decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.attach_money),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.deepPurple),
+                                borderRadius: BorderRadius.circular(12)),
+                            hintText: 'Fee Charges For House Visit (PKR)',
+                            fillColor: Colors.grey[200],
+                            filled: true),
+                      ))
+                  : SizedBox.shrink(),
+              showHouseVisit
+                  ? const SizedBox(
+                      height: 8,
+                    )
+                  : SizedBox.shrink(),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 3.h),
                 child: MyTextField(

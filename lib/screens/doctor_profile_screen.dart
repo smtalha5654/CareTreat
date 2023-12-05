@@ -40,6 +40,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      backgroundColor: Colors.deepPurple[100],
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -53,7 +54,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                 height: MediaQuery.of(context).size.width,
               ),
               Padding(
-                padding: EdgeInsets.only(top: 45.h),
+                padding: EdgeInsets.only(top: 40.h),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
@@ -199,8 +200,19 @@ class _DoctorProfileState extends State<DoctorProfile> {
                         const SizedBox(
                           height: 5,
                         ),
+                        widget.visitcharges == 0
+                            ? SizedBox.shrink()
+                            : Text(
+                                'House Visit Charges ${widget.visitcharges}',
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                ),
+                              ),
+                        const SizedBox(
+                          height: 5,
+                        ),
                         Text(
-                          'House Visit Charges ${widget.visitcharges} \nAppointment Charges ${widget.appointmentcharges}',
+                          'Appointment Charges ${widget.appointmentcharges}',
                           style: TextStyle(
                             fontSize: 13.sp,
                           ),
@@ -235,7 +247,9 @@ class _DoctorProfileState extends State<DoctorProfile> {
                                           borderRadius:
                                               BorderRadius.circular(12)),
                                       child: Text(
-                                        'Book Appointment & House Visit',
+                                        widget.visitcharges == 0
+                                            ? 'Book Appointment'
+                                            : 'Book Appointment or House Visit',
                                         style: TextStyle(
                                             fontSize: 16.sp,
                                             fontWeight: FontWeight.bold,
