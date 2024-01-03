@@ -17,13 +17,14 @@ class MyTextField extends StatelessWidget {
       maxLines: 4,
       controller: controller,
       decoration: InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 15),
           prefixIcon: Icon(icon),
           enabledBorder: OutlineInputBorder(
-            borderSide:const BorderSide(color: Colors.white),
+            borderSide: const BorderSide(color: Colors.white),
             borderRadius: BorderRadius.circular(12),
           ),
           focusedBorder: OutlineInputBorder(
-              borderSide:const BorderSide(color: Colors.deepPurple),
+              borderSide: const BorderSide(color: Colors.deepPurple),
               borderRadius: BorderRadius.circular(12)),
           hintText: hinttext,
           fillColor: Colors.grey[200],

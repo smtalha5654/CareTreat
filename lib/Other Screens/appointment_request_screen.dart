@@ -1,9 +1,13 @@
+import 'package:caretreat/api/firebase_api.dart';
+import 'package:caretreat/screens/create_doctor_schedule.dart';
 import 'package:caretreat/screens/doctor_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
 final userRef2 = FirebaseFirestore.instance.collection('doctors');
@@ -13,9 +17,13 @@ class AppointmentRequestScreen extends StatefulWidget {
       {super.key,
       required this.id,
       required this.appointmentCharges,
-      required this.housevisitCharges});
+      required this.housevisitCharges,
+      required this.FMCToken,
+      required this.doctorName});
   int appointmentCharges;
   int housevisitCharges;
+  String doctorName;
+  String FMCToken = '';
   String id = '';
   @override
   State<AppointmentRequestScreen> createState() =>
@@ -23,7 +31,40 @@ class AppointmentRequestScreen extends StatefulWidget {
 }
 
 class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
+  List<Map<String, dynamic>> bookedAppointments = [];
+  Future<List<Map<String, dynamic>>> fetchData() async {
+    List<Map<String, dynamic>> tempList = [];
+
+    try {
+      var data = await userRef2.doc(widget.id).collection('appointments').get();
+
+      data.docs.forEach((element) {
+        if (element.exists) {
+          var appointmentData = {
+            'date': element['date'] as String? ?? '',
+            'slot': element['slot'] as String? ?? '',
+          };
+
+          tempList.add(appointmentData);
+        }
+      });
+
+      // Update the bookedAppointments state variable
+      setState(() {
+        bookedAppointments = tempList;
+      });
+
+      print('date $tempList');
+      return tempList;
+    } catch (e) {
+      print("Error fetching data: $e");
+      return [];
+    }
+  }
+
   DateTime selectedDate = DateTime.now();
+  String simpleDateFormat = '';
+  String selectedTimeSlot = '';
   bool isTypeSelected = false;
   bool isDateSelected = false;
   late SingleValueDropDownController _bookingtypecontroller;
@@ -38,6 +79,18 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
+        simpleDateFormat = DateFormat('yyyy-MM-dd').format(selectedDate);
+
+        // Fetch booked slots for all dates
+        fetchData().then((appointments) {
+          bookedAppointments = appointments;
+
+          // Filter available slots based on the selected date
+          List<String> availableSlotsForSelectedDate =
+              getAvailableTimeSlotsForSelectedDate(bookedAppointments);
+
+          // Now, availableSlotsForSelectedDate contains the filtered slots for the selected date
+        });
       });
     }
   }
@@ -66,80 +119,137 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
   void initState() {
     super.initState();
     _bookingtypecontroller = SingleValueDropDownController();
+
+    fetchData();
     getName();
     getAvailableSots();
   }
 
-  Future<void> addPost() {
-    return userRef2
-        .doc(widget.id)
-        .collection(
-            'appointments') // Reference to the "posts" collection inside the user's document
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .set({
-          'date': selectedDate,
-          'type': _bookingtypecontroller.dropDownValue?.name.toString().trim(),
-          'first name': fname,
-          'last name': lname,
-          'phone': phone,
-          'profile': profile,
-          'email': FirebaseAuth.instance.currentUser?.email,
-          'address': address
-          // 'content': 'Lorem ipsum dolor sit amet...',
-          // Other post data...
-        })
-        .then((value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(
-                "Requeset Added succesfully",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
-              ),
-              backgroundColor: Colors.deepPurple,
-              padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
-              behavior: SnackBarBehavior.floating,
-              duration: const Duration(seconds: 3),
-            )))
-        .catchError((error) =>
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(
-                "Error while sending request",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
-              ),
-              backgroundColor: Colors.deepPurple,
-              padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
-              behavior: SnackBarBehavior.floating,
-              duration: const Duration(seconds: 3),
-            )));
+  Future<void> sendBookingRequest() {
+    return widget.housevisitCharges == 0
+        ? userRef2
+            .doc(widget.id)
+            .collection(
+                'appointments') // Reference to the "posts" collection inside the user's document
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .set({
+              'date': simpleDateFormat,
+              'slot': selectedTimeSlot,
+              'type': 'Appointment',
+              'first name': fname,
+              'last name': lname,
+              'phone': phone,
+              'profile': profile,
+              'email': FirebaseAuth.instance.currentUser?.email,
+              'address': address
+              // 'content': 'Lorem ipsum dolor sit amet...',
+              // Other post data...
+            })
+            .then((value) =>
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    "Requeset Added succesfully",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+                  ),
+                  backgroundColor: Colors.deepPurple,
+                  padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 3),
+                )))
+            .catchError((error) =>
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    "Error while sending request",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+                  ),
+                  backgroundColor: Colors.deepPurple,
+                  padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 3),
+                )))
+        : userRef2
+            .doc(widget.id)
+            .collection(
+                'appointments') // Reference to the "posts" collection inside the user's document
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .set({
+              'date': simpleDateFormat,
+              'slot': selectedTimeSlot,
+              'type':
+                  _bookingtypecontroller.dropDownValue?.name.toString().trim(),
+              'first name': fname,
+              'last name': lname,
+              'phone': phone,
+              'profile': profile,
+              'email': FirebaseAuth.instance.currentUser?.email,
+              'address': address
+              // 'content': 'Lorem ipsum dolor sit amet...',
+              // Other post data...
+            })
+            .then((value) =>
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    "Requeset Added succesfully",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+                  ),
+                  backgroundColor: Colors.deepPurple,
+                  padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 3),
+                )))
+            .catchError((error) =>
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    "Error while sending request",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+                  ),
+                  backgroundColor: Colors.deepPurple,
+                  padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 3),
+                )));
   }
 
   List<String> slots = [];
-  void getAvailableSots() {
-    print('slots loadded');
 
+  void getAvailableSots() {
     final userRef = FirebaseFirestore.instance.collection('doctors');
     userRef.doc(widget.id).get().then((DocumentSnapshot doc) {
       String slotsString = doc.get('slots');
-      // Remove extra brackets at the start and end
       slotsString = slotsString.substring(1, slotsString.length - 1);
-
-      List<String> slots = slotsString.split(', ');
-
-      // Print the fetched data to check if it's as expected
-      print('Fetched Slots: $slots');
-
-      // Now, update the state with the fetched data
-      // Now, update the state with the fetched data
-      setState(() {
-        this.slots = slots;
-      });
+      slots = slotsString.split(', ');
     });
+  }
+
+  List<String> getAvailableTimeSlotsForSelectedDate(
+      List<Map<String, dynamic>> bookedAppointments) {
+    // Filter out booked slots for the selected date
+    List bookedSlots = bookedAppointments
+        .where((appointment) => appointment['date'] == simpleDateFormat)
+        .map((appointment) => appointment['slot'])
+        .toList();
+
+    // Filter out booked slots from all available slots
+    List<String> availableSlotsForSelectedDate =
+        slots.where((slot) => !bookedSlots.contains(slot)).toList();
+    return availableSlotsForSelectedDate;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Colors.deepPurple,
         elevation: 0,
-        title: Text('Booking Request'),
+        title: Text(
+          'Booking Request',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -155,20 +265,37 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
               //     fontWeight: FontWeight.w400,
               //   ),
               // ),
-
-              isDateSelected && isTypeSelected
-                  ? SizedBox.shrink()
-                  : Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Text(
-                        "Please select date and booking type for booking request.",
-                        style: TextStyle(
-                          color: Colors.deepPurple,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
+              widget.housevisitCharges == 0
+                  ? isDateSelected
+                      ? SizedBox.shrink()
+                      : Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: Text(
+                            widget.housevisitCharges == 0
+                                ? 'Please select date for booking request'
+                                : "Please select date and booking type for booking request.",
+                            style: TextStyle(
+                              color: Colors.deepPurple,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                  : isDateSelected && isTypeSelected
+                      ? SizedBox.shrink()
+                      : Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: Text(
+                            widget.housevisitCharges == 0
+                                ? 'Please select date for booking request'
+                                : "Please select date and booking type for booking request.",
+                            style: TextStyle(
+                              color: Colors.deepPurple,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
               SizedBox(
                 height: 20,
               ),
@@ -261,24 +388,23 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                     )
                   : SizedBox.shrink(),
               SizedBox(
-                height: 10,
+                height: isTypeSelected ? 10 : 20,
               ),
+
               isTypeSelected
-                  ? Text(
-                      'Selected Type: '
-                      '${_bookingtypecontroller.dropDownValue?.name.toString().trim()}',
-                      style: TextStyle(
-                          fontSize: 15.sp, fontWeight: FontWeight.bold),
+                  ? Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        'Selected Type: '
+                        '${_bookingtypecontroller.dropDownValue?.name.toString().trim()}',
+                        style: TextStyle(
+                            fontSize: 15.sp, fontWeight: FontWeight.bold),
+                      ),
                     )
                   : SizedBox.shrink(),
 
-              SizedBox(
-                height: 10,
-              ),
               isTypeSelected ? chargesText() : SizedBox.shrink(),
-              SizedBox(
-                height: 20,
-              ),
+
               isDateSelected
                   ? Container(
                       width: double.infinity,
@@ -291,7 +417,9 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                             height: 10,
                           ),
                           Text(
-                            'Time Slots for Appointment',
+                            widget.housevisitCharges == 0
+                                ? 'Select Time Slot for Appointment'
+                                : 'Select Time Slot for Booking',
                             style: TextStyle(
                                 fontSize: 12.sp, fontWeight: FontWeight.bold),
                           ),
@@ -301,10 +429,8 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                                     SizedBox(
                                       height: 60,
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                          'Time slots is not available please generate time slots for Appointments',
+                                    Center(
+                                      child: Text('Time slots is not available',
                                           style: TextStyle(
                                               fontSize: 12.sp,
                                               fontWeight: FontWeight.bold)),
@@ -321,7 +447,8 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                                     spacing: 10.0,
                                     runSpacing: 8.0,
                                     children: slots.map((timeSlot) {
-                                      return buildTimeSlotCard(timeSlot);
+                                      return buildTimeSlotCard(
+                                          timeSlot, bookedAppointments);
                                     }).toList(),
                                   ),
                                 ),
@@ -336,15 +463,13 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                   ? isDateSelected
                       ? GestureDetector(
                           onTap: () {
-                            addPost();
-                            // showDialog(
-                            //     context: context,
-                            //     builder: (context) {
-                            //       return const SpinKitFadingCircle(
-                            //         color: Colors.deepPurple,
-                            //         size: 60.0,
-                            //       );
-                            //     });
+                            sendBookingRequest();
+                            FirebaseApi().sendNotificationToDoctor(
+                                widget.FMCToken,
+                                "$fname $lname",
+                                simpleDateFormat);
+                            FirebaseApi().sendNotificationToPatient(
+                                widget.doctorName, simpleDateFormat);
                           },
                           child: Center(
                             child: Container(
@@ -368,7 +493,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                   : isTypeSelected && isDateSelected
                       ? GestureDetector(
                           onTap: () {
-                            addPost();
+                            sendBookingRequest();
                             // showDialog(
                             //     context: context,
                             //     builder: (context) {
@@ -407,36 +532,80 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
   chargesText() {
     if (_bookingtypecontroller.dropDownValue?.name.toString().trim() ==
         'House Visit') {
-      return Text(
-        'House Visit Charges: '
-        '${widget.housevisitCharges}',
-        style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: Text(
+          'House Visit Charges: '
+          '${widget.housevisitCharges}',
+          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
+        ),
       );
     } else if (_bookingtypecontroller.dropDownValue?.name.toString().trim() ==
         'Appointment') {
-      return Text(
-        'Appointment Charges: '
-        '${widget.appointmentCharges}',
-        style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: Text(
+          'Appointment Charges: '
+          '${widget.appointmentCharges}',
+          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
+        ),
       );
     }
   }
 
-  Widget buildTimeSlotCard(String timeSlot) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.deepPurple, borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              timeSlot,
-              style: TextStyle(color: Colors.white),
+  Widget buildTimeSlotCard(
+      String timeSlot, List<Map<String, dynamic>> bookedAppointments) {
+    bool isSelected = availableTimeSlots.contains(timeSlot);
+    bool isBooked = bookedAppointments.any((appointment) =>
+        appointment['date'] == simpleDateFormat &&
+        appointment['slot'] == timeSlot);
+
+    return InkWell(
+      onTap: () {
+        setState(() {
+          if (isBooked) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                "Please choose different time slot this one is alreay book by someone",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+              ),
+              backgroundColor: Colors.deepPurple,
+              padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 3),
+            ));
+          } else {
+            if (isSelected) {
+              // If the slot is already selected, clear the selection
+              availableTimeSlots.clear();
+            } else {
+              // If a new slot is selected, clear the previous selection and add the new one
+              availableTimeSlots.clear();
+              availableTimeSlots.add(timeSlot);
+              selectedTimeSlot = timeSlot;
+            }
+          }
+        });
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: isBooked
+              ? Colors.red
+              : (isSelected ? Colors.deepPurple : Colors.grey),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                timeSlot,
+                style: TextStyle(color: Colors.white),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

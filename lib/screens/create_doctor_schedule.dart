@@ -112,104 +112,110 @@ class _DoctorScheduleState extends State<DoctorSchedule> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 2.h, vertical: 4.h),
-              child: Column(
-                children: [
-                  Text(
-                    'Create Clinic Schedule',
-                    style:
-                        TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _buildTimePickerTextField('Select Starting Time', true),
-                  SizedBox(height: 16),
-                  _buildTimePickerTextField('Select Ending Time', false),
-                  SizedBox(height: 16),
-                  TextField(
-                    controller: _durationController,
-                    decoration: InputDecoration(
-                      hintText: 'Appointment Duration (min)',
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.deepPurple),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      fillColor: Colors.grey[200],
-                      filled: true,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 2.h, vertical: 4.h),
+                child: Column(
+                  children: [
+                    Text(
+                      'Create Clinic Schedule',
+                      style: TextStyle(
+                          fontSize: 14.sp, fontWeight: FontWeight.bold),
                     ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      setState(() {
-                        duration = int.tryParse(value) ?? 0;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 16),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
+                    SizedBox(
+                      height: 20,
                     ),
-                    onPressed: _generateTimeSlots,
-                    child: Text('Generate Time Slots'),
-                  ),
-                ],
+                    _buildTimePickerTextField('Select Starting Time', true),
+                    SizedBox(height: 16),
+                    _buildTimePickerTextField('Select Ending Time', false),
+                    SizedBox(height: 16),
+                    TextField(
+                      controller: _durationController,
+                      decoration: InputDecoration(
+                        hintText: 'Appointment Duration (min)',
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: Colors.deepPurple),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        fillColor: Colors.grey[200],
+                        filled: true,
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        setState(() {
+                          duration = int.tryParse(value) ?? 0;
+                        });
+                      },
+                    ),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      ),
+                      onPressed: _generateTimeSlots,
+                      child: Text('Generate Time Slots'),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Colors.grey[350],
-                  borderRadius: BorderRadius.circular(12)),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Time Slots for Appointment',
-                    style:
-                        TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
-                  ),
-                  slots.isEmpty
-                      ? Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Text(
-                                    'Time slots is not available please generate time slots for Appointments',
-                                    style: TextStyle(
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.bold)),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 2.h),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[350],
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Time Slots for Appointment',
+                        style: TextStyle(
+                            fontSize: 12.sp, fontWeight: FontWeight.bold),
+                      ),
+                      slots.isEmpty
+                          ? Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: Text(
+                                        'Time slots is not available please generate time slots for Appointments',
+                                        style: TextStyle(
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 10, bottom: 20, left: 5, right: 5),
+                              child: Wrap(
+                                spacing: 15.0,
+                                runSpacing: 8.0,
+                                children: slots.map((timeSlot) {
+                                  return buildTimeSlotCard(timeSlot);
+                                }).toList(),
                               ),
                             ),
-                          ],
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.only(
-                              top: 10, bottom: 20, left: 5, right: 5),
-                          child: Wrap(
-                            spacing: 15.0,
-                            runSpacing: 8.0,
-                            children: slots.map((timeSlot) {
-                              return buildTimeSlotCard(timeSlot);
-                            }).toList(),
-                          ),
-                        ),
-                ],
-              ),
-            )
-          ],
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

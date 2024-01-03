@@ -120,6 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                   controller: _passwordcontroller,
                   obscureText: passtoggle,
                   decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 15),
                       suffixIcon: InkWell(
                         onTap: () {
                           setState(() {

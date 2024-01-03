@@ -60,7 +60,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             padding: EdgeInsets.symmetric(
                                 vertical: 2.h, horizontal: 3.h),
                             child: Text(
-                              'Welcome to CareTreat! Streamline your healthcare journey by effortlessly scheduling appointments at your fingertips. Experience the convenience of personalized care with our intuitive appointment system.Your health is our priority, and with CareTreat, booking appointments has never been smoother.',
+                              'Welcome to CareTreat! Streamline your healthcare journey by effortlessly scheduling appointments at your fingertips. Experience the convenience of personalized care.Your health is our priority, and with CareTreat, booking appointments has never been smoother.',
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
@@ -111,7 +111,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             padding: EdgeInsets.symmetric(
                                 vertical: 2.h, horizontal: 3.h),
                             child: Text(
-                              "Discover the convenience of CareTreat's innovative house visit feature, a personalized healthcare experience tailored to your doorstep. Effortlessly schedule visits with our user-friendly platform, ensuring medical care is not just accessible but also seamlessly integrated into the comfort of your home. ",
+                              "Introducing CareTreat's exclusive House Visit feature, now available exclusively for physiotherapists! Elevate your healthcare experience with personalized, in-home sessions tailored for rehabilitation. Effortlessly schedule visits through our user-friendly platform",
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
@@ -163,7 +163,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             padding: EdgeInsets.symmetric(
                                 vertical: 2.h, horizontal: 3.h),
                             child: Text(
-                              "CareTreat introduces a revolutionary nursing feature, optimizing your healthcare experience. Seamlessly allocate qualified nurses based on your unique needs, ensuring timely and personalized care. With CareTreat, your well-being is our priority, supported by a dynamic approach to nurse allocation.",
+                              "CareTreat introduces a revolutionary nursing feature, optimizing your healthcare experience. Seamlessly allocate qualified nurses based on your unique needs, With CareTreat, your well-being is our priority, supported by a dynamic approach to nurse allocation.",
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,

@@ -12,7 +12,8 @@ class DoctorRequestScreen extends StatefulWidget {
       required this.profile,
       required this.phone,
       required this.date,
-      required this.email});
+      required this.email,
+      required this.slot});
   String requestType = '';
   String name = '';
   String address = '';
@@ -20,6 +21,7 @@ class DoctorRequestScreen extends StatefulWidget {
   String email = '';
   int phone = 0;
   String date = '';
+  String slot = '';
 
   @override
   State<DoctorRequestScreen> createState() => _DoctorRequestScreenState();
@@ -45,6 +47,7 @@ class _DoctorRequestScreenState extends State<DoctorRequestScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      backgroundColor: Colors.deepPurple[100],
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -58,11 +61,11 @@ class _DoctorRequestScreenState extends State<DoctorRequestScreen> {
                 height: MediaQuery.of(context).size.width,
               ),
               Padding(
-                padding: EdgeInsets.only(top: 45.h),
+                padding: EdgeInsets.only(top: 40.h),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Colors.deepPurple[100],
                       borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(12),
                           topRight: Radius.circular(12))),
@@ -169,123 +172,20 @@ class _DoctorRequestScreenState extends State<DoctorRequestScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Row(
-                          children: [
-                            Text(
-                              'Select time:',
-                              style: TextStyle(
-                                  fontSize: 16.sp, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              width: 16.h,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                _selectTime(context);
-                                setState(() {
-                                  isTimeSelected = true;
-                                });
-                              },
-                              child: Container(
-                                height: 40,
-                                width: 120,
-                                decoration: BoxDecoration(
-                                    color: Colors.deepPurple,
-                                    borderRadius: BorderRadius.circular(12)),
-                                child: Center(
-                                    child: Text(
-                                  'Select time',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 11.sp,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                              ),
-                            ),
-                          ],
+                        Text(
+                          'Time Slot',
+                          style: TextStyle(
+                              fontSize: 16.sp, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 5,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            isTimeSelected ? timeText() : SizedBox.shrink()
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 2.h),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 40, vertical: 12),
-                                decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(12)),
-                                child: Text(
-                                  'Accept',
-                                  style: TextStyle(
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 45, vertical: 12),
-                                decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(12)),
-                                child: Text(
-                                  'Reject',
-                                  style: TextStyle(
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ],
+                        Text(
+                          widget.slot,
+                          style: TextStyle(
+                            fontSize: 13.sp,
                           ),
-                        )
-                        // Center(
-                        //   child: InkWell(
-                        //     onTap: () {
-                        //       // Navigator.push(context,
-                        //       //     MaterialPageRoute(builder: (context) {
-                        //       //   return AppointmentRequestScreen(
-                        //       //     appointmentCharges:
-                        //       //         widget.appointmentcharges,
-                        //       //     housevisitCharges: widget.visitcharges,
-                        //       //     id: widget.id,
-                        //       //   );
-                        //       // }));
-                        //     },
-                        //     child: Padding(
-                        //       padding: EdgeInsets.only(bottom: 2.h),
-                        //       child: Container(
-                        //         padding: const EdgeInsets.symmetric(
-                        //             horizontal: 20, vertical: 15),
-                        //         decoration: BoxDecoration(
-                        //             color: Colors.deepPurple,
-                        //             border:
-                        //                 Border.all(color: Colors.deepPurple),
-                        //             borderRadius: BorderRadius.circular(12)),
-                        //         child: Text(
-                        //           'Book Appointment & House Visit',
-                        //           style: TextStyle(
-                        //               fontSize: 16.sp,
-                        //               fontWeight: FontWeight.bold,
-                        //               color: Colors.white),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
+                        ),
                       ],
                     ),
                   ),

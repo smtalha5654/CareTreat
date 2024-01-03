@@ -4,20 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 class DoctorProfile extends StatefulWidget {
-  DoctorProfile(
-      {super.key,
-      required this.id,
-      required this.name,
-      required this.about,
-      required this.address,
-      required this.appointmentcharges,
-      required this.doctortype,
-      required this.education,
-      required this.experience,
-      required this.gender,
-      required this.phone,
-      required this.profile,
-      required this.visitcharges});
+  DoctorProfile({
+    super.key,
+    required this.id,
+    required this.name,
+    required this.about,
+    required this.address,
+    required this.appointmentcharges,
+    required this.doctortype,
+    required this.education,
+    required this.experience,
+    required this.gender,
+    required this.phone,
+    required this.profile,
+    required this.visitcharges,
+    required this.FMCToken,
+  });
   String name = '';
   int phone = 0;
   String gender = '';
@@ -30,6 +32,7 @@ class DoctorProfile extends StatefulWidget {
   String experience = '';
   String profile = '';
   String id = '';
+  String FMCToken = '';
 
   @override
   State<DoctorProfile> createState() => _DoctorProfileState();
@@ -232,6 +235,8 @@ class _DoctorProfileState extends State<DoctorProfile> {
                                             widget.appointmentcharges,
                                         housevisitCharges: widget.visitcharges,
                                         id: widget.id,
+                                        FMCToken: widget.FMCToken,
+                                        doctorName: widget.name,
                                       );
                                     }));
                                   },
@@ -251,7 +256,9 @@ class _DoctorProfileState extends State<DoctorProfile> {
                                             ? 'Book Appointment'
                                             : 'Book Appointment or House Visit',
                                         style: TextStyle(
-                                            fontSize: 16.sp,
+                                            fontSize: widget.visitcharges == 0
+                                                ? 16.sp
+                                                : 14.sp,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white),
                                       ),

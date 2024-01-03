@@ -7,6 +7,7 @@ import 'package:caretreat/screens/patient_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,7 +52,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
   int visitcharges = 0;
   var experience = '';
   String profile = '';
-
+  String doctorFMC = '';
   final userRef = FirebaseFirestore.instance.collection('doctors');
   void getProfileData() {
     print('profile data function load');
@@ -69,6 +70,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
         address = doc.get('address');
         about = doc.get('about');
         gender = doc.get("gender");
+        doctorFMC = doc.get('doctorFCM');
       });
     });
   }
@@ -220,6 +222,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
     String id,
   ) async {
     final id = FirebaseAuth.instance.currentUser!.uid;
+
     await FirebaseFirestore.instance.collection('doctors').doc(id).set({
       'name': name,
       'phone': phone,
@@ -604,6 +607,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                   ],
                   controller: _phonecontroller,
                   decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 15),
                       prefixIcon: const Icon(Icons.phone),
                       enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.white),
@@ -625,6 +629,8 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                   padding: EdgeInsets.symmetric(horizontal: 3.h),
                   child: DropDownTextField(
                     textFieldDecoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
@@ -660,6 +666,8 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                   child: DropDownTextField(
                     enableSearch: true,
                     textFieldDecoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
@@ -774,6 +782,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                     ],
                     controller: _appointmentchargescontroller,
                     decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 15),
                         prefixIcon: const Icon(Icons.attach_money),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.white),
@@ -803,6 +812,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                         ],
                         controller: _visitchargescontroller,
                         decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 15),
                             prefixIcon: const Icon(Icons.attach_money),
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(color: Colors.white),
@@ -859,18 +869,20 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return DoctorProfile(
-                            id: id,
-                            name: name,
-                            about: about,
-                            address: address,
-                            appointmentcharges: appointmentcharges,
-                            doctortype: doctortype,
-                            education: education,
-                            experience: experience,
-                            gender: gender,
-                            phone: phone,
-                            profile: profile,
-                            visitcharges: visitcharges);
+                          FMCToken: doctorFMC,
+                          id: id,
+                          name: name,
+                          about: about,
+                          address: address,
+                          appointmentcharges: appointmentcharges,
+                          doctortype: doctortype,
+                          education: education,
+                          experience: experience,
+                          gender: gender,
+                          phone: phone,
+                          profile: profile,
+                          visitcharges: visitcharges,
+                        );
                       }));
                     },
                     color: Colors.deepPurple,

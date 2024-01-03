@@ -6,10 +6,10 @@ import 'package:caretreat/Other%20Screens/create_doctor_profile.dart';
 import 'package:caretreat/components/mybutton.dart';
 import 'package:caretreat/main.dart';
 import 'package:caretreat/screens/create_doctor_schedule.dart';
-
+import 'package:caretreat/screens/notification_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-
 import 'package:sizer/sizer.dart';
 import '../Drawer Screens/favorite.dart';
 import '../Drawer Screens/my_profile.dart';
@@ -49,6 +48,40 @@ class _DoctorScreenState extends State<DoctorScreen> {
     });
   }
 
+  Future<void> getFCMToken() async {
+    final _firebasemessaging = FirebaseMessaging.instance;
+    final FCMToken = await _firebasemessaging.getToken();
+    print("FCMToken $FCMToken");
+    final id = FirebaseAuth.instance.currentUser!.uid;
+    //addFMC
+    userRef2.doc(id).get().then((DocumentSnapshot doc) async {
+      if (doc.exists) {
+        //updateFMC
+        await FirebaseFirestore.instance.collection('doctors').doc(id).update({
+          'doctorFCM': FCMToken,
+        });
+        print("update FMC done");
+      } else {
+        await FirebaseFirestore.instance.collection('doctors').doc(id).set({
+          'doctorFCM': FCMToken,
+        });
+        print("Add FMC done");
+      }
+    });
+  }
+  // //  Future addFMCToken(
+  // //   String profile,
+  // // ) async {
+
+  // // }
+  // Future updateFMCToken(
+  //   String profile,
+  // ) async {
+  //   final id = FirebaseAuth.instance.currentUser!.uid;
+  //   await FirebaseFirestore.instance.collection('doctors').doc(id).update({
+  //     'profile': imageUrl,
+  //   });
+  // }
   String time = '';
   @override
   void initState() {
@@ -56,6 +89,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
     getName();
     getProfile();
     displayData();
+    getFCMToken();
   }
 
   String fname = '';
@@ -142,7 +176,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
       drawer: SafeArea(
         child: Drawer(
           elevation: 0,
-          width: 44.h,
+          //width: 44.h,
           backgroundColor: Colors.white,
           child: SingleChildScrollView(
             child: Column(
@@ -569,6 +603,19 @@ class _DoctorScreenState extends State<DoctorScreen> {
         ),
       ),
       appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return NotificationsScreen();
+                  }));
+                },
+                child: Icon(Icons.notifications)),
+          )
+        ],
+        iconTheme: IconThemeData(color: Colors.white),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(24),
@@ -624,11 +671,11 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                     const Color.fromARGB(255, 150, 115, 210)),
                             child: Padding(
                               padding: EdgeInsets.symmetric(
-                                  vertical: 1.5.h, horizontal: 2.h),
+                                  vertical: 1.h, horizontal: 1.5.h),
                               child: Text(
                                 'Create Doctor Profile',
                                 style: TextStyle(
-                                    fontSize: 11.sp,
+                                    fontSize: 10.sp,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
                               ),
@@ -649,11 +696,11 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                     const Color.fromARGB(255, 150, 115, 210)),
                             child: Padding(
                               padding: EdgeInsets.symmetric(
-                                  vertical: 1.5.h, horizontal: 2.h),
+                                  vertical: 1.h, horizontal: 1.5.h),
                               child: Text(
                                 'Create Clinic Schedule',
                                 style: TextStyle(
-                                    fontSize: 11.sp,
+                                    fontSize: 10.sp,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
                               ),
@@ -678,10 +725,10 @@ class _DoctorScreenState extends State<DoctorScreen> {
                     child: ListView.builder(
                         itemCount: items.length,
                         itemBuilder: (BuildContext context, int index) {
-                          Timestamp timestamp = items[index]['date'];
-                          DateTime dateTime = timestamp.toDate();
-                          String formattedDate =
-                              DateFormat('d MMMM y').format(dateTime);
+                          // Timestamp timestamp = items[index]['date'];
+                          // DateTime dateTime = timestamp.toDate();
+                          // String formattedDate =
+                          //     DateFormat('d MMMM y').format(dateTime);
                           return Card(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12)),
@@ -690,13 +737,22 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                   backgroundImage: NetworkImage(
                                       'https://firebasestorage.googleapis.com/v0/b/caretreat-69b27.appspot.com/o/digitalprofile%2Ft.jpg?alt=media&token=6cf569aa-2988-4c3f-beba-67d33f4afa9b'),
                                 ),
-                                title: Text(items[index]['first name'] +
-                                    ' ' +
-                                    items[index]['last name']),
+                                title: Flexible(
+                                  child: Text(
+                                      items[index]['first name'] +
+                                          ' ' +
+                                          items[index]['last name'],
+                                      overflow: TextOverflow.ellipsis),
+                                ),
                                 subtitle: Row(
                                   children: [
-                                    Text(items[index]['type'] + ' Date '),
-                                    Text(formattedDate),
+                                    Text(
+                                      items[index]['type'] + ' Date ',
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Flexible(
+                                        child: Text(items[index]['date'],
+                                            overflow: TextOverflow.ellipsis)),
                                   ],
                                 ),
                                 onTap: () {
@@ -711,10 +767,11 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                           ' ' +
                                           items[index]['last name'],
                                       address: items[index]['address'],
-                                      date: formattedDate,
+                                      date: items[index]['date'],
                                       email: items[index]['email'],
                                       phone: items[index]['phone'],
                                       profile: items[index]['profile'],
+                                      slot: items[index]['slot'],
                                     );
                                   }));
                                 },

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:caretreat/Auth/main_page.dart';
+import 'package:caretreat/screens/notification_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -68,7 +69,7 @@ class _PatientScreenState extends State<PatientScreen> {
       isLoaded = true;
     });
   }
-  
+
   String profile = '';
   void getProfile() {
     final String id = FirebaseAuth.instance.currentUser!.uid;
@@ -117,7 +118,7 @@ class _PatientScreenState extends State<PatientScreen> {
           drawer: SafeArea(
             child: Drawer(
               elevation: 0,
-              width: 44.h,
+              // width: 44.h,
               backgroundColor: Colors.white,
               child: SingleChildScrollView(
                 child: Column(
@@ -569,6 +570,20 @@ class _PatientScreenState extends State<PatientScreen> {
             ),
           ),
           appBar: AppBar(
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return NotificationsScreen();
+                      }));
+                    },
+                    child: Icon(Icons.notifications)),
+              )
+            ],
+            iconTheme: IconThemeData(color: Colors.white),
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(24),
@@ -616,6 +631,8 @@ class _PatientScreenState extends State<PatientScreen> {
                       height: 7.h,
                       child: TextField(
                         decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
                           border: UnderlineInputBorder(
                               borderRadius: BorderRadius.circular(24)),
                           prefixIcon: const Icon(
@@ -716,6 +733,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                           gender: items[index]["gender"],
                                           phone: items[index]["phone"],
                                           id: items[index]['id'],
+                                          FMCToken: items[index]['doctorFCM'],
                                         );
                                       })));
                                     },
@@ -848,45 +866,47 @@ class _PatientScreenState extends State<PatientScreen> {
                               color: Colors.deepPurple,
                               size: 60.0,
                             )),
-                  Tab(
-                      child: DefaultTabController(
-                    length: 2,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 1.h),
-                          child: Container(
-                            height: 6.h,
-                            decoration: BoxDecoration(
-                                color: Colors.deepPurple[100],
-                                borderRadius: BorderRadius.circular(24)),
-                            child: TabBar(
-                                indicator: BoxDecoration(
-                                    color: Colors.deepPurple,
-                                    borderRadius: BorderRadius.circular(24)),
-                                splashBorderRadius: BorderRadius.circular(24),
-                                labelPadding:
-                                    EdgeInsets.symmetric(horizontal: 4.h),
-                                isScrollable: true,
-                                labelColor: Colors.white,
-                                unselectedLabelColor: Colors.black,
-                                tabs: [
-                                  Text('Male',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12.sp)),
-                                  Text(
-                                    'Female',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12.sp),
-                                  )
-                                ]),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )),
+                  Tab(child: Text('Hello')
+                      //      DefaultTabController(
+                      //   length: 2,
+                      //   child: Column(
+                      //     children: [
+                      //       Padding(
+                      //         padding: EdgeInsets.symmetric(
+                      //             vertical: 1.h, horizontal: 8.h),
+                      //         child: Container(
+                      //           height: 6.h,
+                      //           decoration: BoxDecoration(
+                      //               color: Colors.deepPurple[100],
+                      //               borderRadius: BorderRadius.circular(24)),
+                      //           child: TabBar(
+                      //               indicator: BoxDecoration(
+                      //                   color: Colors.deepPurple,
+                      //                   borderRadius: BorderRadius.circular(24)),
+                      //               splashBorderRadius: BorderRadius.circular(24),
+                      //               labelPadding:
+                      //                   EdgeInsets.symmetric(horizontal: 4.h),
+                      //               isScrollable: true,
+                      //               labelColor: Colors.white,
+                      //               unselectedLabelColor: Colors.black,
+                      //               tabs: [
+                      //                 Text('Male',
+                      //                     style: TextStyle(
+                      //                         fontWeight: FontWeight.bold,
+                      //                         fontSize: 12.sp)),
+                      //                 Text(
+                      //                   'Female',
+                      //                   style: TextStyle(
+                      //                       fontWeight: FontWeight.bold,
+                      //                       fontSize: 12.sp),
+                      //                 )
+                      //               ]),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // )
+                      ),
                 ]),
               )
             ],
