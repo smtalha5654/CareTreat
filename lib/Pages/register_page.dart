@@ -187,7 +187,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ],
                   controller: _phonecontroller,
                   decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 15),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 15),
                       prefixIcon: const Icon(Icons.phone),
                       enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.white),
@@ -210,7 +210,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: DropDownTextField(
                     textFieldDecoration: InputDecoration(
                         contentPadding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                            const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
@@ -246,7 +246,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: DropDownTextField(
                     textFieldDecoration: InputDecoration(
                         contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                            const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
@@ -302,7 +302,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _passwordcontroller,
                   obscureText: passtoggle,
                   decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 15),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 15),
                       suffixIcon: InkWell(
                         onTap: () {
                           setState(() {
@@ -336,7 +336,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _confirmpasswordcontroller,
                   obscureText: passtoggle,
                   decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 15),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 15),
                       suffixIcon: InkWell(
                         onTap: () {
                           setState(() {

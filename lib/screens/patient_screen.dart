@@ -60,9 +60,9 @@ class _PatientScreenState extends State<PatientScreen> {
   displayData() async {
     List<Map<String, dynamic>> tempList = [];
     var data = await collection.get();
-    data.docs.forEach((element) {
+    for (var element in data.docs) {
       tempList.add(element.data());
-    });
+    }
 
     setState(() {
       items = tempList;
@@ -577,13 +577,13 @@ class _PatientScreenState extends State<PatientScreen> {
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return NotificationsScreen();
+                        return const NotificationsScreen();
                       }));
                     },
-                    child: Icon(Icons.notifications)),
+                    child: const Icon(Icons.notifications)),
               )
             ],
-            iconTheme: IconThemeData(color: Colors.white),
+            iconTheme: const IconThemeData(color: Colors.white),
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(24),
@@ -631,7 +631,7 @@ class _PatientScreenState extends State<PatientScreen> {
                       height: 7.h,
                       child: TextField(
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 10),
                           border: UnderlineInputBorder(
                               borderRadius: BorderRadius.circular(24)),
@@ -691,7 +691,7 @@ class _PatientScreenState extends State<PatientScreen> {
                       ],
                     ),
                   ]),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Expanded(
@@ -702,7 +702,7 @@ class _PatientScreenState extends State<PatientScreen> {
                               // physics: const NeverScrollableScrollPhysics(),
                               // shrinkWrap: true,
                               gridDelegate:
-                                  SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                                  const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 2),
                               itemCount: items.length,
                               itemBuilder: (context, index) {
@@ -750,7 +750,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           ClipRRect(
-                                            borderRadius: BorderRadius.only(
+                                            borderRadius: const BorderRadius.only(
                                                 topLeft: Radius.circular(12),
                                                 topRight: Radius.circular(12)),
                                             child: Image.network(
@@ -807,10 +807,8 @@ class _PatientScreenState extends State<PatientScreen> {
                                                                 TextOverflow
                                                                     .ellipsis)),
                                                     Text(
-                                                        'Rs. ' +
-                                                            items[index][
-                                                                    "appointment charges"]
-                                                                .toString(),
+                                                        'Rs. ${items[index][
+                                                                    "appointment charges"]}',
                                                         style: const TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
@@ -824,7 +822,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                                 ),
                                                 items[index]["visit charges"] ==
                                                         null
-                                                    ? SizedBox.shrink()
+                                                    ? const SizedBox.shrink()
                                                     : Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -840,10 +838,8 @@ class _PatientScreenState extends State<PatientScreen> {
                                                                       TextOverflow
                                                                           .ellipsis)),
                                                           Text(
-                                                              'Rs.' +
-                                                                  items[index][
-                                                                          "visit charges"]
-                                                                      .toString(),
+                                                              'Rs.${items[index][
+                                                                          "visit charges"]}',
                                                               style: const TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
@@ -866,7 +862,7 @@ class _PatientScreenState extends State<PatientScreen> {
                               color: Colors.deepPurple,
                               size: 60.0,
                             )),
-                  Tab(child: Text('Hello')
+                  const Tab(child: Text('Hello')
                       //      DefaultTabController(
                       //   length: 2,
                       //   child: Column(

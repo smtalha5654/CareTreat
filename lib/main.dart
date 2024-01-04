@@ -1,6 +1,5 @@
 import 'package:caretreat/api/firebase_api.dart';
 import 'package:caretreat/screens/notification_screen.dart';
-import 'package:caretreat/screens/patient_screen.dart';
 import 'package:caretreat/screens/splash_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -48,7 +47,7 @@ class MyApp extends StatelessWidget {
           home: const SplashScreen(),
           navigatorKey: navigatorKey,
           routes: {
-            '/notification_screen': (context) => NotificationsScreen(),
+            '/notification_screen': (context) => const NotificationsScreen(),
           },
         );
       },

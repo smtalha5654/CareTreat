@@ -1,5 +1,4 @@
 import 'package:caretreat/Other%20Screens/appointment_request_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -124,13 +123,13 @@ class _DoctorScheduleState extends State<DoctorSchedule> {
                       style: TextStyle(
                           fontSize: 14.sp, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     _buildTimePickerTextField('Select Starting Time', true),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     _buildTimePickerTextField('Select Ending Time', false),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     TextField(
                       controller: _durationController,
                       decoration: InputDecoration(
@@ -154,7 +153,7 @@ class _DoctorScheduleState extends State<DoctorSchedule> {
                         });
                       },
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -162,7 +161,7 @@ class _DoctorScheduleState extends State<DoctorSchedule> {
                         ),
                       ),
                       onPressed: _generateTimeSlots,
-                      child: Text('Generate Time Slots'),
+                      child: const Text('Generate Time Slots'),
                     ),
                   ],
                 ),
@@ -176,7 +175,7 @@ class _DoctorScheduleState extends State<DoctorSchedule> {
                       borderRadius: BorderRadius.circular(12)),
                   child: Column(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Text(
@@ -252,12 +251,12 @@ class _DoctorScheduleState extends State<DoctorSchedule> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () => selectTime(context, isStart),
-              child: Text(buttonText),
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
               ),
+              child: Text(buttonText),
             ),
           ),
         ),
@@ -326,7 +325,7 @@ class _DoctorScheduleState extends State<DoctorSchedule> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               timeSlot,
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
           ),
         ],

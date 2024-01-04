@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:caretreat/Auth/main_page.dart';
 import 'package:caretreat/Other%20Screens/appointment_request_screen.dart';
 import 'package:caretreat/Other%20Screens/create_doctor_profile.dart';
-import 'package:caretreat/components/mybutton.dart';
 import 'package:caretreat/main.dart';
 import 'package:caretreat/screens/create_doctor_schedule.dart';
 import 'package:caretreat/screens/notification_screen.dart';
@@ -11,12 +10,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 import '../Drawer Screens/favorite.dart';
 import '../Drawer Screens/my_profile.dart';
@@ -49,8 +46,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
   }
 
   Future<void> getFCMToken() async {
-    final _firebasemessaging = FirebaseMessaging.instance;
-    final FCMToken = await _firebasemessaging.getToken();
+    final firebasemessaging = FirebaseMessaging.instance;
+    final FCMToken = await firebasemessaging.getToken();
     print("FCMToken $FCMToken");
     final id = FirebaseAuth.instance.currentUser!.uid;
     //addFMC
@@ -153,9 +150,9 @@ class _DoctorScreenState extends State<DoctorScreen> {
         .collection(
             'appointments') // Reference to the "posts" collection inside the user's document
         .get();
-    data.docs.forEach((element) {
-      tempList.add(element.data() as Map<String, dynamic>);
-    });
+    for (var element in data.docs) {
+      tempList.add(element.data());
+    }
 
     setState(() {
       items = tempList;
@@ -609,13 +606,13 @@ class _DoctorScreenState extends State<DoctorScreen> {
             child: InkWell(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return NotificationsScreen();
+                    return const NotificationsScreen();
                   }));
                 },
-                child: Icon(Icons.notifications)),
+                child: const Icon(Icons.notifications)),
           )
         ],
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(24),
@@ -624,6 +621,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
         toolbarHeight: 20.h,
         backgroundColor: Colors.deepPurple,
         bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(35),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -710,14 +708,13 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       ],
                     )),
               ],
-            ),
-            preferredSize: const Size.fromHeight(35)),
+            )),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             isLoaded
@@ -733,7 +730,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12)),
                               child: ListTile(
-                                leading: CircleAvatar(
+                                leading: const CircleAvatar(
                                   backgroundImage: NetworkImage(
                                       'https://firebasestorage.googleapis.com/v0/b/caretreat-69b27.appspot.com/o/digitalprofile%2Ft.jpg?alt=media&token=6cf569aa-2988-4c3f-beba-67d33f4afa9b'),
                                 ),
@@ -778,9 +775,9 @@ class _DoctorScreenState extends State<DoctorScreen> {
                               ));
                         }),
                   )
-                : Padding(
-                    padding: const EdgeInsets.only(top: 200),
-                    child: const SpinKitFadingCircle(
+                : const Padding(
+                    padding: EdgeInsets.only(top: 200),
+                    child: SpinKitFadingCircle(
                       color: Colors.deepPurple,
                       size: 60.0,
                     ),

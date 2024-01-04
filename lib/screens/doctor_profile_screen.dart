@@ -204,7 +204,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                           height: 5,
                         ),
                         widget.visitcharges == 0
-                            ? SizedBox.shrink()
+                            ? const SizedBox.shrink()
                             : Text(
                                 'House Visit Charges ${widget.visitcharges}',
                                 style: TextStyle(
@@ -224,7 +224,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                           height: 20,
                         ),
                         isOwnProfileSelected
-                            ? SizedBox.shrink()
+                            ? const SizedBox.shrink()
                             : Center(
                                 child: InkWell(
                                   onTap: () {

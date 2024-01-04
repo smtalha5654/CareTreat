@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import 'main.dart';
 
 class DoctorRequestScreen extends StatefulWidget {
   DoctorRequestScreen(
@@ -82,7 +81,7 @@ class _DoctorRequestScreenState extends State<DoctorRequestScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${widget.name}',
+                                  widget.name,
                                   style: TextStyle(
                                       fontSize: 15.sp,
                                       fontWeight: FontWeight.bold),
@@ -91,7 +90,7 @@ class _DoctorRequestScreenState extends State<DoctorRequestScreen> {
                                   height: 5,
                                 ),
                                 Text(
-                                  widget.requestType + ' Request',
+                                  '${widget.requestType} Request',
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                   ),
@@ -100,7 +99,7 @@ class _DoctorRequestScreenState extends State<DoctorRequestScreen> {
                                   height: 5,
                                 ),
                                 Text(
-                                  '+92' + widget.phone.toString(),
+                                  '+92${widget.phone}',
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                   ),
@@ -120,7 +119,7 @@ class _DoctorRequestScreenState extends State<DoctorRequestScreen> {
                           height: 5,
                         ),
                         Text(
-                          widget.requestType + ' Date',
+                          '${widget.requestType} Date',
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.bold,

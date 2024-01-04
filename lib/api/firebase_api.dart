@@ -5,8 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:caretreat/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FirebaseApi {
@@ -50,7 +48,7 @@ class FirebaseApi {
         .map((snapshot) {
       return snapshot.docs
           .map((doc) =>
-              NotificationModel.fromJson(doc.data() as Map<String, dynamic>))
+              NotificationModel.fromJson(doc.data()))
           .toList();
     });
   }
@@ -59,7 +57,7 @@ class FirebaseApi {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   Future<void> showLocalNotification(RemoteMessage message) async {
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
       'channel_id',
       'channel_name',
       importance: Importance.max,
@@ -90,7 +88,7 @@ class FirebaseApi {
   Future<void> _initLocalNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    final InitializationSettings initializationSettings =
+    const InitializationSettings initializationSettings =
         InitializationSettings(
       android: initializationSettingsAndroid,
     );
@@ -140,7 +138,7 @@ class FirebaseApi {
 
   Future<void> sendNotificationToDoctor(
       String doctorFCMToken, String patientName, String date) async {
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
       'channel_id',
       'channel_name',
       importance: Importance.max,
@@ -192,7 +190,7 @@ class FirebaseApi {
 
   Future<void> sendNotificationToPatient(String doctorName, date) async {
     String? patientFMCToken = await _firebasemessaging.getToken();
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
       'channel_id',
       'channel_name',
       importance: Importance.max,

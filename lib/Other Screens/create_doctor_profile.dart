@@ -7,7 +7,6 @@ import 'package:caretreat/screens/patient_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -607,7 +606,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                   ],
                   controller: _phonecontroller,
                   decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 15),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 15),
                       prefixIcon: const Icon(Icons.phone),
                       enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.white),
@@ -630,7 +629,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                   child: DropDownTextField(
                     textFieldDecoration: InputDecoration(
                         contentPadding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                            const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
@@ -667,7 +666,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                     enableSearch: true,
                     textFieldDecoration: InputDecoration(
                         contentPadding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                            const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
@@ -782,7 +781,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                     ],
                     controller: _appointmentchargescontroller,
                     decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(vertical: 15),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 15),
                         prefixIcon: const Icon(Icons.attach_money),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.white),
@@ -812,7 +811,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                         ],
                         controller: _visitchargescontroller,
                         decoration: InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(vertical: 15),
+                            contentPadding: const EdgeInsets.symmetric(vertical: 15),
                             prefixIcon: const Icon(Icons.attach_money),
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(color: Colors.white),
@@ -826,12 +825,12 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                             fillColor: Colors.grey[200],
                             filled: true),
                       ))
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
               showHouseVisit
                   ? const SizedBox(
                       height: 8,
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 3.h),
                 child: MyTextField(

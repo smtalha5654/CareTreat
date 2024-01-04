@@ -4,9 +4,7 @@ import 'package:caretreat/screens/doctor_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
@@ -38,7 +36,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
     try {
       var data = await userRef2.doc(widget.id).collection('appointments').get();
 
-      data.docs.forEach((element) {
+      for (var element in data.docs) {
         if (element.exists) {
           var appointmentData = {
             'date': element['date'] as String? ?? '',
@@ -47,7 +45,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
 
           tempList.add(appointmentData);
         }
-      });
+      }
 
       // Update the bookedAppointments state variable
       setState(() {
@@ -243,10 +241,10 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Colors.deepPurple,
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Booking Request',
           style: TextStyle(color: Colors.white),
         ),
@@ -267,9 +265,9 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
               // ),
               widget.housevisitCharges == 0
                   ? isDateSelected
-                      ? SizedBox.shrink()
+                      ? const SizedBox.shrink()
                       : Padding(
-                          padding: EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.only(top: 20),
                           child: Text(
                             widget.housevisitCharges == 0
                                 ? 'Please select date for booking request'
@@ -282,9 +280,9 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                           ),
                         )
                   : isDateSelected && isTypeSelected
-                      ? SizedBox.shrink()
+                      ? const SizedBox.shrink()
                       : Padding(
-                          padding: EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.only(top: 20),
                           child: Text(
                             widget.housevisitCharges == 0
                                 ? 'Please select date for booking request'
@@ -296,7 +294,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                             ),
                           ),
                         ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Row(
@@ -310,7 +308,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   InkWell(
                     onTap: () {
                       isDateSelected = true;
@@ -334,11 +332,11 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               widget.housevisitCharges == 0
-                  ? SizedBox.shrink()
+                  ? const SizedBox.shrink()
                   : DropDownTextField(
                       textFieldDecoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
@@ -374,19 +372,18 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                         });
                       },
                     ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               isDateSelected
                   ? Text(
-                      'Selected Date: ' +
-                          '${selectedDate.toLocal()}'.split(' ')[0],
+                      'Selected Date: ${'${selectedDate.toLocal()}'.split(' ')[0]}',
                       style: TextStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
               SizedBox(
                 height: isTypeSelected ? 10 : 20,
               ),
@@ -401,9 +398,9 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                             fontSize: 15.sp, fontWeight: FontWeight.bold),
                       ),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
 
-              isTypeSelected ? chargesText() : SizedBox.shrink(),
+              isTypeSelected ? chargesText() : const SizedBox.shrink(),
 
               isDateSelected
                   ? Container(
@@ -413,7 +410,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                           borderRadius: BorderRadius.circular(12)),
                       child: Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Text(
@@ -426,7 +423,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                           slots.isEmpty
                               ? Column(
                                   children: [
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 60,
                                     ),
                                     Center(
@@ -435,7 +432,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                                               fontSize: 12.sp,
                                               fontWeight: FontWeight.bold)),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 60,
                                     )
                                   ],
@@ -455,8 +452,8 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                         ],
                       ),
                     )
-                  : SizedBox.shrink(),
-              SizedBox(
+                  : const SizedBox.shrink(),
+              const SizedBox(
                 height: 20,
               ),
               widget.housevisitCharges == 0
@@ -489,7 +486,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                             ),
                           ),
                         )
-                      : SizedBox.shrink()
+                      : const SizedBox.shrink()
                   : isTypeSelected && isDateSelected
                       ? GestureDetector(
                           onTap: () {
@@ -521,7 +518,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                             ),
                           ),
                         )
-                      : SizedBox.shrink()
+                      : const SizedBox.shrink()
             ],
           ),
         ),
@@ -601,7 +598,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 timeSlot,
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
             ),
           ],
