@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:caretreat/Auth/main_page.dart';
 import 'package:caretreat/screens/notification_screen.dart';
+import 'package:caretreat/screens/nurse_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -36,6 +37,7 @@ class _PatientScreenState extends State<PatientScreen> {
     displayData();
     email;
     getProfile();
+    displayNurseData();
   }
 
   String fname = '';
@@ -66,6 +68,20 @@ class _PatientScreenState extends State<PatientScreen> {
 
     setState(() {
       items = tempList;
+      isLoaded = true;
+    });
+  }
+
+  late List<Map<String, dynamic>> nurseitems;
+  displayNurseData() async {
+    List<Map<String, dynamic>> nursetempList = [];
+    var data = await userRef3.get();
+    for (var element in data.docs) {
+      nursetempList.add(element.data());
+    }
+
+    setState(() {
+      nurseitems = nursetempList;
       isLoaded = true;
     });
   }
@@ -118,7 +134,7 @@ class _PatientScreenState extends State<PatientScreen> {
           drawer: SafeArea(
             child: Drawer(
               elevation: 0,
-              // width: 44.h,
+              width: 44.h,
               backgroundColor: Colors.white,
               child: SingleChildScrollView(
                 child: Column(
@@ -718,7 +734,8 @@ class _PatientScreenState extends State<PatientScreen> {
                                         return DoctorProfile(
                                           name: items[index]["name"],
                                           appointmentcharges: items[index]
-                                              ["appointment charges"],
+                                                  ["appointment charges"] ??
+                                              0,
                                           doctortype: items[index]
                                               ["doctor type"],
                                           visitcharges: items[index]
@@ -750,9 +767,12 @@ class _PatientScreenState extends State<PatientScreen> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           ClipRRect(
-                                            borderRadius: const BorderRadius.only(
-                                                topLeft: Radius.circular(12),
-                                                topRight: Radius.circular(12)),
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(12),
+                                                    topRight:
+                                                        Radius.circular(12)),
                                             child: Image.network(
                                               items[index]['profile'],
                                               height: 180,
@@ -807,8 +827,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                                                 TextOverflow
                                                                     .ellipsis)),
                                                     Text(
-                                                        'Rs. ${items[index][
-                                                                    "appointment charges"]}',
+                                                        'Rs. ${items[index]["appointment charges"]}',
                                                         style: const TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
@@ -838,8 +857,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                                                       TextOverflow
                                                                           .ellipsis)),
                                                           Text(
-                                                              'Rs.${items[index][
-                                                                          "visit charges"]}',
+                                                              'Rs.${items[index]["visit charges"]}',
                                                               style: const TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
@@ -862,47 +880,222 @@ class _PatientScreenState extends State<PatientScreen> {
                               color: Colors.deepPurple,
                               size: 60.0,
                             )),
-                  const Tab(child: Text('Hello')
-                      //      DefaultTabController(
-                      //   length: 2,
-                      //   child: Column(
-                      //     children: [
-                      //       Padding(
-                      //         padding: EdgeInsets.symmetric(
-                      //             vertical: 1.h, horizontal: 8.h),
-                      //         child: Container(
-                      //           height: 6.h,
-                      //           decoration: BoxDecoration(
-                      //               color: Colors.deepPurple[100],
-                      //               borderRadius: BorderRadius.circular(24)),
-                      //           child: TabBar(
-                      //               indicator: BoxDecoration(
-                      //                   color: Colors.deepPurple,
-                      //                   borderRadius: BorderRadius.circular(24)),
-                      //               splashBorderRadius: BorderRadius.circular(24),
-                      //               labelPadding:
-                      //                   EdgeInsets.symmetric(horizontal: 4.h),
-                      //               isScrollable: true,
-                      //               labelColor: Colors.white,
-                      //               unselectedLabelColor: Colors.black,
-                      //               tabs: [
-                      //                 Text('Male',
-                      //                     style: TextStyle(
-                      //                         fontWeight: FontWeight.bold,
-                      //                         fontSize: 12.sp)),
-                      //                 Text(
-                      //                   'Female',
-                      //                   style: TextStyle(
-                      //                       fontWeight: FontWeight.bold,
-                      //                       fontSize: 12.sp),
-                      //                 )
-                      //               ]),
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // )
-                      ),
+                  Tab(
+                      child: isLoaded
+                          ? MasonryGridView.builder(
+                              // physics: const NeverScrollableScrollPhysics(),
+                              // shrinkWrap: true,
+                              gridDelegate:
+                                  const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2),
+                              itemCount: nurseitems.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 0.5.h, vertical: 0.5.h),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: ((
+                                        context,
+                                      ) {
+                                        return DoctorProfile(
+                                          name: nurseitems[index]["name"],
+                                          appointmentcharges: nurseitems[index]
+                                                  ["appointment charges"] ??
+                                              0,
+                                          doctortype: nurseitems[index]
+                                                  ["expertise"] ??
+                                              '',
+                                          visitcharges: nurseitems[index]
+                                              ["housevisit charges"],
+                                          profile: nurseitems[index]["profile"],
+                                          about: nurseitems[index]["about"],
+                                          address: nurseitems[index]["address"],
+                                          education: nurseitems[index]
+                                              ["education"],
+                                          experience: nurseitems[index]
+                                              ["experience"],
+                                          gender: nurseitems[index]["gender"],
+                                          phone: nurseitems[index]["phone"],
+                                          id: nurseitems[index]['id'],
+                                          FMCToken: nurseitems[index]
+                                              ['doctorFCM'],
+                                        );
+                                      })));
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: Colors.deepPurple[100],
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(12),
+                                                    topRight:
+                                                        Radius.circular(12)),
+                                            child: Image.network(
+                                              nurseitems[index]['profile'],
+                                              height: 180,
+                                              width: double.infinity,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          // const Spacer(),
+                                          Padding(
+                                            padding: EdgeInsets.all(0.9.h),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  nurseitems[index]["gender"] ==
+                                                          'Male'
+                                                      ? 'Mr. ' +
+                                                              nurseitems[index]
+                                                                  ["name"] ??
+                                                          "Not given"
+                                                      : 'Ms. ' +
+                                                              nurseitems[index]
+                                                                  ["name"] ??
+                                                          "Not given",
+                                                  style: TextStyle(
+                                                      fontSize: 10.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      overflow: TextOverflow
+                                                          .ellipsis),
+                                                ),
+                                                SizedBox(
+                                                  height: 0.5.h,
+                                                ),
+                                                Text(
+                                                    nurseitems[index]["gender"],
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        overflow: TextOverflow
+                                                            .ellipsis)),
+                                                SizedBox(
+                                                  height: 0.5.h,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    const Text('Housevisit',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis)),
+                                                    Text(
+                                                        'Rs. ${nurseitems[index]["housevisit charges"]}',
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis))
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 0.5.h,
+                                                ),
+                                                nurseitems[index]
+                                                            ["visit charges"] ==
+                                                        null
+                                                    ? const SizedBox.shrink()
+                                                    : Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          const Text(
+                                                              'House vist',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis)),
+                                                          Text(
+                                                              'Rs.${nurseitems[index]["visit charges"]}',
+                                                              style: const TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis))
+                                                        ],
+                                                      )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              })
+                          : const SpinKitFadingCircle(
+                              color: Colors.deepPurple,
+                              size: 60.0,
+                            )),
+                  //      DefaultTabController(
+                  //   length: 2,
+                  //   child: Column(
+                  //     children: [
+                  //       Padding(
+                  //         padding: EdgeInsets.symmetric(
+                  //             vertical: 1.h, horizontal: 8.h),
+                  //         child: Container(
+                  //           height: 6.h,
+                  //           decoration: BoxDecoration(
+                  //               color: Colors.deepPurple[100],
+                  //               borderRadius: BorderRadius.circular(24)),
+                  //           child: TabBar(
+                  //               indicator: BoxDecoration(
+                  //                   color: Colors.deepPurple,
+                  //                   borderRadius: BorderRadius.circular(24)),
+                  //               splashBorderRadius: BorderRadius.circular(24),
+                  //               labelPadding:
+                  //                   EdgeInsets.symmetric(horizontal: 4.h),
+                  //               isScrollable: true,
+                  //               labelColor: Colors.white,
+                  //               unselectedLabelColor: Colors.black,
+                  //               tabs: [
+                  //                 Text('Male',
+                  //                     style: TextStyle(
+                  //                         fontWeight: FontWeight.bold,
+                  //                         fontSize: 12.sp)),
+                  //                 Text(
+                  //                   'Female',
+                  //                   style: TextStyle(
+                  //                       fontWeight: FontWeight.bold,
+                  //                       fontSize: 12.sp),
+                  //                 )
+                  //               ]),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // )
                 ]),
               )
             ],

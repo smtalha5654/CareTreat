@@ -3,6 +3,7 @@ import 'package:caretreat/components/mybutton.dart';
 import 'package:caretreat/components/mytextfield.dart';
 import 'package:caretreat/main.dart';
 import 'package:caretreat/screens/doctor_profile_screen.dart';
+import 'package:caretreat/screens/nurse_screen.dart';
 import 'package:caretreat/screens/patient_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
@@ -10,31 +11,28 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:sizer/sizer.dart';
 
-class CreateDoctorProfile extends StatefulWidget {
-  const CreateDoctorProfile({super.key});
+class CreateNurseProfile extends StatefulWidget {
+  const CreateNurseProfile({super.key});
 
   @override
-  State<CreateDoctorProfile> createState() => _CreateDoctorProfileState();
+  State<CreateNurseProfile> createState() => _CreateNurseProfileState();
 }
 
-class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
+class _CreateNurseProfileState extends State<CreateNurseProfile> {
   final _namecontroller = TextEditingController();
   final _aboutcontroller = TextEditingController();
   final _educationcontroller = TextEditingController();
-  final _appointmentchargescontroller = TextEditingController();
   final _visitchargescontroller = TextEditingController();
   final _experiencecontroller = TextEditingController();
   final _addresscontroller = TextEditingController();
-  late SingleValueDropDownController _doctortypecontroller;
+  final _expertisecontroller = TextEditingController();
   late SingleValueDropDownController _gendercontroller;
   final _phonecontroller = TextEditingController();
   @override
   void initState() {
-    _doctortypecontroller = SingleValueDropDownController();
     _gendercontroller = SingleValueDropDownController();
     getProfileData();
     super.initState();
@@ -43,7 +41,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
   var name = '';
   int phone = 0;
   var gender = '';
-  var doctortype = '';
+  String expertise = '';
   var about = '';
   var address = '';
   var education = '';
@@ -56,14 +54,14 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
   void getProfileData() {
     print('profile data function load');
     final String id = FirebaseAuth.instance.currentUser!.uid;
-    userRef.doc(id).get().then((DocumentSnapshot doc) {
+    userRef3.doc(id).get().then((DocumentSnapshot doc) {
       setState(() {
         profile = doc.get('profile');
         name = doc.get('name');
         phone = doc.get('phone');
         appointmentcharges = doc.get('appointment charges');
         visitcharges = doc.get('visit charges');
-        doctortype = doc.get('doctor type');
+        expertise = doc.get('expertise');
         education = doc.get('education');
         experience = doc.get('experience');
         address = doc.get('address');
@@ -76,7 +74,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
 
   Future submitImage() async {
     try {
-      userRef2.doc(id).get().then((DocumentSnapshot doc) {
+      userRef3.doc(id).get().then((DocumentSnapshot doc) {
         if (doc.exists) {
           updateImage(imageUrl.toString().trim());
           getProfileData();
@@ -121,32 +119,21 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
 
   Future submit() async {
     try {
-      userRef2.doc(id).get().then((DocumentSnapshot doc) {
+      userRef3.doc(id).get().then((DocumentSnapshot doc) {
         if (doc.exists) {
-          showHouseVisit
-              ? updateTherapyDoctorDetails(
-                  _namecontroller.text.trim(),
-                  int.parse(_phonecontroller.text.trim()),
-                  _gendercontroller.dropDownValue!.name.toString().trim(),
-                  _doctortypecontroller.dropDownValue!.name.toString().trim(),
-                  _aboutcontroller.text.trim(),
-                  _addresscontroller.text.trim(),
-                  _educationcontroller.text.trim(),
-                  int.parse(_visitchargescontroller.text.trim()),
-                  int.parse(_appointmentchargescontroller.text.trim()),
-                  _experiencecontroller.text.trim(),
-                  id.trim())
-              : updateOtherDoctorDetails(
-                  _namecontroller.text.trim(),
-                  int.parse(_phonecontroller.text.trim()),
-                  _gendercontroller.dropDownValue!.name.toString().trim(),
-                  _doctortypecontroller.dropDownValue!.name.toString().trim(),
-                  _aboutcontroller.text.trim(),
-                  _addresscontroller.text.trim(),
-                  _educationcontroller.text.trim(),
-                  int.parse(_appointmentchargescontroller.text.trim()),
-                  _experiencecontroller.text.trim(),
-                  id.trim());
+          updateNurseDetails(
+            _namecontroller.text.trim(),
+            int.parse(_phonecontroller.text.trim()),
+            _gendercontroller.dropDownValue!.name.toString().trim(),
+            _aboutcontroller.text.trim(),
+            _addresscontroller.text.trim(),
+            _educationcontroller.text.trim(),
+            int.parse(_visitchargescontroller.text.trim()),
+            _experiencecontroller.text.trim(),
+            id.trim(),
+            _expertisecontroller.text.trim(),
+          );
+
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
               "Profile Updated Successfully",
@@ -158,30 +145,18 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
             duration: const Duration(seconds: 3),
           ));
         } else {
-          showHouseVisit
-              ? addTherapyDoctorDetails(
-                  _namecontroller.text.trim(),
-                  int.parse(_phonecontroller.text.trim()),
-                  _gendercontroller.dropDownValue!.name.toString().trim(),
-                  _doctortypecontroller.dropDownValue!.name.toString().trim(),
-                  _aboutcontroller.text.trim(),
-                  _addresscontroller.text.trim(),
-                  _educationcontroller.text.trim(),
-                  int.parse(_visitchargescontroller.text.trim()),
-                  int.parse(_appointmentchargescontroller.text.trim()),
-                  _experiencecontroller.text.trim(),
-                  id.trim())
-              : addOtherDoctorDetails(
-                  _namecontroller.text.trim(),
-                  int.parse(_phonecontroller.text.trim()),
-                  _gendercontroller.dropDownValue!.name.toString().trim(),
-                  _doctortypecontroller.dropDownValue!.name.toString().trim(),
-                  _aboutcontroller.text.trim(),
-                  _addresscontroller.text.trim(),
-                  _educationcontroller.text.trim(),
-                  int.parse(_visitchargescontroller.text.trim()),
-                  _experiencecontroller.text.trim(),
-                  id.trim());
+          addNurseDetails(
+              _namecontroller.text.trim(),
+              int.parse(_phonecontroller.text.trim()),
+              _gendercontroller.dropDownValue!.name.toString().trim(),
+              _aboutcontroller.text.trim(),
+              _addresscontroller.text.trim(),
+              _educationcontroller.text.trim(),
+              int.parse(_visitchargescontroller.text.trim()),
+              _experiencecontroller.text.trim(),
+              _expertisecontroller.text.trim(),
+              id.trim());
+
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
               "Profile Created Successfully",
@@ -208,114 +183,54 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
     }
   }
 
-  Future addOtherDoctorDetails(
-    String name,
-    int phone,
-    String gender,
-    String doctortype,
-    String about,
-    String address,
-    String education,
-    int appointmentcharges,
-    String experience,
-    String id,
-  ) async {
+  Future addNurseDetails(
+      String name,
+      int phone,
+      String gender,
+      String about,
+      String address,
+      String education,
+      int housevisitcharges,
+      String experience,
+      String id,
+      String expertise) async {
     final id = FirebaseAuth.instance.currentUser!.uid;
 
-    await FirebaseFirestore.instance.collection('doctors').doc(id).set({
+    await userRef3.doc(id).set({
       'name': name,
       'phone': phone,
       'gender': gender,
-      'doctor type': doctortype,
+      'expertise': expertise,
       'about': about,
       'address': address,
       'education': education,
-      'appointment charges': appointmentcharges,
+      'housevisit charges': housevisitcharges,
       'experience': experience,
       'id': id,
     });
   }
 
-  Future addTherapyDoctorDetails(
-    String name,
-    int phone,
-    String gender,
-    String doctortype,
-    String about,
-    String address,
-    String education,
-    int visitcharges,
-    int appointmentcharges,
-    String experience,
-    String id,
-  ) async {
+  Future updateNurseDetails(
+      String name,
+      int phone,
+      String gender,
+      String about,
+      String address,
+      String education,
+      int housevisitcharges,
+      String experience,
+      String id,
+      String expertise) async {
     final id = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance.collection('doctors').doc(id).set({
+    await userRef3.doc(id).update({
       'name': name,
       'phone': phone,
       'gender': gender,
-      'doctor type': doctortype,
+      'expertise': expertise,
       'about': about,
       'address': address,
       'education': education,
-      'visit charges': visitcharges,
-      'appointment charges': appointmentcharges,
-      'experience': experience,
-      'id': id,
-    });
-  }
-
-  Future updateOtherDoctorDetails(
-    String name,
-    int phone,
-    String gender,
-    String doctortype,
-    String about,
-    String address,
-    String education,
-    int appointmentcharges,
-    String experience,
-    String id,
-  ) async {
-    final id = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance.collection('doctors').doc(id).update({
-      'name': name,
-      'phone': phone,
-      'gender': gender,
-      'doctor type': doctortype,
-      'about': about,
-      'address': address,
-      'education': education,
-      'appointment charges': appointmentcharges,
-      'experience': experience,
-      'id': id,
-    });
-  }
-
-  Future updateTherapyDoctorDetails(
-    String name,
-    int phone,
-    String gender,
-    String doctortype,
-    String about,
-    String address,
-    String education,
-    int visitcharges,
-    int appointmentcharges,
-    String experience,
-    String id,
-  ) async {
-    final id = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance.collection('doctors').doc(id).update({
-      'name': name,
-      'phone': phone,
-      'gender': gender,
-      'doctor type': doctortype,
-      'about': about,
-      'address': address,
-      'education': education,
-      'visit charges': visitcharges,
-      'appointment charges': appointmentcharges,
+      'housevisit charges': housevisitcharges,
       'experience': experience,
       'id': id,
     });
@@ -325,7 +240,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
     String profile,
   ) async {
     final id = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance.collection('doctors').doc(id).set({
+    await userRef3.doc(id).set({
       'profile': imageUrl,
     });
   }
@@ -334,7 +249,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
     String profile,
   ) async {
     final id = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance.collection('doctors').doc(id).update({
+    await userRef3.doc(id).update({
       'profile': imageUrl,
     });
   }
@@ -662,78 +577,12 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                 height: 8,
               ),
               Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 3.h),
-                  child: DropDownTextField(
-                    enableSearch: true,
-                    textFieldDecoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 10),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.deepPurple),
-                            borderRadius: BorderRadius.circular(12)),
-                        hintText: 'Select Doctor Type',
-                        fillColor: Colors.grey[200],
-                        filled: true),
-                    clearOption: true,
-                    controller: _doctortypecontroller,
-                    validator: (value) {
-                      if (value == null) {
-                        return "Required field";
-                      } else {
-                        return null;
-                      }
-                    },
-                    dropDownItemCount: 6,
-                    dropDownList: const [
-                      DropDownValueModel(
-                          name: 'General practitioner', value: "value1"),
-                      DropDownValueModel(name: 'Pediatrician', value: "value2"),
-                      DropDownValueModel(name: 'Gynecologist', value: "value3"),
-                      DropDownValueModel(name: 'Cardiologist', value: "value4"),
-                      DropDownValueModel(name: 'Oncologist', value: "value5"),
-                      DropDownValueModel(
-                          name: 'Gastroenterologist', value: "value6"),
-                      DropDownValueModel(
-                          name: 'Pulmonologist', value: "value7"),
-                      DropDownValueModel(
-                          name: 'Infectious disease', value: "value8"),
-                      DropDownValueModel(name: 'Nephrologist', value: "value9"),
-                      DropDownValueModel(
-                          name: 'Endocrinologist', value: "value10"),
-                      DropDownValueModel(
-                          name: 'Ophthalmologist', value: "value11"),
-                      DropDownValueModel(
-                          name: 'Dermatologist', value: "value12"),
-                      DropDownValueModel(
-                          name: 'Psychiatrist', value: "value13"),
-                      DropDownValueModel(name: 'Neurologist', value: "value14"),
-                      DropDownValueModel(name: 'Radiologist', value: "value15"),
-                      DropDownValueModel(
-                          name: 'Anesthesiologist', value: "value16"),
-                      DropDownValueModel(name: 'Surgeon', value: "value17"),
-                      DropDownValueModel(
-                          name: 'Physician executive', value: "value18"),
-                    ],
-                    onChanged: (val) {
-                      if (_doctortypecontroller.dropDownValue!.name
-                              .toString()
-                              .trim() ==
-                          'Psychiatrist') {
-                        setState(() {
-                          showHouseVisit = true;
-                        });
-                      } else {
-                        setState(() {
-                          showHouseVisit = false;
-                        });
-                      }
-                    },
-                  )),
+                padding: EdgeInsets.symmetric(horizontal: 3.h),
+                child: MyTextField(
+                    controller: _expertisecontroller,
+                    hinttext: 'Define Your Experties',
+                    icon: Icons.medical_information),
+              ),
               const SizedBox(
                 height: 8,
               ),
@@ -780,7 +629,7 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    controller: _appointmentchargescontroller,
+                    controller: _visitchargescontroller,
                     decoration: InputDecoration(
                         contentPadding:
                             const EdgeInsets.symmetric(vertical: 15),
@@ -793,47 +642,14 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                             borderSide:
                                 const BorderSide(color: Colors.deepPurple),
                             borderRadius: BorderRadius.circular(12)),
-                        hintText: 'Fee Charges For Appointment (PKR)',
+                        hintText: 'Fee Charges For House Visit(PKR)',
                         fillColor: Colors.grey[200],
                         filled: true),
                   )),
               const SizedBox(
                 height: 8,
               ),
-              showHouseVisit
-                  ? Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 3.h,
-                      ),
-                      child: TextField(
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        controller: _visitchargescontroller,
-                        decoration: InputDecoration(
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 15),
-                            prefixIcon: const Icon(Icons.attach_money),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.white),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.deepPurple),
-                                borderRadius: BorderRadius.circular(12)),
-                            hintText: 'Fee Charges For House Visit (PKR)',
-                            fillColor: Colors.grey[200],
-                            filled: true),
-                      ))
-                  : const SizedBox.shrink(),
-              showHouseVisit
-                  ? const SizedBox(
-                      height: 8,
-                    )
-                  : const SizedBox.shrink(),
+
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 3.h),
                 child: MyTextField(
@@ -860,39 +676,39 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
               SizedBox(
                 height: 1.h,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 3.h),
-                child: MyButton(
-                    title: 'Check Profile',
-                    ontap: () {
-                      setState(() {
-                        isOwnProfileSelected = true;
-                      });
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return DoctorProfile(
-                          FMCToken: doctorFMC,
-                          id: id,
-                          name: name,
-                          about: about,
-                          address: address,
-                          appointmentcharges: appointmentcharges,
-                          doctortype: doctortype,
-                          education: education,
-                          experience: experience,
-                          gender: gender,
-                          phone: phone,
-                          profile: profile,
-                          visitcharges: visitcharges,
-                        );
-                      }));
-                    },
-                    color: Colors.deepPurple,
-                    textStyle: TextStyle(
-                        fontSize: 15.sp,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold)),
-              )
+              // Padding(
+              //   padding: EdgeInsets.symmetric(horizontal: 3.h),
+              //   child: MyButton(
+              //       title: 'Check Profile',
+              //       ontap: () {
+              //         setState(() {
+              //           isOwnProfileSelected = true;
+              //         });
+              //         Navigator.push(context,
+              //             MaterialPageRoute(builder: (context) {
+              //           return DoctorProfile(
+              //             FMCToken: doctorFMC,
+              //             id: id,
+              //             name: name,
+              //             about: about,
+              //             address: address,
+              //             appointmentcharges: appointmentcharges,
+              //             doctortype: doctortype,
+              //             education: education,
+              //             experience: experience,
+              //             gender: gender,
+              //             phone: phone,
+              //             profile: profile,
+              //             visitcharges: visitcharges,
+              //           );
+              //         }));
+              //       },
+              //       color: Colors.deepPurple,
+              //       textStyle: TextStyle(
+              //           fontSize: 15.sp,
+              //           color: Colors.white,
+              //           fontWeight: FontWeight.bold)),
+              // )
             ],
           ),
         ),

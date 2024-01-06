@@ -111,11 +111,12 @@ class _DoctorScheduleState extends State<DoctorSchedule> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(),
         body: SingleChildScrollView(
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 2.h, vertical: 4.h),
+                padding: EdgeInsets.symmetric(horizontal: 2.h, vertical: 1.h),
                 child: Column(
                   children: [
                     Text(
@@ -161,7 +162,10 @@ class _DoctorScheduleState extends State<DoctorSchedule> {
                         ),
                       ),
                       onPressed: _generateTimeSlots,
-                      child: const Text('Generate Time Slots'),
+                      child: const Text(
+                        'Generate Time Slots',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ],
                 ),
@@ -256,7 +260,10 @@ class _DoctorScheduleState extends State<DoctorSchedule> {
                   borderRadius: BorderRadius.circular(24),
                 ),
               ),
-              child: Text(buttonText),
+              child: Text(
+                buttonText,
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
         ),

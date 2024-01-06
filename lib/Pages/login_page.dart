@@ -196,7 +196,9 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text(
                         "Sign in",
                         style: TextStyle(
-                            fontSize: 18.sp, fontWeight: FontWeight.bold),
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       )),
                 ),
               ),

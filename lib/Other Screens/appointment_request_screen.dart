@@ -1,10 +1,15 @@
+import 'dart:convert';
 import 'package:caretreat/api/firebase_api.dart';
 import 'package:caretreat/screens/create_doctor_schedule.dart';
 import 'package:caretreat/screens/doctor_screen.dart';
+import 'package:caretreat/screens/nurse_screen.dart';
+import 'package:caretreat/temp_payment_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
@@ -29,6 +34,55 @@ class AppointmentRequestScreen extends StatefulWidget {
 }
 
 class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
+  Map<String, dynamic>? paymentIntent;
+  void makePayment() async {
+    try {
+      paymentIntent = await createPaymentIntent();
+      var gpay = const PaymentSheetGooglePay(
+          merchantCountryCode: "US", currencyCode: "US", testEnv: true);
+      await Stripe.instance.initPaymentSheet(
+          paymentSheetParameters: SetupPaymentSheetParameters(
+              paymentIntentClientSecret: paymentIntent!['client_secret'],
+              merchantDisplayName: 'Talha',
+              googlePay: gpay,
+              style: ThemeMode.dark));
+
+      displayPaymentSheet();
+    } catch (e) {}
+  }
+
+  void displayPaymentSheet() async {
+    try {
+      await Stripe.instance.presentPaymentSheet();
+      widget.housevisitCharges != 0 && widget.appointmentCharges == 0
+          ? sendBookingRequestToNurse()
+          : sendBookingRequest();
+      FirebaseApi().sendNotificationToDoctor(
+          widget.FMCToken, "$fname $lname", simpleDateFormat);
+      FirebaseApi()
+          .sendNotificationToPatient(widget.doctorName, simpleDateFormat);
+    } catch (e) {
+      print('Failed');
+    }
+  }
+
+  createPaymentIntent() async {
+    try {
+      Map<String, dynamic> body = {"amount": "100", "currency": "USD"};
+      http.Response response = await http.post(
+          Uri.parse('https://api.stripe.com/v1/payment_intents'),
+          body: body,
+          headers: {
+            "Authorization":
+                "Bearer sk_test_51JCiBhBEJyVxZuHvy7nISzbYKYTYJvF72YeNdMP0nj3B3ZjqEFKdP7bWakt75Np1QdL6sOWp0beg6xfHJ0NyeFdD00LxSjgXa3",
+            "Content-Type": 'application/x-www-form-urlencoded'
+          });
+      return json.decode(response.body);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   List<Map<String, dynamic>> bookedAppointments = [];
   Future<List<Map<String, dynamic>>> fetchData() async {
     List<Map<String, dynamic>> tempList = [];
@@ -146,7 +200,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
             .then((value) =>
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
-                    "Requeset Added succesfully",
+                    "Payment Succesfull",
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
                   ),
@@ -177,6 +231,92 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
               'slot': selectedTimeSlot,
               'type':
                   _bookingtypecontroller.dropDownValue?.name.toString().trim(),
+              'first name': fname,
+              'last name': lname,
+              'phone': phone,
+              'profile': profile,
+              'email': FirebaseAuth.instance.currentUser?.email,
+              'address': address
+              // 'content': 'Lorem ipsum dolor sit amet...',
+              // Other post data...
+            })
+            .then((value) =>
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    "Requeset Added succesfully",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+                  ),
+                  backgroundColor: Colors.deepPurple,
+                  padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 3),
+                )))
+            .catchError((error) =>
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    "Error while sending request",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+                  ),
+                  backgroundColor: Colors.deepPurple,
+                  padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 3),
+                )));
+  }
+
+  Future<void> sendBookingRequestToNurse() {
+    return widget.housevisitCharges == 0
+        ? userRef3
+            .doc(widget.id)
+            .collection(
+                'appointments') // Reference to the "posts" collection inside the user's document
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .set({
+              'date': simpleDateFormat,
+              'slot': selectedTimeSlot,
+              'first name': fname,
+              'last name': lname,
+              'phone': phone,
+              'profile': profile,
+              'email': FirebaseAuth.instance.currentUser?.email,
+              'address': address
+              // 'content': 'Lorem ipsum dolor sit amet...',
+              // Other post data...
+            })
+            .then((value) =>
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    "Payment Succesfull",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+                  ),
+                  backgroundColor: Colors.deepPurple,
+                  padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 3),
+                )))
+            .catchError((error) =>
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    "Error while sending request",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+                  ),
+                  backgroundColor: Colors.deepPurple,
+                  padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 3),
+                )))
+        : userRef3
+            .doc(widget.id)
+            .collection(
+                'appointments') // Reference to the "posts" collection inside the user's document
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .set({
+              'date': simpleDateFormat,
+              'slot': selectedTimeSlot,
               'first name': fname,
               'last name': lname,
               'phone': phone,
@@ -335,43 +475,46 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
               const SizedBox(
                 height: 10,
               ),
-              widget.housevisitCharges == 0
-                  ? const SizedBox.shrink()
-                  : DropDownTextField(
-                      textFieldDecoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  const BorderSide(color: Colors.deepPurple),
-                              borderRadius: BorderRadius.circular(12)),
-                          hintText: 'Select Booking Type',
-                          fillColor: Colors.grey[200],
-                          filled: true),
-                      clearOption: false,
-                      controller: _bookingtypecontroller,
-                      validator: (value) {
-                        if (value == null) {
-                          return "Required field";
-                        } else {
-                          return null;
-                        }
-                      },
-                      dropDownItemCount: 2,
-                      dropDownList: const [
-                        DropDownValueModel(
-                            name: 'Appointment', value: "value1"),
-                        DropDownValueModel(
-                            name: 'House Visit', value: "value2"),
-                      ],
-                      onChanged: (val) {
-                        setState(() {
-                          isTypeSelected = true;
-                        });
-                      },
-                    ),
+              widget.housevisitCharges != 0 && widget.appointmentCharges == 0
+                  ? SizedBox.shrink()
+                  : widget.housevisitCharges == 0
+                      ? const SizedBox.shrink()
+                      : DropDownTextField(
+                          textFieldDecoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: Colors.deepPurple),
+                                  borderRadius: BorderRadius.circular(12)),
+                              hintText: 'Select Booking Type',
+                              fillColor: Colors.grey[200],
+                              filled: true),
+                          clearOption: false,
+                          controller: _bookingtypecontroller,
+                          validator: (value) {
+                            if (value == null) {
+                              return "Required field";
+                            } else {
+                              return null;
+                            }
+                          },
+                          dropDownItemCount: 2,
+                          dropDownList: const [
+                            DropDownValueModel(
+                                name: 'Appointment', value: "value1"),
+                            DropDownValueModel(
+                                name: 'House Visit', value: "value2"),
+                          ],
+                          onChanged: (val) {
+                            setState(() {
+                              isTypeSelected = true;
+                            });
+                          },
+                        ),
               const SizedBox(
                 height: 20,
               ),
@@ -456,17 +599,18 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
               const SizedBox(
                 height: 20,
               ),
-              widget.housevisitCharges == 0
+              widget.housevisitCharges != 0 && widget.appointmentCharges == 0
                   ? isDateSelected
                       ? GestureDetector(
                           onTap: () {
-                            sendBookingRequest();
-                            FirebaseApi().sendNotificationToDoctor(
-                                widget.FMCToken,
-                                "$fname $lname",
-                                simpleDateFormat);
-                            FirebaseApi().sendNotificationToPatient(
-                                widget.doctorName, simpleDateFormat);
+                            makePayment();
+                            // sendBookingRequest();
+                            // FirebaseApi().sendNotificationToDoctor(
+                            //     widget.FMCToken,
+                            //     "$fname $lname",
+                            //     simpleDateFormat);
+                            // FirebaseApi().sendNotificationToPatient(
+                            //     widget.doctorName, simpleDateFormat);
                           },
                           child: Center(
                             child: Container(
@@ -477,7 +621,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                                   border: Border.all(color: Colors.deepPurple),
                                   borderRadius: BorderRadius.circular(12)),
                               child: Text(
-                                'Send Booking Request',
+                                'Pay Fee Charges',
                                 style: TextStyle(
                                     fontSize: 15.sp,
                                     fontWeight: FontWeight.bold,
@@ -486,39 +630,73 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                             ),
                           ),
                         )
-                      : const SizedBox.shrink()
-                  : isTypeSelected && isDateSelected
-                      ? GestureDetector(
-                          onTap: () {
-                            sendBookingRequest();
-                            // showDialog(
-                            //     context: context,
-                            //     builder: (context) {
-                            //       return const SpinKitFadingCircle(
-                            //         color: Colors.deepPurple,
-                            //         size: 60.0,
-                            //       );
-                            //     });
-                          },
-                          child: Center(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 15),
-                              decoration: BoxDecoration(
-                                  color: Colors.deepPurple,
-                                  border: Border.all(color: Colors.deepPurple),
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: Text(
-                                'Send Booking Request',
-                                style: TextStyle(
-                                    fontSize: 15.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
+                      : SizedBox.shrink()
+                  : widget.housevisitCharges == 0
+                      ? isDateSelected
+                          ? GestureDetector(
+                              onTap: () {
+                                makePayment();
+                                // sendBookingRequest();
+                                // FirebaseApi().sendNotificationToDoctor(
+                                //     widget.FMCToken,
+                                //     "$fname $lname",
+                                //     simpleDateFormat);
+                                // FirebaseApi().sendNotificationToPatient(
+                                //     widget.doctorName, simpleDateFormat);
+                              },
+                              child: Center(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 15),
+                                  decoration: BoxDecoration(
+                                      color: Colors.deepPurple,
+                                      border:
+                                          Border.all(color: Colors.deepPurple),
+                                      borderRadius: BorderRadius.circular(12)),
+                                  child: Text(
+                                    'Pay Fee Charges',
+                                    style: TextStyle(
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        )
-                      : const SizedBox.shrink()
+                            )
+                          : const SizedBox.shrink()
+                      : isTypeSelected && isDateSelected
+                          ? GestureDetector(
+                              onTap: () {
+                                makePayment();
+                                // showDialog(
+                                //     context: context,
+                                //     builder: (context) {
+                                //       return const SpinKitFadingCircle(
+                                //         color: Colors.deepPurple,
+                                //         size: 60.0,
+                                //       );
+                                //     });
+                              },
+                              child: Center(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 15),
+                                  decoration: BoxDecoration(
+                                      color: Colors.deepPurple,
+                                      border:
+                                          Border.all(color: Colors.deepPurple),
+                                      borderRadius: BorderRadius.circular(12)),
+                                  child: Text(
+                                    'Pay Fee Charges',
+                                    style: TextStyle(
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink()
             ],
           ),
         ),

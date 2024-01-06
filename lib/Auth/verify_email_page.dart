@@ -25,7 +25,8 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
     if (!isEmailVerified) {
       sendVerificationEmail();
-      timer = Timer.periodic(const Duration(seconds: 3), (_) => checkEmailVerified());
+      timer = Timer.periodic(
+          const Duration(seconds: 3), (_) => checkEmailVerified());
     }
   }
 
@@ -45,7 +46,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
         backgroundColor: Colors.deepPurple,
         padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
         behavior: SnackBarBehavior.floating,
-        duration:const Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
       ));
     }
   }
@@ -64,12 +65,12 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   @override
   Widget build(BuildContext context) => isEmailVerified
-      ?const CheckRole()
+      ? const CheckRole()
       : SafeArea(
           child: Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.deepPurple,
-              title:const Center(child: Text('Email Verification')),
+              //backgroundColor: Colors.deepPurple,
+              title: const Center(child: Text('Email Verification')),
             ),
             body: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -100,11 +101,16 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                         ),
                         onPressed:
                             canResendEmail ? sendVerificationEmail : null,
-                        icon:const Icon(Icons.email),
+                        icon: const Icon(
+                          Icons.email,
+                          color: Colors.white,
+                        ),
                         label: Text(
                           "Resent Email",
                           style: TextStyle(
-                              fontSize: 16.sp, fontWeight: FontWeight.bold),
+                              color: Colors.white,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold),
                         )),
                   ),
                 ),
@@ -122,11 +128,16 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                           ),
                         ),
                         onPressed: () => FirebaseAuth.instance.signOut(),
-                        icon:const Icon(Icons.cancel_sharp),
+                        icon: const Icon(
+                          Icons.cancel_sharp,
+                          color: Colors.white,
+                        ),
                         label: Text(
                           "Cancel",
                           style: TextStyle(
-                              fontSize: 16.sp, fontWeight: FontWeight.bold),
+                              color: Colors.white,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold),
                         )),
                   ),
                 ),

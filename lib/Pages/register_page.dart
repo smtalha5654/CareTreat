@@ -209,8 +209,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: EdgeInsets.symmetric(horizontal: 3.h),
                   child: DropDownTextField(
                     textFieldDecoration: InputDecoration(
-                        contentPadding:
-                            const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 10),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
@@ -245,8 +245,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: EdgeInsets.symmetric(horizontal: 3.h),
                   child: DropDownTextField(
                     textFieldDecoration: InputDecoration(
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 15),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.white),
                           borderRadius: BorderRadius.circular(12),
@@ -388,7 +388,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Text(
                         "Sign Up",
                         style: TextStyle(
-                            fontSize: 18.sp, fontWeight: FontWeight.bold),
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       )),
                 ),
               ),

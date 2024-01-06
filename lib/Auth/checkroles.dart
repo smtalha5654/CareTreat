@@ -30,7 +30,7 @@ class _CheckRoleState extends State<CheckRole> {
       if (role == 'Doctor') {
         return Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
-          return const DoctorScreen();
+          return DoctorScreen();
         }));
       }
       if (role == 'Patient') {

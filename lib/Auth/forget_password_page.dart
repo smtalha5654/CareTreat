@@ -14,7 +14,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   Future resetPassword() async {
     await FirebaseAuth.instance
         .sendPasswordResetEmail(email: _emailcontroller.text.trim());
-   const ScaffoldMessenger(child: Text('Email Sent'));
+    const ScaffoldMessenger(child: Text('Email Sent'));
   }
 
   @override
@@ -22,17 +22,19 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.deepPurple,
-          title:const Text('Forget Password'),
+          //  backgroundColor: Colors.deepPurple,
+          title: const Text(
+            'Forget Password',
+          ),
         ),
         body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-         const Center(
+          const Center(
               child: Text(
             'Receive an email to\nreset your password',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
           )),
-         const SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Padding(
@@ -41,20 +43,20 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               controller: _emailcontroller,
               decoration: InputDecoration(
-                  prefixIcon:const Icon(Icons.email),
+                  prefixIcon: const Icon(Icons.email),
                   enabledBorder: OutlineInputBorder(
-                    borderSide:const BorderSide(color: Colors.white),
+                    borderSide: const BorderSide(color: Colors.white),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   focusedBorder: OutlineInputBorder(
-                      borderSide:const BorderSide(color: Colors.deepPurple),
+                      borderSide: const BorderSide(color: Colors.deepPurple),
                       borderRadius: BorderRadius.circular(12)),
                   hintText: 'Enter Email',
                   fillColor: Colors.grey[200],
                   filled: true),
             ),
           ),
-         const SizedBox(
+          const SizedBox(
             height: 15,
           ),
           Padding(
@@ -71,10 +73,13 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     ),
                   ),
                   onPressed: resetPassword,
-                  icon:const Icon(Icons.email),
-                  label:const Text(
+                  icon: const Icon(Icons.email),
+                  label: const Text(
                     "Forget Password",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   )),
             ),
           ),

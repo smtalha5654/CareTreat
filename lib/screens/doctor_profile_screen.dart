@@ -1,6 +1,7 @@
 import 'package:caretreat/Other%20Screens/appointment_request_screen.dart';
 import 'package:caretreat/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:sizer/sizer.dart';
 
 class DoctorProfile extends StatefulWidget {
@@ -252,9 +253,12 @@ class _DoctorProfileState extends State<DoctorProfile> {
                                           borderRadius:
                                               BorderRadius.circular(12)),
                                       child: Text(
-                                        widget.visitcharges == 0
-                                            ? 'Book Appointment'
-                                            : 'Book Appointment or House Visit',
+                                        widget.visitcharges != 0 &&
+                                                widget.appointmentcharges == 0
+                                            ? 'Book House Visit'
+                                            : widget.visitcharges == 0
+                                                ? 'Book Appointment'
+                                                : 'Book Appointment or House Visit',
                                         style: TextStyle(
                                             fontSize: widget.visitcharges == 0
                                                 ? 16.sp

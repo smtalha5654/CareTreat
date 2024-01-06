@@ -66,19 +66,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
       }
     });
   }
-  // //  Future addFMCToken(
-  // //   String profile,
-  // // ) async {
 
-  // // }
-  // Future updateFMCToken(
-  //   String profile,
-  // ) async {
-  //   final id = FirebaseAuth.instance.currentUser!.uid;
-  //   await FirebaseFirestore.instance.collection('doctors').doc(id).update({
-  //     'profile': imageUrl,
-  //   });
-  // }
   String time = '';
   @override
   void initState() {
@@ -173,7 +161,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
       drawer: SafeArea(
         child: Drawer(
           elevation: 0,
-          //width: 44.h,
+          width: 44.h,
           backgroundColor: Colors.white,
           child: SingleChildScrollView(
             child: Column(

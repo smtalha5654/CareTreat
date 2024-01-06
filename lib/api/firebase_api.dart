@@ -47,8 +47,7 @@ class FirebaseApi {
         .snapshots()
         .map((snapshot) {
       return snapshot.docs
-          .map((doc) =>
-              NotificationModel.fromJson(doc.data()))
+          .map((doc) => NotificationModel.fromJson(doc.data()))
           .toList();
     });
   }
@@ -94,10 +93,19 @@ class FirebaseApi {
     );
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onSelectNotification: (String? payload) async {
-        if (payload != null) {
-          print('Notification clicked: $payload');
-          // Handle navigation or other actions based on payload
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) {
+        switch (notificationResponse.notificationResponseType) {
+          case NotificationResponseType.selectedNotification:
+            print('Notification clicked: ${notificationResponse.payload}');
+            // Handle navigation or other actions based on payload
+            break;
+          case NotificationResponseType.selectedNotificationAction:
+            // if (notificationResponse.actionId == navigationActionId) {
+            //   print('Notification action clicked: ${notificationResponse.payload}');
+            //   // Handle specific action based on payload
+            // }
+            break;
         }
       },
     );
