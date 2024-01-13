@@ -718,12 +718,14 @@ class _CreateDoctorProfileState extends State<CreateDoctorProfile> {
                       DropDownValueModel(name: 'Surgeon', value: "value17"),
                       DropDownValueModel(
                           name: 'Physician executive', value: "value18"),
+                      DropDownValueModel(
+                          name: 'Physiotherapist', value: 'value19')
                     ],
                     onChanged: (val) {
                       if (_doctortypecontroller.dropDownValue!.name
                               .toString()
                               .trim() ==
-                          'Psychiatrist') {
+                          'Physiotherapist') {
                         setState(() {
                           showHouseVisit = true;
                         });

@@ -28,319 +28,295 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Stack(
+        body: Column(
           children: [
-            PageView(
-              controller: _controller,
-              children: [
-                SingleChildScrollView(
-                  child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 2.5.h,
-                            ),
-                            child: SizedBox(
-                              height: 45.h,
-                              child: Image.asset(
-                                'assets/images/onboardingscreen1.png',
-                              ),
-                            ),
-                          ),
-                          Text(
-                            'Effortless Appointments',
-                            style: TextStyle(
-                              fontSize: 21.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 2.h, horizontal: 3.h),
-                            child: Text(
-                              'Welcome to CareTreat! Streamline your healthcare journey by effortlessly scheduling appointments at your fingertips. Experience the convenience of personalized care.Your health is our priority, and with CareTreat, booking appointments has never been smoother.',
-                              style: TextStyle(
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Padding(
+            Expanded(
+              child: PageView(
+                controller: _controller,
+                children: [
+                  SingleChildScrollView(
+                    child: Container(
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            Padding(
                               padding: EdgeInsets.symmetric(
-                                  vertical: 1.5.h, horizontal: 4.h),
-                              child: MyButton(
-                                  textStyle: TextStyle(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                  title: 'NEXT',
-                                  ontap: () {
-                                    _controller.nextPage(
-                                        duration:
-                                            const Duration(milliseconds: 500),
-                                        curve: Curves.easeIn);
-                                  },
-                                  color: Colors.deepPurple)),
-                        ],
-                      )),
-                ),
-                SingleChildScrollView(
-                  child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 2.5.h),
-                            child: SizedBox(
-                              height: 45.h,
-                              child: Image.asset(
-                                  'assets/images/onboardingscreen2.png'),
-                            ),
-                          ),
-                          Text(
-                            'In-Home Care Hub',
-                            style: TextStyle(
-                              fontSize: 21.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 2.h, horizontal: 3.h),
-                            child: Text(
-                              "Introducing CareTreat's exclusive House Visit feature, now available exclusively for physiotherapists! Elevate your healthcare experience with personalized, in-home sessions tailored for rehabilitation. Effortlessly schedule visits through our user-friendly platform",
-                              style: TextStyle(
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w500,
+                                vertical: 2.h,
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 1.5.h, horizontal: 4.h),
-                            child: MyButton(
-                                textStyle: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                                title: 'NEXT',
-                                ontap: () {
-                                  _controller.nextPage(
-                                      duration:
-                                          const Duration(milliseconds: 500),
-                                      curve: Curves.easeIn);
-                                },
-                                color: Colors.deepPurple),
-                          ),
-                        ],
-                      )),
-                ),
-
-                SingleChildScrollView(
-                  child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 2.5.h),
-                            child: Image.asset(
-                              'assets/images/onboardingscreen3.png',
-                              height: 45.h,
-                            ),
-                          ),
-                          Text(
-                            'Dynamic Nursing Solutions',
-                            style: TextStyle(
-                              fontSize: 21.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 2.h, horizontal: 3.h),
-                            child: Text(
-                              "CareTreat introduces a revolutionary nursing feature, optimizing your healthcare experience. Seamlessly allocate qualified nurses based on your unique needs, With CareTreat, your well-being is our priority, supported by a dynamic approach to nurse allocation.",
-                              style: TextStyle(
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w500,
+                              child: SizedBox(
+                                height: 42.h,
+                                child: Image.asset(
+                                  'assets/images/onboardingscreen1.png',
+                                ),
                               ),
-                              textAlign: TextAlign.center,
                             ),
-                          ),
-                          Padding(
+                            Text(
+                              'Effortless Appointments',
+                              style: TextStyle(
+                                fontSize: 21.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Padding(
                               padding: EdgeInsets.symmetric(
-                                  vertical: 1.5.h, horizontal: 4.h),
-                              child: MyButton(
-                                  textStyle: TextStyle(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                  title: 'NEXT',
-                                  ontap: () {
-                                    _controller.nextPage(
-                                        duration:
-                                            const Duration(milliseconds: 500),
-                                        curve: Curves.easeIn);
-                                  },
-                                  color: Colors.deepPurple))
-                        ],
-                      )),
-                ),
-                SingleChildScrollView(
-                  child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 2.5.h),
-                            child: SizedBox(
-                              height: 45.h,
-                              child: Image.asset(
-                                'assets/images/onboardingscreen5.png',
+                                  vertical: 2.h, horizontal: 3.h),
+                              child: Text(
+                                'Welcome to CareTreat! Streamline your healthcare journey by effortlessly scheduling appointments at your fingertips. Experience the convenience of personalized care.Your health is our priority, and with CareTreat, booking appointments has never been smoother.',
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
-                          ),
-                          Text(
-                            'Doctor Growth Network',
-                            style: TextStyle(
-                              fontSize: 21.sp,
-                              fontWeight: FontWeight.bold,
+                            // Padding(
+                            //     padding: EdgeInsets.symmetric(
+                            //         vertical: 1.5.h, horizontal: 4.h),
+                            //     child: MyButton(
+                            //         textStyle: TextStyle(
+                            //             fontSize: 14.sp,
+                            //             fontWeight: FontWeight.bold,
+                            //             color: Colors.white),
+                            //         title: 'NEXT',
+                            //         ontap: () {
+                            //           _controller.nextPage(
+                            //               duration:
+                            //                   const Duration(milliseconds: 500),
+                            //               curve: Curves.easeIn);
+                            //         },
+                            //         color: Colors.deepPurple)),
+                          ],
+                        )),
+                  ),
+                  SingleChildScrollView(
+                    child: Container(
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2.h),
+                              child: SizedBox(
+                                height: 42.h,
+                                child: Image.asset(
+                                    'assets/images/onboardingscreen2.png'),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 2.h, horizontal: 3.h),
-                            child: Text(
-                              "Doctors, seize the opportunity with CareTreat! Expand your patient base through our platform's seamless features—easy scheduling, house visits, and dynamic nurse allocation. Elevate your practice and connect with patients in a new era of personalized healthcare.",
+                            Text(
+                              'In-Home Care Hub',
                               style: TextStyle(
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 21.sp,
+                                fontWeight: FontWeight.bold,
                               ),
-                              textAlign: TextAlign.center,
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 1.5.h, horizontal: 4.h),
-                            child: MyButton(
-                                textStyle: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                                title: 'Get Started',
-                                ontap: () async {
-                                  await _storeOnBoardInfo();
-                                  Navigator.pushReplacement(context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext) {
-                                    return const Main_Page();
-                                  }));
-                                },
-                                color: Colors.deepPurple),
-                          ),
-                        ],
-                      )),
-                ),
-                // SingleChildScrollView(
-                //   child: Container(
-                //       color: Colors.white,
-                //       child: Column(
-                //         children: [
-                //           Padding(
-                //             padding: EdgeInsets.symmetric(vertical: 2.5.h),
-                //             child: Image.asset(
-                //               'assets/images/onboardingscreen4.png',
-                //               height: 45.h,
-                //             ),
-                //           ),
-                //           Text(
-                //             'Medical Tests at Home',
-                //             style: TextStyle(
-                //               fontSize: 21.sp,
-                //               fontWeight: FontWeight.bold,
-                //             ),
-                //           ),
-                //           Padding(
-                //             padding: EdgeInsets.symmetric(
-                //                 vertical: 2.h, horizontal: 3.h),
-                //             child: Text(
-                //               "CareTreat provide Laboratory option for patient so that they can make a House call for different medical tests in which a professional comes at patients home and bring their equipment with them to perform different Medical tests. ",
-                //               style: TextStyle(
-                //                 fontSize: 13.sp,
-                //                 fontWeight: FontWeight.w500,
-                //               ),
-                //               textAlign: TextAlign.center,
-                //             ),
-                //           ),
-                //           Padding(
-                //             padding: EdgeInsets.symmetric(
-                //                 vertical: 1.5.h, horizontal: 4.h),
-                //             child: MyButton(
-                //                 textStyle: TextStyle(
-                //                     fontSize: 14.sp,
-                //                     fontWeight: FontWeight.bold,
-                //                     color: Colors.white),
-                //                 title: 'Get Started',
-                //                 ontap: () async {
-                //                   await _storeOnBoardInfo();
-                //                   Navigator.pushReplacement(context,
-                //                       MaterialPageRoute(
-                //                           builder: (BuildContext) {
-                //                     return const Main_Page();
-                //                   }));
-                //                 },
-                //                 color: Colors.deepPurple),
-                //           ),
-                //         ],
-                //       )),
-                // ),
-              ],
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 2.h, horizontal: 3.h),
+                              child: Text(
+                                "Introducing CareTreat's exclusive House Visit feature, now available exclusively for physiotherapists! Elevate your healthcare experience with personalized, in-home sessions tailored for rehabilitation. Effortlessly schedule visits through our user-friendly platform",
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            // Padding(
+                            //   padding: EdgeInsets.symmetric(
+                            //       vertical: 1.5.h, horizontal: 4.h),
+                            //   child: MyButton(
+                            //       textStyle: TextStyle(
+                            //           fontSize: 14.sp,
+                            //           fontWeight: FontWeight.bold,
+                            //           color: Colors.white),
+                            //       title: 'NEXT',
+                            //       ontap: () {
+                            //         _controller.nextPage(
+                            //             duration:
+                            //                 const Duration(milliseconds: 500),
+                            //             curve: Curves.easeIn);
+                            //       },
+                            //       color: Colors.deepPurple),
+                            // ),
+                          ],
+                        )),
+                  ),
+                  SingleChildScrollView(
+                    child: Container(
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2.h),
+                              child: Image.asset(
+                                'assets/images/onboardingscreen3.png',
+                                height: 42.h,
+                              ),
+                            ),
+                            Text(
+                              'Dynamic Nursing Solutions',
+                              style: TextStyle(
+                                fontSize: 21.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 2.h, horizontal: 3.h),
+                              child: Text(
+                                "CareTreat introduces a revolutionary nursing feature, optimizing your healthcare experience. Seamlessly allocate qualified nurses based on your unique needs, With CareTreat, your well-being is our priority, supported by a dynamic approach to nurse allocation.",
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        )),
+                  ),
+                  SingleChildScrollView(
+                    child: Container(
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2.h),
+                              child: SizedBox(
+                                height: 42.h,
+                                child: Image.asset(
+                                  'assets/images/onboardingscreen5.png',
+                                ),
+                              ),
+                            ),
+                            Text(
+                              'Doctor Growth Network',
+                              style: TextStyle(
+                                fontSize: 21.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 2.h, horizontal: 3.h),
+                              child: Text(
+                                "Doctors, seize the opportunity with CareTreat! Expand your patient base through our platform's seamless features—easy scheduling, house visits, and dynamic nurse allocation. Elevate your practice and connect with patients in a new era of personalized healthcare.",
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            // Padding(
+                            //   padding: EdgeInsets.symmetric(
+                            //       vertical: 1.5.h, horizontal: 4.h),
+                            //   child: MyButton(
+                            //       textStyle: TextStyle(
+                            //           fontSize: 14.sp,
+                            //           fontWeight: FontWeight.bold,
+                            //           color: Colors.white),
+                            //       title: 'Get Started',
+                            //       ontap: () async {
+                            //         await _storeOnBoardInfo();
+                            //         Navigator.pushReplacement(context,
+                            //             MaterialPageRoute(
+                            //                 builder: (BuildContext) {
+                            //           return const Main_Page();
+                            //         }));
+                            //       },
+                            //       color: Colors.deepPurple),
+                            // ),
+                          ],
+                        )),
+                  ),
+                ],
+              ),
             ),
             Padding(
-              padding: EdgeInsets.only(right: 4.h, top: 2.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: () async {
-                      await _storeOnBoardInfo();
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (BuildContext) {
-                        return const Main_Page();
-                      }));
-                    },
-                    child: Text(
-                      'Skip',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14.sp),
+              padding: EdgeInsets.only(bottom: 1.h),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 2.h, horizontal: 4.h),
+                        child: MyButton(
+                            textStyle: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                            title: 'NEXT',
+                            ontap: () {
+                              _controller.nextPage(
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeIn);
+                            },
+                            color: Colors.deepPurple)),
+                    SizedBox(
+                      height: 1.h,
                     ),
-                  ),
-                ],
+                    SmoothPageIndicator(
+                      effect: ExpandingDotsEffect(
+                        activeDotColor: Colors.deepPurple,
+                      ),
+                      controller: _controller,
+                      count: 4,
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        await _storeOnBoardInfo();
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                          builder: (BuildContext) {
+                            return const Main_Page();
+                          },
+                        ));
+                      },
+                      child: Text(
+                        'Skip',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Color.fromRGBO(107, 114, 128, 1),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(bottom: 5.h),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SmoothPageIndicator(
-                          effect: const WormEffect(),
-                          controller: _controller,
-                          count: 4),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            // Positioned(
+            //   top: 2.h,
+            //   right: 4.h,
+            //   child: GestureDetector(
+            //     onTap: () async {
+            //       await _storeOnBoardInfo();
+            //       Navigator.pushReplacement(context, MaterialPageRoute(
+            //         builder: (BuildContext) {
+            //           return const Main_Page();
+            //         },
+            //       ));
+            //     },
+            //     child: Text(
+            //       'Skip',
+            //       style: TextStyle(
+            //         color: Colors.black,
+            //         fontWeight: FontWeight.bold,
+            //         fontSize: 14.sp,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // Align(
+            //   alignment: Alignment.bottomCenter,
+            //   child: Padding(
+            //     padding: EdgeInsets.only(bottom: 5.h),
+            //     child: SmoothPageIndicator(
+            //       effect: const WormEffect(),
+            //       controller: _controller,
+            //       count: 4,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

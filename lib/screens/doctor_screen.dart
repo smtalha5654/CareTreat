@@ -707,61 +707,70 @@ class _DoctorScreenState extends State<DoctorScreen> {
             ),
             isLoaded
                 ? Expanded(
-                    child: ListView.builder(
-                        itemCount: items.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          // Timestamp timestamp = items[index]['date'];
-                          // DateTime dateTime = timestamp.toDate();
-                          // String formattedDate =
-                          //     DateFormat('d MMMM y').format(dateTime);
-                          return Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: ListTile(
-                                leading: const CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      'https://firebasestorage.googleapis.com/v0/b/caretreat-69b27.appspot.com/o/digitalprofile%2Ft.jpg?alt=media&token=6cf569aa-2988-4c3f-beba-67d33f4afa9b'),
-                                ),
-                                title: Flexible(
-                                  child: Text(
-                                      items[index]['first name'] +
-                                          ' ' +
-                                          items[index]['last name'],
-                                      overflow: TextOverflow.ellipsis),
-                                ),
-                                subtitle: Row(
-                                  children: [
-                                    Text(
-                                      items[index]['type'] + ' Date ',
-                                      overflow: TextOverflow.ellipsis,
+                    child: items.isEmpty
+                        ? Center(
+                            child: Text(
+                              'Dear $fname $lname\n Click \'Create Doctor Profile\' to set up your professional information. For scheduling, use \'Create Clinic Schedule\' to input your availability. Currently, no appointments are scheduled, ensuring you can manage your time effectively',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: items.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              // Timestamp timestamp = items[index]['date'];
+                              // DateTime dateTime = timestamp.toDate();
+                              // String formattedDate =
+                              //     DateFormat('d MMMM y').format(dateTime);
+                              return Card(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)),
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(items[index]['profile']),
                                     ),
-                                    Flexible(
-                                        child: Text(items[index]['date'],
-                                            overflow: TextOverflow.ellipsis)),
-                                  ],
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    isTimeSelected = false;
-                                  });
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return DoctorRequestScreen(
-                                      requestType: items[index]['type'],
-                                      name: items[index]['first name'] +
-                                          ' ' +
-                                          items[index]['last name'],
-                                      address: items[index]['address'],
-                                      date: items[index]['date'],
-                                      email: items[index]['email'],
-                                      phone: items[index]['phone'],
-                                      profile: items[index]['profile'],
-                                      slot: items[index]['slot'],
-                                    );
-                                  }));
-                                },
-                              ));
-                        }),
+                                    title: Flexible(
+                                      child: Text(
+                                          items[index]['first name'] +
+                                              ' ' +
+                                              items[index]['last name'],
+                                          overflow: TextOverflow.ellipsis),
+                                    ),
+                                    subtitle: Row(
+                                      children: [
+                                        Text(
+                                          items[index]['type'] + ' Date ',
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Flexible(
+                                            child: Text(items[index]['date'],
+                                                overflow:
+                                                    TextOverflow.ellipsis)),
+                                      ],
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        isTimeSelected = false;
+                                      });
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return DoctorRequestScreen(
+                                          requestType: items[index]['type'],
+                                          name: items[index]['first name'] +
+                                              ' ' +
+                                              items[index]['last name'],
+                                          address: items[index]['address'],
+                                          date: items[index]['date'],
+                                          email: items[index]['email'],
+                                          phone: items[index]['phone'],
+                                          profile: items[index]['profile'],
+                                          slot: items[index]['slot'],
+                                        );
+                                      }));
+                                    },
+                                  ));
+                            }),
                   )
                 : const Padding(
                     padding: EdgeInsets.only(top: 200),

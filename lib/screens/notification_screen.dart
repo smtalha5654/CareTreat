@@ -77,12 +77,12 @@ class NotificationsScreen extends StatelessWidget {
                     return Text('Error: ${snapshot.error}');
                   } else {
                     final notifications = snapshot.data ?? [];
-                    final reversedNotifications =
-                        notifications.reversed.toList();
+                    notifications.sort((a, b) => b.createdAt.compareTo(
+                        a.createdAt)); // Sort by timestamp in descending order
                     return ListView.builder(
-                      itemCount: reversedNotifications.length,
+                      itemCount: notifications.length,
                       itemBuilder: (context, index) {
-                        final notification = reversedNotifications[index];
+                        final notification = notifications[index];
                         return ListTile(
                           title: Text(
                             notification.title,
@@ -101,7 +101,13 @@ class NotificationsScreen extends StatelessWidget {
                 },
               ),
             )
-            // NotificationTemplate(
+          ],
+        ),
+      ),
+    );
+  }
+}
+// NotificationTemplate(
             //   image: 'assets/images/successnoti.png',
             //   text:
             //       'You have successfully booked your appointment with Ms. Emily Walker.',
@@ -119,9 +125,3 @@ class NotificationsScreen extends StatelessWidget {
             //       'You have successfully booked your appointment with Ms. Emily Walker.',
             //   heading: 'Appoinment Reschduled',
             // )
-          ],
-        ),
-      ),
-    );
-  }
-}

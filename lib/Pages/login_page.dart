@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 0.1.h),
+          padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 0.1.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -177,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Container(
                   decoration:
                       BoxDecoration(borderRadius: BorderRadius.circular(12)),
-                  height: 8.h,
+                  height: 50,
                   width: MediaQuery.of(context).size.width,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(

@@ -7,12 +7,12 @@ class MyButton extends StatelessWidget {
       {super.key,
       required this.title,
       required this.ontap,
-      required this.color,
-      required this.textStyle});
+      this.color,
+      this.textStyle});
   String title = '';
   final Function()? ontap;
-  final Color color;
-  final TextStyle textStyle;
+  final Color? color;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class MyButton extends StatelessWidget {
       child: Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24), color: color),
-          height: 8.h,
+          height: 42,
           width: MediaQuery.of(context).size.width,
           child: Center(
             child: Text(

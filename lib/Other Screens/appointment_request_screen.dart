@@ -51,6 +51,20 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
     } catch (e) {}
   }
 
+  bool isHouseVisit = false;
+  void checkType() {
+    if (widget.appointmentCharges == 0 && widget.housevisitCharges != 0) {
+      setState(() {
+        isHouseVisit = true;
+      });
+    } else if (widget.appointmentCharges != 0 &&
+        widget.housevisitCharges == 0) {
+      setState(() {
+        isHouseVisit = false;
+      });
+    }
+  }
+
   void displayPaymentSheet() async {
     try {
       await Stripe.instance.presentPaymentSheet();
@@ -58,9 +72,9 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
           ? sendBookingRequestToNurse()
           : sendBookingRequest();
       FirebaseApi().sendNotificationToDoctor(
-          widget.FMCToken, "$fname $lname", simpleDateFormat);
-      FirebaseApi()
-          .sendNotificationToPatient(widget.doctorName, simpleDateFormat);
+          widget.FMCToken, "$fname $lname", simpleDateFormat, isHouseVisit);
+      FirebaseApi().sendNotificationToPatient(
+          widget.doctorName, simpleDateFormat, isHouseVisit);
     } catch (e) {
       print('Failed');
     }
@@ -83,12 +97,23 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
     }
   }
 
+  List<String> availableTimeSlots = [];
   List<Map<String, dynamic>> bookedAppointments = [];
   Future<List<Map<String, dynamic>>> fetchData() async {
     List<Map<String, dynamic>> tempList = [];
 
     try {
-      var data = await userRef2.doc(widget.id).collection('appointments').get();
+      var data = isNurse
+          ? await FirebaseFirestore.instance
+              .collection('nurses')
+              .doc(widget.id)
+              .collection('appointments')
+              .get()
+          : await FirebaseFirestore.instance
+              .collection('doctors')
+              .doc(widget.id)
+              .collection('appointments')
+              .get();
 
       for (var element in data.docs) {
         if (element.exists) {
@@ -171,10 +196,12 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
   void initState() {
     super.initState();
     _bookingtypecontroller = SingleValueDropDownController();
-
+    checkType();
     fetchData();
     getName();
-    getAvailableSots();
+    getRole().then((_) {
+      getAvailableSots();
+    });
   }
 
   Future<void> sendBookingRequest() {
@@ -353,14 +380,36 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
   }
 
   List<String> slots = [];
+  bool isNurse = false;
+  String fetchedRole = '';
+  getRole() async {
+    DocumentSnapshot doc = await userRef.doc(widget.id).get();
+    String role = doc.get('role');
 
-  void getAvailableSots() {
-    final userRef = FirebaseFirestore.instance.collection('doctors');
-    userRef.doc(widget.id).get().then((DocumentSnapshot doc) {
-      String slotsString = doc.get('slots');
-      slotsString = slotsString.substring(1, slotsString.length - 1);
-      slots = slotsString.split(', ');
+    setState(() {
+      fetchedRole = role;
+
+      if (fetchedRole == 'Nurse') {
+        setState(() {
+          isNurse = true;
+        });
+      } else {
+        setState(() {
+          isNurse = false;
+        });
+      }
     });
+  }
+
+  void getAvailableSots() async {
+    final userRef = isNurse
+        ? FirebaseFirestore.instance.collection('nurses')
+        : FirebaseFirestore.instance.collection('doctors');
+    print('value: $isNurse');
+    DocumentSnapshot doc = await userRef.doc(widget.id).get();
+    String slotsString = doc.get('slots');
+    slotsString = slotsString.substring(1, slotsString.length - 1);
+    slots = slotsString.split(', ');
   }
 
   List<String> getAvailableTimeSlotsForSelectedDate(
@@ -375,6 +424,23 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
     List<String> availableSlotsForSelectedDate =
         slots.where((slot) => !bookedSlots.contains(slot)).toList();
     return availableSlotsForSelectedDate;
+  }
+
+  void checkForBoth() {
+    print('Booking controller value Checked');
+    if (widget.appointmentCharges != 0 && widget.housevisitCharges != 0) {
+      if (_bookingtypecontroller.dropDownValue?.name.toString().trim() ==
+          'House Visit') {
+        setState(() {
+          isHouseVisit = true;
+        });
+      } else if (_bookingtypecontroller.dropDownValue?.name.toString().trim() ==
+          'Appointment') {
+        setState(() {
+          isHouseVisit = false;
+        });
+      }
+    }
   }
 
   @override
@@ -513,6 +579,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                             setState(() {
                               isTypeSelected = true;
                             });
+                            checkForBoth();
                           },
                         ),
               const SizedBox(

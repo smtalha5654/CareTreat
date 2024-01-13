@@ -104,16 +104,16 @@ class _DoctorProfileState extends State<DoctorProfile> {
                                 ),
                               ],
                             ),
-                            Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: Colors.deepPurple),
-                                child: const Icon(
-                                  Icons.call,
-                                  color: Colors.white,
-                                  size: 50,
-                                ))
+                            // Container(
+                            //     padding: const EdgeInsets.all(8),
+                            //     decoration: BoxDecoration(
+                            //         borderRadius: BorderRadius.circular(12),
+                            //         color: Colors.deepPurple),
+                            //     child: const Icon(
+                            //       Icons.call,
+                            //       color: Colors.white,
+                            //       size: 50,
+                            //     ))
                           ],
                         ),
                         const SizedBox(
@@ -215,12 +215,15 @@ class _DoctorProfileState extends State<DoctorProfile> {
                         const SizedBox(
                           height: 5,
                         ),
-                        Text(
-                          'Appointment Charges ${widget.appointmentcharges}',
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                          ),
-                        ),
+                        widget.visitcharges != 0 &&
+                                widget.appointmentcharges == 0
+                            ? SizedBox.shrink()
+                            : Text(
+                                'Appointment Charges ${widget.appointmentcharges}',
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                ),
+                              ),
                         const SizedBox(
                           height: 20,
                         ),

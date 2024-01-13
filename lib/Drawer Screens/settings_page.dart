@@ -11,10 +11,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:const Text('Settings Screen'),
-      ),
-      body:const Center(child: Text('Settings Screen')),
+      body: const Center(child: Text('Settings Screen')),
     );
   }
 }

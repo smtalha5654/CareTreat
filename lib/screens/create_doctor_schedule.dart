@@ -1,3 +1,4 @@
+import 'package:caretreat/Auth/checkroles.dart';
 import 'package:caretreat/Other%20Screens/appointment_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -11,34 +12,64 @@ class DoctorSchedule extends StatefulWidget {
   State<DoctorSchedule> createState() => _DoctorScheduleState();
 }
 
-TimeOfDay startTime = TimeOfDay.now();
-TimeOfDay endTime = TimeOfDay.now();
-int duration = 0; // Default duration in minutes
-
-List<String> availableTimeSlots = [];
-final _durationController = TextEditingController();
-
-Future updateAvailableSlots(String slots) async {
-  final id = FirebaseAuth.instance.currentUser!.uid;
-  await FirebaseFirestore.instance.collection('doctors').doc(id).update({
-    'slots': slots,
-  });
-}
-
-Future addAvailableSlots(String slots) async {
-  final id = FirebaseAuth.instance.currentUser!.uid;
-  await FirebaseFirestore.instance.collection('doctors').doc(id).set({
-    'slots': slots,
-  });
-}
-
 class _DoctorScheduleState extends State<DoctorSchedule> {
+  bool isNurse = false;
+  String fetchedRole = '';
+  getRole() {
+    final String id = FirebaseAuth.instance.currentUser!.uid;
+    userRef.doc(id).get().then((DocumentSnapshot doc) {
+      String role = doc.get('role');
+      setState(() {
+        fetchedRole = role;
+        if (fetchedRole == 'Nurse') {
+          isNurse = true;
+        }
+      });
+    });
+  }
+
+  TimeOfDay startTime = TimeOfDay.now();
+  TimeOfDay endTime = TimeOfDay.now();
+  int duration = 0; // Default duration in minutes
+
+  List<String> availableTimeSlots = [];
+  final _durationController = TextEditingController();
+
+  Future updateAvailableSlots(String slots) async {
+    final id = FirebaseAuth.instance.currentUser!.uid;
+    if (fetchedRole == 'Nurse') {
+      await FirebaseFirestore.instance.collection('nurses').doc(id).update({
+        'slots': slots,
+      });
+    } else if (fetchedRole == 'Doctor') {
+      await FirebaseFirestore.instance.collection('doctors').doc(id).update({
+        'slots': slots,
+      });
+    }
+  }
+
+  Future addAvailableSlots(String slots) async {
+    final id = FirebaseAuth.instance.currentUser!.uid;
+
+    if (fetchedRole == 'Nurse') {
+      await FirebaseFirestore.instance.collection('nurses').doc(id).set({
+        'slots': slots,
+      });
+    } else if (fetchedRole == 'Doctor') {
+      await FirebaseFirestore.instance.collection('doctors').doc(id).set({
+        'slots': slots,
+      });
+    }
+  }
+
   List<String> slots = [];
   void getAvailableSots() {
     print('slots loadded');
     final String id = FirebaseAuth.instance.currentUser!.uid;
 
-    final userRef = FirebaseFirestore.instance.collection('doctors');
+    final userRef = isNurse
+        ? FirebaseFirestore.instance.collection('nurses')
+        : FirebaseFirestore.instance.collection('doctors');
     userRef.doc(id).get().then((DocumentSnapshot doc) {
       String slotsString = doc.get('slots');
       // Remove extra brackets at the start and end
@@ -61,31 +92,17 @@ class _DoctorScheduleState extends State<DoctorSchedule> {
     final id = FirebaseAuth.instance.currentUser!.uid;
     try {
       userRef2.doc(id).get().then((DocumentSnapshot doc) {
-        if (doc.exists) {
-          updateAvailableSlots(availableTimeSlots.toString());
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-              "Profile Updated Successfully",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
-            ),
-            backgroundColor: Colors.deepPurple,
-            padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 3),
-          ));
-        } else {
-          addAvailableSlots(availableTimeSlots.toString());
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-              "Profile Created Successfully",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
-            ),
-            backgroundColor: Colors.deepPurple,
-            padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 3),
-          ));
-        }
+        updateAvailableSlots(availableTimeSlots.toString());
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            "Schedule Updated Successfully",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
+          ),
+          backgroundColor: Colors.deepPurple,
+          padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.h),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 3),
+        ));
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -105,6 +122,7 @@ class _DoctorScheduleState extends State<DoctorSchedule> {
   void initState() {
     super.initState();
     getAvailableSots();
+    getRole();
   }
 
   @override

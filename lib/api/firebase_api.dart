@@ -9,27 +9,14 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FirebaseApi {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  // Future<void> addNotificationToDoctor(
-  //     String doctorid, RemoteMessage message) async {
-  //   final notification = NotificationModel(
-  //     title: message.notification?.title ?? '',
-  //     body: message.notification?.body ?? '',
-  //   );
-
-  //   await _firestore
-  //       .collection('doctors')
-  //       .doc(doctorid)
-  //       .collection('notifications')
-  //       .add(notification.toJson());
-  // }
 
   Future<void> addNotificationToPatient(
       String id, RemoteMessage message) async {
     print('id $id');
     final notification = NotificationModel(
-      title: message.notification?.title ?? '',
-      body: message.notification?.body ?? '',
-    );
+        title: message.notification?.title ?? '',
+        body: message.notification?.body ?? '',
+        createdAt: DateTime.now());
 
     await _firestore
         .collection('users')
@@ -144,14 +131,14 @@ class FirebaseApi {
     });
   }
 
-  Future<void> sendNotificationToDoctor(
-      String doctorFCMToken, String patientName, String date) async {
+  Future<void> sendNotificationToDoctor(String doctorFCMToken,
+      String patientName, String date, bool isHouseVisit) async {
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
       'channel_id',
       'channel_name',
       importance: Importance.max,
       priority: Priority.high,
-      showWhen: false, // Add this line if you don't want to show the timestamp
+      showWhen: true, // Add this line if you don't want to show the timestamp
     );
 
     var platformChannelSpecifics =
@@ -159,8 +146,10 @@ class FirebaseApi {
 
     await flutterLocalNotificationsPlugin.show(
       0,
-      'New Appointment Booked',
-      '$patientName has booked an appointment with you on $date. Check your schedule!',
+      isHouseVisit ? 'New House visit Booked' : 'New Appointment Booked',
+      isHouseVisit
+          ? '$patientName has booked an House Visit with you on $date. Check your schedule!'
+          : '$patientName has booked an appointment with you on $date. Check your schedule!',
       platformChannelSpecifics,
       payload: 'appointment_details',
     );
@@ -179,9 +168,11 @@ class FirebaseApi {
     var body = {
       'to': doctorFCMToken,
       'notification': {
-        'title': 'New Appointment Booked',
-        'body':
-            '$patientName has booked an appointment with you on $date. Check your schedule!',
+        'title':
+            isHouseVisit ? 'New House Visit Booked' : 'New Appointment Booked',
+        'body': isHouseVisit
+            ? '$patientName has booked an House Visit with you on $date. Check your schedule!'
+            : '$patientName has booked an appointment with you on $date. Check your schedule!',
       },
     };
 
@@ -196,22 +187,27 @@ class FirebaseApi {
     }
   }
 
-  Future<void> sendNotificationToPatient(String doctorName, date) async {
+  Future<void> sendNotificationToPatient(
+      String doctorName, date, bool isHouseVisit) async {
     String? patientFMCToken = await _firebasemessaging.getToken();
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
       'channel_id',
       'channel_name',
       importance: Importance.max,
       priority: Priority.high,
-      showWhen: false, // Add this line if you don't want to show the timestamp
+      showWhen: true, // Add this line if you don't want to show the timestamp
     );
     var platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.show(
       0,
-      'Appointment Booked successfully',
-      'Your appointment has been booked on $date with $doctorName',
+      isHouseVisit
+          ? 'House Visit Booked Successfully'
+          : 'Appointment Booked successfully',
+      isHouseVisit
+          ? 'Your House Visit has been booked on $date with $doctorName'
+          : 'Your appointment has been booked on $date with $doctorName',
       platformChannelSpecifics,
       payload: 'appointment_details',
     );
@@ -230,8 +226,12 @@ class FirebaseApi {
     var body = {
       'to': patientFMCToken,
       'notification': {
-        'title': 'Appointment Booked successfully',
-        'body': 'Your appointment has been booked on $date with $doctorName',
+        'title': isHouseVisit
+            ? 'House Visit booked successfully'
+            : 'Appointment Booked successfully',
+        'body': isHouseVisit
+            ? 'Your House Visit has been booked on $date with $doctorName'
+            : 'Your appointment has been booked on $date with $doctorName',
       },
     };
 

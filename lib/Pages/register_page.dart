@@ -142,13 +142,13 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 0.1.h),
+          padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 0.1.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
                 'assets/images/loginlogo.png',
-                height: 25.h,
+                height: 20.h,
               ),
               Text('CareTreat',
                   style: TextStyle(fontSize: 45.sp, fontFamily: 'BebasNeue')),
@@ -369,7 +369,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Container(
                   decoration:
                       BoxDecoration(borderRadius: BorderRadius.circular(12)),
-                  height: 8.h,
+                  height: 50,
                   width: MediaQuery.of(context).size.width,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
