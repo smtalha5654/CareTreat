@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:sizer/sizer.dart';
-
 
 class DoctorRequestScreen extends StatefulWidget {
   DoctorRequestScreen(
@@ -12,7 +12,9 @@ class DoctorRequestScreen extends StatefulWidget {
       required this.phone,
       required this.date,
       required this.email,
-      required this.slot});
+      required this.slot,
+      required this.prescription,
+      required this.prescriptionImage});
   String requestType = '';
   String name = '';
   String address = '';
@@ -21,6 +23,8 @@ class DoctorRequestScreen extends StatefulWidget {
   int phone = 0;
   String date = '';
   String slot = '';
+  String prescription = '';
+  String prescriptionImage = '';
 
   @override
   State<DoctorRequestScreen> createState() => _DoctorRequestScreenState();
@@ -185,6 +189,91 @@ class _DoctorRequestScreenState extends State<DoctorRequestScreen> {
                             fontSize: 13.sp,
                           ),
                         ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Prescription',
+                          style: TextStyle(
+                              fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          widget.prescription,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        widget.prescriptionImage == ''
+                            ? SizedBox.shrink()
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Prescription Image',
+                                    style: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => SafeArea(
+                                              child: Scaffold(
+                                                appBar: AppBar(
+                                                  iconTheme: IconThemeData(
+                                                      color: Colors.white),
+                                                  backgroundColor:
+                                                      Colors.deepPurple,
+                                                  title: Text(
+                                                    'Prescription Image',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                body: PhotoView(
+                                                  imageProvider: NetworkImage(
+                                                      widget.prescriptionImage),
+                                                  backgroundDecoration:
+                                                      BoxDecoration(
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ));
+                                    },
+                                    child: Container(
+                                      height: 300,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          image: DecorationImage(
+                                            filterQuality: FilterQuality.low,
+                                            fit: BoxFit.cover,
+                                            image: NetworkImage(
+                                              widget.prescriptionImage,
+                                            ),
+                                          )),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  )
+                                ],
+                              ),
                       ],
                     ),
                   ),

@@ -150,14 +150,13 @@ class _PatientAppointmentScreenState extends State<PatientAppointmentScreen> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.deepPurple,
-        centerTitle: true,
-        title: Text(
-          'My Bookings',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
+          automaticallyImplyLeading: false,
+          title: Text(
+            'My Bookings',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.deepPurple),
       body: isLoaded
           ? Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),

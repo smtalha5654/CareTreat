@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:caretreat/api/firebase_api.dart';
+import 'package:caretreat/components/textfield_with_camera.dart';
 import 'package:caretreat/screens/create_doctor_schedule.dart';
 import 'package:caretreat/screens/doctor_screen.dart';
 import 'package:caretreat/screens/nurse_screen.dart';
@@ -7,9 +9,11 @@ import 'package:caretreat/temp_payment_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
@@ -176,6 +180,7 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
   String lname = '';
   int phone = 0;
   String profile = '';
+
   String address = '';
   String email = FirebaseAuth.instance.currentUser!.email.toString();
 
@@ -220,7 +225,9 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
               'phone': phone,
               'profile': profile,
               'email': FirebaseAuth.instance.currentUser?.email,
-              'address': address
+              'address': address,
+              'prescription': prescriptionController.text.trim(),
+              'prescriptionimage': imageUrl
               // 'content': 'Lorem ipsum dolor sit amet...',
               // Other post data...
             })
@@ -263,7 +270,9 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
               'phone': phone,
               'profile': profile,
               'email': FirebaseAuth.instance.currentUser?.email,
-              'address': address
+              'address': address,
+              'prescription': prescriptionController.text.trim(),
+              'prescriptionimage': imageUrl
               // 'content': 'Lorem ipsum dolor sit amet...',
               // Other post data...
             })
@@ -308,7 +317,9 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
               'phone': phone,
               'profile': profile,
               'email': FirebaseAuth.instance.currentUser?.email,
-              'address': address
+              'address': address,
+              'prescription': prescriptionController.text.trim(),
+              'prescriptionimage': imageUrl
               // 'content': 'Lorem ipsum dolor sit amet...',
               // Other post data...
             })
@@ -349,14 +360,16 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
               'phone': phone,
               'profile': profile,
               'email': FirebaseAuth.instance.currentUser?.email,
-              'address': address
+              'address': address,
+              'prescription': prescriptionController.text.trim(),
+              'prescriptionimage': imageUrl
               // 'content': 'Lorem ipsum dolor sit amet...',
               // Other post data...
             })
             .then((value) =>
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
-                    "Requeset Added succesfully",
+                    "Payment Succesfull",
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 13.sp),
                   ),
@@ -443,6 +456,8 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
     }
   }
 
+  String imageUrl = '';
+  TextEditingController prescriptionController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -663,9 +678,183 @@ class _AppointmentRequestScreenState extends State<AppointmentRequestScreen> {
                       ),
                     )
                   : const SizedBox.shrink(),
-              const SizedBox(
-                height: 20,
+
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: CustomTextFieldWithCamera(
+                  controller: prescriptionController,
+                  maxLines: 3,
+                  onCameraTap: () {
+                    ImagePicker imagePicker = ImagePicker();
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  XFile? file = await imagePicker.pickImage(
+                                      source: ImageSource.camera);
+
+                                  if (file == null) return;
+                                  //Import dart:core
+                                  String uniqueFileName = widget.id.toString();
+
+                                  /*Step 2: Upload to Firebase storage*/
+                                  //Install firebase_storage
+                                  //Import the library
+
+                                  //Get a reference to storage root
+                                  Reference referenceRoot =
+                                      FirebaseStorage.instance.ref();
+                                  Reference referenceDirImages =
+                                      referenceRoot.child('prescriptionimage');
+
+                                  //Create a reference for the image to be stored
+                                  Reference referenceImageToUpload =
+                                      referenceDirImages.child(uniqueFileName);
+
+                                  //Handle errors/success
+                                  try {
+                                    //Store the file
+                                    await referenceImageToUpload
+                                        .putFile(File(file.path));
+                                    //Success: get the download URL
+
+                                    imageUrl = await referenceImageToUpload
+                                        .getDownloadURL();
+                                  } catch (error) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content: Text(
+                                        "Error while uploading image",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13.sp),
+                                      ),
+                                      backgroundColor: Colors.deepPurple,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 2.h, horizontal: 2.h),
+                                      behavior: SnackBarBehavior.floating,
+                                      duration: const Duration(seconds: 3),
+                                    ));
+                                  }
+                                },
+                                child: Container(
+                                    height: 15.h,
+                                    width: 15.h,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white60,
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.camera_alt_rounded,
+                                          size: 10.h,
+                                          color: Colors.black,
+                                        ),
+                                        Text(
+                                          'Camera',
+                                          style: TextStyle(
+                                              fontSize: 10.sp,
+                                              decoration: TextDecoration.none,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    )),
+                              ),
+                              SizedBox(
+                                width: 1.h,
+                              ),
+                              GestureDetector(
+                                onTap: () async {
+                                  XFile? file = await imagePicker.pickImage(
+                                      source: ImageSource.gallery);
+
+                                  if (file == null) return;
+                                  //Import dart:core
+                                  String uniqueFileName = widget.id.toString();
+
+                                  /*Step 2: Upload to Firebase storage*/
+                                  //Install firebase_storage
+                                  //Import the library
+
+                                  //Get a reference to storage root
+                                  Reference referenceRoot =
+                                      FirebaseStorage.instance.ref();
+                                  Reference referenceDirImages =
+                                      referenceRoot.child('prescriptionimage');
+
+                                  //Create a reference for the image to be stored
+                                  Reference referenceImageToUpload =
+                                      referenceDirImages.child(uniqueFileName);
+
+                                  //Handle errors/success
+                                  try {
+                                    //Store the file
+                                    await referenceImageToUpload
+                                        .putFile(File(file.path));
+                                    //Success: get the download URL
+
+                                    imageUrl = await referenceImageToUpload
+                                        .getDownloadURL();
+                                  } catch (error) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content: Text(
+                                        "Error while uploading image",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13.sp),
+                                      ),
+                                      backgroundColor: Colors.deepPurple,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 2.h, horizontal: 2.h),
+                                      behavior: SnackBarBehavior.floating,
+                                      duration: const Duration(seconds: 3),
+                                    ));
+                                  }
+                                },
+                                child: Container(
+                                    height: 15.h,
+                                    width: 15.h,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white60,
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.photo,
+                                          size: 10.h,
+                                          color: Colors.black,
+                                        ),
+                                        Text(
+                                          'Gallery',
+                                          style: TextStyle(
+                                              fontSize: 10.sp,
+                                              decoration: TextDecoration.none,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    )),
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                ),
               ),
+
               widget.housevisitCharges != 0 && widget.appointmentCharges == 0
                   ? isDateSelected
                       ? GestureDetector(

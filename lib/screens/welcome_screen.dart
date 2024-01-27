@@ -22,6 +22,8 @@ _storeOnBoardInfo() async {
   await prefs.setInt('onBoard', isViewed);
 }
 
+int currentindex = 0;
+
 class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           children: [
             Expanded(
               child: PageView(
+                onPageChanged: (value) {
+                  setState(() {
+                    currentindex = value;
+                  });
+                },
                 controller: _controller,
                 children: [
                   SingleChildScrollView(
@@ -246,12 +253,23 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white),
-                            title: 'NEXT',
-                            ontap: () {
-                              _controller.nextPage(
-                                  duration: const Duration(milliseconds: 500),
-                                  curve: Curves.easeIn);
-                            },
+                            title: currentindex == 3 ? 'Get Started' : 'NEXT',
+                            ontap: currentindex == 3
+                                ? () async {
+                                    await _storeOnBoardInfo();
+                                    Navigator.pushReplacement(context,
+                                        MaterialPageRoute(
+                                      builder: (BuildContext) {
+                                        return const Main_Page();
+                                      },
+                                    ));
+                                  }
+                                : () {
+                                    _controller.nextPage(
+                                        duration:
+                                            const Duration(milliseconds: 500),
+                                        curve: Curves.easeIn);
+                                  },
                             color: Colors.deepPurple)),
                     SizedBox(
                       height: 1.h,

@@ -1,3 +1,4 @@
+import 'package:caretreat/Drawer%20Screens/settings_page.dart';
 import 'package:caretreat/api/firebase_api.dart';
 import 'package:caretreat/screens/notification_screen.dart';
 import 'package:caretreat/screens/splash_screen.dart';

@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:caretreat/Auth/main_page.dart';
 import 'package:caretreat/Drawer%20Screens/favorite.dart';
-import 'package:caretreat/Drawer%20Screens/my_profile.dart';
+import 'package:caretreat/Drawer%20Screens/edit_profile.dart';
 import 'package:caretreat/Drawer%20Screens/settings_page.dart';
 import 'package:caretreat/Other%20Screens/appointment_request_screen.dart';
 import 'package:caretreat/Other%20Screens/create_doctor_profile.dart';
 import 'package:caretreat/doctor_request_screen..dart';
 import 'package:caretreat/main.dart';
+import 'package:caretreat/screens/bank_details_screen.dart';
 import 'package:caretreat/screens/create_doctor_schedule.dart';
 import 'package:caretreat/screens/create_nurse_profile.dart';
 import 'package:caretreat/screens/doctor_screen.dart';
@@ -449,12 +450,12 @@ class _NurseScreenState extends State<NurseScreen> {
               ),
               ListTile(
                 title: Text(
-                  'My Profile',
+                  'Edit Profile',
                   style:
                       TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
                 ),
                 leading: Icon(
-                  Icons.person_2_outlined,
+                  Icons.edit,
                   size: 3.5.h,
                   color: Colors.deepPurple,
                 ),
@@ -462,7 +463,25 @@ class _NurseScreenState extends State<NurseScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const MyProfile()));
+                          builder: (context) => const EditProfile()));
+                },
+              ),
+              ListTile(
+                title: Text(
+                  'Add Bank Details',
+                  style:
+                      TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
+                ),
+                leading: Icon(
+                  Icons.credit_card,
+                  size: 3.5.h,
+                  color: Colors.deepPurple,
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>  BankDetails()));
                 },
               ),
               ListTile(
@@ -483,24 +502,24 @@ class _NurseScreenState extends State<NurseScreen> {
                           builder: (context) => const SettingPage()));
                 },
               ),
-              ListTile(
-                title: Text(
-                  'Favorites',
-                  style:
-                      TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
-                ),
-                leading: Icon(
-                  Icons.favorite_border_outlined,
-                  size: 3.5.h,
-                  color: Colors.deepPurple,
-                ),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Favorite()));
-                },
-              ),
+              // ListTile(
+              //   title: Text(
+              //     'Favorites',
+              //     style:
+              //         TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
+              //   ),
+              //   leading: Icon(
+              //     Icons.favorite_border_outlined,
+              //     size: 3.5.h,
+              //     color: Colors.deepPurple,
+              //   ),
+              //   onTap: () {
+              //     Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => const Favorite()));
+              //   },
+              // ),
               ListTile(
                 title: Text(
                   'Logout',
@@ -508,7 +527,7 @@ class _NurseScreenState extends State<NurseScreen> {
                       TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
                 ),
                 leading: Icon(
-                  Icons.logout_outlined,
+                  Icons.exit_to_app,
                   size: 3.5.h,
                   color: Colors.deepPurple,
                 ),
@@ -735,6 +754,11 @@ class _NurseScreenState extends State<NurseScreen> {
                                           phone: items[index]['phone'],
                                           profile: items[index]['profile'],
                                           slot: items[index]['slot'],
+                                          prescription: items[index]
+                                              ['prescription'],
+                                          prescriptionImage: items[index]
+                                                  ['prescriptionimage'] ??
+                                              '',
                                         );
                                       }));
                                     },

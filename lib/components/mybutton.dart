@@ -21,6 +21,7 @@ class MyButton extends StatelessWidget {
       onTap: ontap,
       child: Container(
           decoration: BoxDecoration(
+            
               borderRadius: BorderRadius.circular(24), color: color),
           height: 42,
           width: MediaQuery.of(context).size.width,

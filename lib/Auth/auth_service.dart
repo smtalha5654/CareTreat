@@ -50,25 +50,38 @@ class AuthService {
           return const CheckRole();
         }));
       }
-      
 
       return await FirebaseAuth.instance.signInWithCredential(credential);
-      
     } on FirebaseAuthException catch (e) {
-      
       showDialog(
           context: context,
           builder: (context) {
             return CupertinoAlertDialog(
               content: Text(
                 e.message.toString(),
-                style:const TextStyle(
+                style: const TextStyle(
                   fontSize: 22,
                 ),
               ),
             );
           });
     }
-    
+  }
+
+  Future<void> changePassword(String newPassword) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        await user.updatePassword(newPassword);
+        print("Password changed successfully");
+      } else {
+        print("User not signed in");
+        // Handle the case when the user is not signed in.
+      }
+    } catch (e) {
+      print("Error changing password: $e");
+      // Handle password change errors (e.g., wrong current password)
+    }
   }
 }

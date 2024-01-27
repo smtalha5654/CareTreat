@@ -17,7 +17,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sizer/sizer.dart';
 
 import '../Drawer Screens/favorite.dart';
-import '../Drawer Screens/my_profile.dart';
+import '../Drawer Screens/edit_profile.dart';
 import '../Drawer Screens/settings_page.dart';
 import 'doctor_profile_screen.dart';
 
@@ -36,10 +36,14 @@ class _PatientScreenState extends State<PatientScreen> {
   void initState() {
     super.initState();
     getName();
+    items = [];
+    nurseitems = [];
+    filteredItems = List.from(items);
+    nurseFilteredItems = List.from(nurseitems);
     displayData();
+    displayNurseData();
     email;
     getProfile();
-    displayNurseData();
   }
 
   String fname = '';
@@ -60,6 +64,8 @@ class _PatientScreenState extends State<PatientScreen> {
   var collection = FirebaseFirestore.instance.collection("doctors");
   late List<Map<String, dynamic>> items;
   bool isLoaded = false;
+  late List<Map<String, dynamic>> filteredItems;
+  late List<Map<String, dynamic>> nurseFilteredItems;
 
   displayData() async {
     List<Map<String, dynamic>> tempList = [];
@@ -71,6 +77,7 @@ class _PatientScreenState extends State<PatientScreen> {
     setState(() {
       items = tempList;
       isLoaded = true;
+      filteredItems = List.from(items);
     });
   }
 
@@ -85,6 +92,8 @@ class _PatientScreenState extends State<PatientScreen> {
     setState(() {
       nurseitems = nursetempList;
       isLoaded = true;
+      nurseFilteredItems = List.from(nurseitems);
+      //  /
     });
   }
 
@@ -128,6 +137,43 @@ class _PatientScreenState extends State<PatientScreen> {
 
   int _currentIndex = 0;
   PageController _pageController = PageController();
+  TextEditingController searchController = TextEditingController();
+  void filterDoctors(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        // If the search query is empty, show the complete list
+        filteredItems = List.from(items);
+      } else {
+        // If there is a search query, filter the list
+        filteredItems = items.where((doctor) {
+          final fullName = doctor["name"].toLowerCase();
+          final searchLowerCase = query.toLowerCase();
+
+          // Check if any part of the name contains the search query
+          return fullName.contains(searchLowerCase);
+        }).toList();
+      }
+    });
+  }
+
+  void filterNurses(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        // If the search query is empty, show the complete list
+        nurseFilteredItems = List.from(nurseitems);
+      } else {
+        // If there is a search query, filter the list
+        nurseFilteredItems = nurseitems.where((doctor) {
+          final fullName = doctor["name"].toLowerCase();
+          final searchLowerCase = query.toLowerCase();
+
+          // Check if any part of the name contains the search query
+          return fullName.contains(searchLowerCase);
+        }).toList();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -489,33 +535,33 @@ class _PatientScreenState extends State<PatientScreen> {
                               ],
                             ),
                           ),
+                          // ListTile(
+                          //   title: Text(
+                          //     'Home',
+                          //     style: TextStyle(
+                          //         fontSize: 12.sp, fontWeight: FontWeight.bold),
+                          //   ),
+                          //   leading: Icon(
+                          //     Icons.home_outlined,
+                          //     size: 3.5.h,
+                          //     color: Colors.deepPurple,
+                          //   ),
+                          //   onTap: () {
+                          //     Navigator.pushReplacement(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //             builder: (context) =>
+                          //                 const PatientScreen()));
+                          //   },
+                          // ),
                           ListTile(
                             title: Text(
-                              'Home',
+                              'Edit Profile',
                               style: TextStyle(
                                   fontSize: 12.sp, fontWeight: FontWeight.bold),
                             ),
                             leading: Icon(
-                              Icons.home_outlined,
-                              size: 3.5.h,
-                              color: Colors.deepPurple,
-                            ),
-                            onTap: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PatientScreen()));
-                            },
-                          ),
-                          ListTile(
-                            title: Text(
-                              'My Profile',
-                              style: TextStyle(
-                                  fontSize: 12.sp, fontWeight: FontWeight.bold),
-                            ),
-                            leading: Icon(
-                              Icons.person_2_outlined,
+                              Icons.edit,
                               size: 3.5.h,
                               color: Colors.deepPurple,
                             ),
@@ -523,7 +569,8 @@ class _PatientScreenState extends State<PatientScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const MyProfile()));
+                                      builder: (context) =>
+                                          const EditProfile()));
                             },
                           ),
                           ListTile(
@@ -538,31 +585,32 @@ class _PatientScreenState extends State<PatientScreen> {
                               color: Colors.deepPurple,
                             ),
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SettingPage()));
+                              setState(() {
+                                _pageController.animateToPage(2,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.easeIn);
+                                _currentIndex = 2;
+                              });
                             },
                           ),
-                          ListTile(
-                            title: Text(
-                              'Favorites',
-                              style: TextStyle(
-                                  fontSize: 12.sp, fontWeight: FontWeight.bold),
-                            ),
-                            leading: Icon(
-                              Icons.favorite_border_outlined,
-                              size: 3.5.h,
-                              color: Colors.deepPurple,
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const Favorite()));
-                            },
-                          ),
+                          // ListTile(
+                          //   title: Text(
+                          //     'Favorites',
+                          //     style: TextStyle(
+                          //         fontSize: 12.sp, fontWeight: FontWeight.bold),
+                          //   ),
+                          //   leading: Icon(
+                          //     Icons.favorite_border_outlined,
+                          //     size: 3.5.h,
+                          //     color: Colors.deepPurple,
+                          //   ),
+                          //   onTap: () {
+                          //     Navigator.push(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //             builder: (context) => const Favorite()));
+                          //   },
+                          // ),
                           ListTile(
                             title: Text(
                               'Logout',
@@ -570,7 +618,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                   fontSize: 12.sp, fontWeight: FontWeight.bold),
                             ),
                             leading: Icon(
-                              Icons.logout_outlined,
+                              Icons.exit_to_app,
                               size: 3.5.h,
                               color: Colors.deepPurple,
                             ),
@@ -679,11 +727,17 @@ class _PatientScreenState extends State<PatientScreen> {
                           child: SizedBox(
                             height: 7.h,
                             child: TextField(
+                              controller: searchController,
+                              onChanged: (value) {
+                                filterDoctors(value);
+                                filterNurses(value);
+                              },
                               decoration: InputDecoration(
                                 contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 10),
                                 border: UnderlineInputBorder(
-                                    borderRadius: BorderRadius.circular(24)),
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
                                 prefixIcon: const Icon(
                                   Icons.search,
                                   color: Colors.deepPurple,
@@ -753,7 +807,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                     gridDelegate:
                                         const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                                             crossAxisCount: 2),
-                                    itemCount: items.length,
+                                    itemCount: filteredItems.length,
                                     itemBuilder: (context, index) {
                                       return Padding(
                                         padding: EdgeInsets.symmetric(
@@ -815,7 +869,8 @@ class _PatientScreenState extends State<PatientScreen> {
                                                               Radius.circular(
                                                                   12)),
                                                   child: Image.network(
-                                                    items[index]['profile'],
+                                                    filteredItems[index]
+                                                        ['profile'],
                                                     height: 180,
                                                     width: double.infinity,
                                                     fit: BoxFit.cover,
@@ -834,7 +889,8 @@ class _PatientScreenState extends State<PatientScreen> {
                                                     children: [
                                                       Text(
                                                         'Dr. ' +
-                                                                items[index]
+                                                                filteredItems[
+                                                                        index]
                                                                     ["name"] ??
                                                             "Not given",
                                                         style: TextStyle(
@@ -849,7 +905,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                                         height: 0.5.h,
                                                       ),
                                                       Text(
-                                                          items[index]
+                                                          filteredItems[index]
                                                               ["doctor type"],
                                                           style: const TextStyle(
                                                               fontWeight:
@@ -876,7 +932,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                                                       TextOverflow
                                                                           .ellipsis)),
                                                           Text(
-                                                              'Rs. ${items[index]["appointment charges"]}',
+                                                              'Rs. ${filteredItems[index]["appointment charges"]}',
                                                               style: const TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
@@ -889,7 +945,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                                       SizedBox(
                                                         height: 0.5.h,
                                                       ),
-                                                      items[index][
+                                                      filteredItems[index][
                                                                   "visit charges"] ==
                                                               null
                                                           ? const SizedBox
@@ -908,7 +964,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                                                         overflow:
                                                                             TextOverflow.ellipsis)),
                                                                 Text(
-                                                                    'Rs.${items[index]["visit charges"]}',
+                                                                    'Rs.${filteredItems[index]["visit charges"]}',
                                                                     style: const TextStyle(
                                                                         fontWeight:
                                                                             FontWeight
@@ -938,7 +994,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                     gridDelegate:
                                         const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                                             crossAxisCount: 2),
-                                    itemCount: nurseitems.length,
+                                    itemCount: nurseFilteredItems.length,
                                     itemBuilder: (context, index) {
                                       return Padding(
                                         padding: EdgeInsets.symmetric(
@@ -1003,7 +1059,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                                               Radius.circular(
                                                                   12)),
                                                   child: Image.network(
-                                                    nurseitems[index]
+                                                    nurseFilteredItems[index]
                                                         ['profile'],
                                                     height: 180,
                                                     width: double.infinity,
@@ -1022,17 +1078,18 @@ class _PatientScreenState extends State<PatientScreen> {
                                                         MainAxisAlignment.start,
                                                     children: [
                                                       Text(
-                                                        nurseitems[index][
+                                                        nurseFilteredItems[
+                                                                        index][
                                                                     "gender"] ==
                                                                 'Male'
                                                             ? 'Mr. ' +
-                                                                    nurseitems[
+                                                                    nurseFilteredItems[
                                                                             index]
                                                                         [
                                                                         "name"] ??
                                                                 "Not given"
                                                             : 'Ms. ' +
-                                                                    nurseitems[
+                                                                    nurseFilteredItems[
                                                                             index]
                                                                         [
                                                                         "name"] ??
@@ -1049,8 +1106,8 @@ class _PatientScreenState extends State<PatientScreen> {
                                                         height: 0.5.h,
                                                       ),
                                                       Text(
-                                                          nurseitems[index]
-                                                              ["gender"],
+                                                          nurseFilteredItems[
+                                                              index]["gender"],
                                                           style: const TextStyle(
                                                               fontWeight:
                                                                   FontWeight
@@ -1076,7 +1133,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                                                       TextOverflow
                                                                           .ellipsis)),
                                                           Text(
-                                                              'Rs. ${nurseitems[index]["housevisit charges"]}',
+                                                              'Rs. ${nurseFilteredItems[index]["housevisit charges"]}',
                                                               style: const TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
@@ -1089,7 +1146,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                                       SizedBox(
                                                         height: 0.5.h,
                                                       ),
-                                                      nurseitems[index][
+                                                      nurseFilteredItems[index][
                                                                   "visit charges"] ==
                                                               null
                                                           ? const SizedBox
@@ -1108,7 +1165,7 @@ class _PatientScreenState extends State<PatientScreen> {
                                                                         overflow:
                                                                             TextOverflow.ellipsis)),
                                                                 Text(
-                                                                    'Rs.${nurseitems[index]["visit charges"]}',
+                                                                    'Rs.${nurseFilteredItems[index]["visit charges"]}',
                                                                     style: const TextStyle(
                                                                         fontWeight:
                                                                             FontWeight
