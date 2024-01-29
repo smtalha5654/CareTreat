@@ -169,48 +169,51 @@ class _PatientAppointmentScreenState extends State<PatientAppointmentScreen> {
                         textAlign: TextAlign.center,
                       ),
                     )
-                  : Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Text(
-                            'Doctors Bookings',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
+                  : SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              'Doctors Bookings',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: appointmentList.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              child: AppointmentListItem(
-                                  appointmentDetails: appointmentList[index]),
-                            );
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Text(
-                            'Nurse Bookings',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: appointmentList.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                child: AppointmentListItem(
+                                    appointmentDetails: appointmentList[index]),
+                              );
+                            },
                           ),
-                        ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: NurseappointmentList.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                                child: NurseListItem(
-                                    nurseDetails: NurseappointmentList[index]));
-                          },
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              'Nurse Bookings',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: NurseappointmentList.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                  child: NurseListItem(
+                                      nurseDetails:
+                                          NurseappointmentList[index]));
+                            },
+                          ),
+                        ],
+                      ),
                     ),
             )
           : const SpinKitFadingCircle(

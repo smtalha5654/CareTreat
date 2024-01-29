@@ -138,18 +138,24 @@ class _PatientScreenState extends State<PatientScreen> {
   int _currentIndex = 0;
   PageController _pageController = PageController();
   TextEditingController searchController = TextEditingController();
-  void filterDoctors(String query) {
+  void filterDoctors(String query, String selectedType) {
     setState(() {
-      if (query.isEmpty) {
-        // If the search query is empty, show the complete list
-        filteredItems = List.from(items);
-      } else {
-        // If there is a search query, filter the list
+      if (selectedType.isNotEmpty) {
+        // If a doctor type is selected, filter the list by type
         filteredItems = items.where((doctor) {
+          final doctorType = doctor["doctor type"].toLowerCase();
+          return doctorType == selectedType.toLowerCase();
+        }).toList();
+      } else {
+        // If there is no type selected, show the complete list
+        filteredItems = List.from(items);
+      }
+
+      // If there is a search query, further filter the list by name
+      if (query.isNotEmpty) {
+        filteredItems = filteredItems.where((doctor) {
           final fullName = doctor["name"].toLowerCase();
           final searchLowerCase = query.toLowerCase();
-
-          // Check if any part of the name contains the search query
           return fullName.contains(searchLowerCase);
         }).toList();
       }
@@ -172,6 +178,78 @@ class _PatientScreenState extends State<PatientScreen> {
         }).toList();
       }
     });
+  }
+
+  String selectedType = '';
+  Future<void> _showFilterOptions(BuildContext context) async {
+    final List<String> doctorTypes = [
+      'General practitioner',
+      'Pediatrician',
+      'Gynecologist',
+      'Cardiologist',
+      'Oncologist',
+      'Gastroenterologist',
+      'Pulmonologist',
+      'Infectious disease',
+      'Nephrologist',
+      'Endocrinologist',
+      'Ophthalmologist',
+      'Dermatologist',
+      'Psychiatrist',
+      'Neurologist',
+      'Radiologist',
+      'Anesthesiologist',
+      'Surgeon',
+      'Physician executive',
+      'Physiotherapist',
+    ];
+
+    String? selectedTypeResult = await showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              ListTile(
+                title: Center(
+                  child: Text(
+                    'Doctor Categories',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context, ''); // Empty string means all types
+                },
+              ),
+              Divider(
+                thickness: 2.0,
+                indent: 16.0,
+                endIndent: 16.0,
+              ),
+              for (String type in doctorTypes)
+                ListTile(
+                  leading: Icon(Icons.local_hospital),
+                  title: Text(type),
+                  onTap: () {
+                    Navigator.pop(context, type);
+                  },
+                ),
+            ],
+          ),
+        );
+      },
+    );
+
+    // Update the selected type and filter the doctors accordingly
+    if (selectedTypeResult != null) {
+      setState(() {
+        selectedType = selectedTypeResult;
+        filterDoctors('', selectedTypeResult); // Pass an empty string for query
+      });
+    }
   }
 
   @override
@@ -729,7 +807,7 @@ class _PatientScreenState extends State<PatientScreen> {
                             child: TextField(
                               controller: searchController,
                               onChanged: (value) {
-                                filterDoctors(value);
+                                filterDoctors(value, '');
                                 filterNurses(value);
                               },
                               decoration: InputDecoration(
@@ -797,6 +875,29 @@ class _PatientScreenState extends State<PatientScreen> {
                     const SizedBox(
                       height: 10,
                     ),
+                    InkWell(
+                      onTap: () {
+                        _showFilterOptions(context);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(
+                              Icons.filter_alt,
+                              color: Colors.deepPurple,
+                              size: 20,
+                            ),
+                            Text(
+                              'Filters',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
                     Expanded(
                       child: TabBarView(children: [
                         Tab(
@@ -809,193 +910,209 @@ class _PatientScreenState extends State<PatientScreen> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                       )
-                                    : MasonryGridView.builder(
-                                        // physics: const NeverScrollableScrollPhysics(),
-                                        // shrinkWrap: true,
-                                        gridDelegate:
-                                            const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 2),
-                                        itemCount: filteredItems.length,
-                                        itemBuilder: (context, index) {
-                                          return Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 0.5.h,
-                                                vertical: 0.5.h),
-                                            child: InkWell(
-                                              onTap: () {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: ((
-                                                  context,
-                                                ) {
-                                                  return DoctorProfile(
-                                                    name: items[index]["name"],
-                                                    appointmentcharges: items[
-                                                                index][
-                                                            "appointment charges"] ??
-                                                        0,
-                                                    doctortype: items[index]
-                                                        ["doctor type"],
-                                                    visitcharges: items[index]
-                                                            ["visit charges"] ??
-                                                        0,
-                                                    profile: items[index]
-                                                        ["profile"],
-                                                    about: items[index]
-                                                        ["about"],
-                                                    address: items[index]
-                                                        ["address"],
-                                                    education: items[index]
-                                                        ["education"],
-                                                    experience: items[index]
-                                                        ["experience"],
-                                                    gender: items[index]
-                                                        ["gender"],
-                                                    phone: items[index]
-                                                        ["phone"],
-                                                    id: items[index]['id'],
-                                                    FMCToken: items[index]
-                                                        ['doctorFCM'],
-                                                  );
-                                                })));
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  color: Colors.deepPurple[100],
-                                                ),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    ClipRRect(
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .only(
-                                                              topLeft: Radius
+                                    : Column(
+                                        children: [
+                                          // ElevatedButton(
+                                          //   onPressed: () {
+                                          //     _showFilterOptions(context);
+                                          //   },
+                                          //   child: Text('Filter'),
+                                          // ),
+                                          Expanded(
+                                            child: MasonryGridView.builder(
+                                                // physics: const NeverScrollableScrollPhysics(),
+                                                // shrinkWrap: true,
+                                                gridDelegate:
+                                                    const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                                                        crossAxisCount: 2),
+                                                itemCount: filteredItems.length,
+                                                itemBuilder: (context, index) {
+                                                  return Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 0.5.h,
+                                                            vertical: 0.5.h),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(context,
+                                                            MaterialPageRoute(
+                                                                builder: ((
+                                                          context,
+                                                        ) {
+                                                          return DoctorProfile(
+                                                            name: items[index]
+                                                                ["name"],
+                                                            appointmentcharges:
+                                                                items[index][
+                                                                        "appointment charges"] ??
+                                                                    0,
+                                                            doctortype: items[
+                                                                    index]
+                                                                ["doctor type"],
+                                                            visitcharges: items[
+                                                                        index][
+                                                                    "visit charges"] ??
+                                                                0,
+                                                            profile:
+                                                                items[index]
+                                                                    ["profile"],
+                                                            about: items[index]
+                                                                ["about"],
+                                                            address:
+                                                                items[index]
+                                                                    ["address"],
+                                                            education: items[
+                                                                    index]
+                                                                ["education"],
+                                                            experience: items[
+                                                                    index]
+                                                                ["experience"],
+                                                            gender: items[index]
+                                                                ["gender"],
+                                                            phone: items[index]
+                                                                ["phone"],
+                                                            id: items[index]
+                                                                ['id'],
+                                                            FMCToken: items[
+                                                                    index]
+                                                                ['doctorFCM'],
+                                                          );
+                                                        })));
+                                                      },
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
                                                                   .circular(12),
-                                                              topRight: Radius
-                                                                  .circular(
-                                                                      12)),
-                                                      child: Image.network(
-                                                        filteredItems[index]
-                                                            ['profile'],
-                                                        height: 180,
-                                                        width: double.infinity,
-                                                        fit: BoxFit.cover,
+                                                          color: Colors
+                                                              .deepPurple[100],
+                                                        ),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            ClipRRect(
+                                                              borderRadius: const BorderRadius
+                                                                  .only(
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          12),
+                                                                  topRight: Radius
+                                                                      .circular(
+                                                                          12)),
+                                                              child:
+                                                                  Image.network(
+                                                                filteredItems[
+                                                                        index]
+                                                                    ['profile'],
+                                                                height: 180,
+                                                                width: double
+                                                                    .infinity,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
+                                                            // const Spacer(),
+                                                            Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(0.9
+                                                                          .h),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    'Dr. ' +
+                                                                            filteredItems[index]["name"] ??
+                                                                        "Not given",
+                                                                    style: TextStyle(
+                                                                        fontSize: 10
+                                                                            .sp,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height:
+                                                                        0.5.h,
+                                                                  ),
+                                                                  Text(
+                                                                      filteredItems[
+                                                                              index]
+                                                                          [
+                                                                          "doctor type"],
+                                                                      style: const TextStyle(
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis)),
+                                                                  SizedBox(
+                                                                    height:
+                                                                        0.5.h,
+                                                                  ),
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      const Text(
+                                                                          'Appointment',
+                                                                          style: TextStyle(
+                                                                              fontWeight: FontWeight.bold,
+                                                                              overflow: TextOverflow.ellipsis)),
+                                                                      Text(
+                                                                          'Rs. ${filteredItems[index]["appointment charges"]}',
+                                                                          style: const TextStyle(
+                                                                              fontWeight: FontWeight.bold,
+                                                                              overflow: TextOverflow.ellipsis))
+                                                                    ],
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height:
+                                                                        0.5.h,
+                                                                  ),
+                                                                  filteredItems[index]
+                                                                              [
+                                                                              "visit charges"] ==
+                                                                          null
+                                                                      ? const SizedBox
+                                                                          .shrink()
+                                                                      : Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            const Text('House vist',
+                                                                                style: TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis)),
+                                                                            Text('Rs.${filteredItems[index]["visit charges"]}',
+                                                                                style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis))
+                                                                          ],
+                                                                        )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
-                                                    // const Spacer(),
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsets.all(0.9.h),
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            'Dr. ' +
-                                                                    filteredItems[
-                                                                            index]
-                                                                        [
-                                                                        "name"] ??
-                                                                "Not given",
-                                                            style: TextStyle(
-                                                                fontSize: 10.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 0.5.h,
-                                                          ),
-                                                          Text(
-                                                              filteredItems[
-                                                                      index][
-                                                                  "doctor type"],
-                                                              style: const TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis)),
-                                                          SizedBox(
-                                                            height: 0.5.h,
-                                                          ),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              const Text(
-                                                                  'Appointment',
-                                                                  style: TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis)),
-                                                              Text(
-                                                                  'Rs. ${filteredItems[index]["appointment charges"]}',
-                                                                  style: const TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis))
-                                                            ],
-                                                          ),
-                                                          SizedBox(
-                                                            height: 0.5.h,
-                                                          ),
-                                                          filteredItems[index][
-                                                                      "visit charges"] ==
-                                                                  null
-                                                              ? const SizedBox
-                                                                  .shrink()
-                                                              : Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  children: [
-                                                                    const Text(
-                                                                        'House vist',
-                                                                        style: TextStyle(
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                            overflow: TextOverflow.ellipsis)),
-                                                                    Text(
-                                                                        'Rs.${filteredItems[index]["visit charges"]}',
-                                                                        style: const TextStyle(
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                            overflow: TextOverflow.ellipsis))
-                                                                  ],
-                                                                )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        })
+                                                  );
+                                                }),
+                                          ),
+                                        ],
+                                      )
                                 : const SpinKitFadingCircle(
                                     color: Colors.deepPurple,
                                     size: 60.0,
